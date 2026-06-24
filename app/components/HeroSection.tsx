@@ -8,8 +8,23 @@ import {
   useInView,
 } from "framer-motion";
 
+// ─── Interfaces ──────────────────────────────────────────────────────────────
+interface ServiceItem {
+  id: string;
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+  accent: string;
+  glow: string;
+}
+
+interface ServiceCardProps {
+  service: ServiceItem;
+  index: number;
+}
+
 // ─── Data ────────────────────────────────────────────────────────────────────
-const services = [
+const services: ServiceItem[] = [
   {
     id: "01",
     label: "Cloud Infrastructure",
@@ -83,8 +98,8 @@ const services = [
 ];
 
 // ─── Tilt Card ────────────────────────────────────────────────────────────────
-function ServiceCard({ service, index }) {
-  const ref = useRef(null);
+function ServiceCard({ service, index }: ServiceCardProps) {
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
 
   const x = useMotionValue(0);
@@ -92,7 +107,7 @@ function ServiceCard({ service, index }) {
   const rotateX = useTransform(y, [-60, 60], [6, -6]);
   const rotateY = useTransform(x, [-60, 60], [-6, 6]);
 
-  function handleMouseMove(e) {
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect();
     x.set(e.clientX - rect.left - rect.width / 2);
     y.set(e.clientY - rect.top - rect.height / 2);
