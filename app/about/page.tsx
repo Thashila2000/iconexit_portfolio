@@ -102,60 +102,67 @@ export default function AboutPage() {
     <div className="overflow-x-hidden">
 
      {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
-      <section className="relative flex h-[60vh] min-h-[420px] items-start bg-ink-950 pb-12 pt-14 md:h-[70vh] md:min-h-[550px] md:pb-16 md:pt-16">
-        <Image
-          src="/Images/abstract img.jpg"
-          alt=""
-          fill
-          priority
-          className="object-cover opacity-30 mix-blend-luminosity"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink-950/20 via-ink-950/50 to-ink-950" />
+{/* Reduced from h-[60vh] min-h-[420px] down to h-[45vh] min-h-[320px] on mobile screens */}
+<section className="relative flex h-[45vh] min-h-[320px] items-start bg-ink-950 pb-8 pt-10 md:h-[70vh] md:min-h-[550px] md:pb-16 md:pt-16 overflow-hidden">
+  
+  {/* Background Image Wrapper */}
+  <div className="absolute inset-0 h-full w-full z-0">
+    <Image
+      src="/Images/abstract img.jpg"
+      alt=""
+      fill
+      priority
+      className="object-cover opacity-25 mix-blend-luminosity"
+      sizes="100vw"
+    />
+  </div>
+  
+  {/* Ambient Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-b from-ink-950/20 via-ink-950/60 to-ink-950 z-0" />
 
-        <motion.div
-          className="relative mx-auto w-full max-w-6xl px-6"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="show"
-        >
-          <motion.p
-            variants={fadeUp}
-            className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-ember-400 md:mb-3"
-          >
-            Our story
-          </motion.p>
+  <motion.div
+    className="relative z-10 mx-auto w-full max-w-6xl px-6"
+    variants={staggerContainer}
+    initial="hidden"
+    animate="show"
+  >
+    <motion.p
+      variants={fadeUp}
+      className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ember-400 md:mb-3 md:text-xs"
+    >
+      Our story
+    </motion.p>
 
-          <motion.h1
-            variants={fadeUp}
-            className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl"
-          >
-            We started with a{' '}
-            <em className="not-italic text-ember-400">frustration.</em>
-          </motion.h1>
+    <motion.h1
+      variants={fadeUp}
+      className="max-w-3xl text-3xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl"
+    >
+      We started with a{' '}
+      <em className="not-italic text-ember-400">frustration.</em>
+    </motion.h1>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-3 max-w-xl text-base leading-relaxed text-slate-300 md:mt-5 md:text-lg"
-          >
-            Too many companies were being handed polished decks and slow software.
-            We left our agency jobs to build the kind of studio we always wished existed.
-          </motion.p>
+    <motion.p
+      variants={fadeUp}
+      className="mt-2 max-w-xl text-sm leading-relaxed text-slate-300 md:mt-5 md:text-lg"
+    >
+      Too many companies were being handed polished decks and slow software.
+      We left our agency jobs to build the kind of studio we always wished existed.
+    </motion.p>
 
-          <motion.div
-            variants={fadeUp}
-            className="mt-6 flex items-center gap-3 text-slate-500 md:mt-8"
-          >
-            <div className="h-px w-10 bg-slate-600" />
-            <span className="font-mono text-[11px] uppercase tracking-widest">
-              Scroll to explore
-            </span>
-          </motion.div>
-        </motion.div>
-      </section>
+    <motion.div
+      variants={fadeUp}
+      className="mt-25 flex items-center gap-3 text-slate-500 md:mt-8"
+    >
+      <div className="h-px w-8 bg-slate-600 md:w-10" />
+      <span className="font-mono text-[10px] uppercase tracking-widest md:text-[11px]">
+        Scroll to explore
+      </span>
+    </motion.div>
+  </motion.div>
+</section>
      
       {/* ── 2. ORIGIN ────────────────────────────────────────────────────────── */}
-      <section className="bg-white py-28">
+      <section className="bg-white py-15">
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-2 lg:gap-24">
 
           {/* text */}

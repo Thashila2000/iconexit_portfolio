@@ -1,6 +1,7 @@
 "use client";
 
 import type { Metadata } from "next";
+import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import {
   motion,
@@ -16,10 +17,10 @@ interface ServiceItem {
   description: string;
   features: string[];
   icon: React.ReactNode;
-  accent: string;       // Saturated text and identity color
-  bgLight: string;      // Soft light pastel background
-  borderLight: string;  // Subtle accent tint border
-  glow: string;         // Hover glow overlay
+  accent: string;       
+  bgLight: string;      
+  borderLight: string;  
+  glow: string;         
 }
 
 // ─── Framer Motion Variants ───────────────────────────────────────────────────
@@ -28,19 +29,34 @@ const staggerContainer = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.15, // Paced out staging delay between title and description
     },
   },
 } as const;
 
-const fadeLeft = {
-  hidden: { opacity: 0, x: -24 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+// Customized slow, organic glide parameters for scrolling into view
+const slowFadeLeft = {
+  hidden: { opacity: 0, x: -32 },
+  show: { 
+    opacity: 1, 
+    x: 0, 
+    transition: { 
+      duration: 1.2,          // Increased duration for a slower entry
+      ease: [0.25, 1, 0.5, 1] // Smooth quintic decelerating curve
+    } 
+  },
 } as const;
 
-const fadeRight = {
-  hidden: { opacity: 0, x: 24 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+const slowFadeRight = {
+  hidden: { opacity: 0, x: 32 },
+  show: { 
+    opacity: 1, 
+    x: 0, 
+    transition: { 
+      duration: 1.2, 
+      ease: [0.25, 1, 0.5, 1] 
+    } 
+  },
 } as const;
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -56,8 +72,8 @@ const services: ServiceItem[] = [
         <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/>
       </svg>
     ),
-    accent: "#1D4ED8",      // Rich Blue
-    bgLight: "#EFF6FF",     // Soft Light Blue
+    accent: "#1D4ED8",      
+    bgLight: "#EFF6FF",     
     borderLight: "#DBEAFE",
     glow: "rgba(37,99,235,0.08)",
   },
@@ -72,8 +88,8 @@ const services: ServiceItem[] = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
     ),
-    accent: "#0369A1",      // Deep Cyan/Sky Blue
-    bgLight: "#F0F9FF",     // Soft Light Sky
+    accent: "#0369A1",      
+    bgLight: "#F0F9FF",     
     borderLight: "#E0F2FE",
     glow: "rgba(6,182,212,0.08)",
   },
@@ -88,8 +104,8 @@ const services: ServiceItem[] = [
         <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
       </svg>
     ),
-    accent: "#6366F1",      // Indigo
-    bgLight: "#EEF2F6",     // Soft Pale Indigo Tint
+    accent: "#6366F1",      
+    bgLight: "#EEF2F6",     
     borderLight: "#E0E7FF",
     glow: "rgba(129,140,248,0.08)",
   },
@@ -104,8 +120,8 @@ const services: ServiceItem[] = [
         <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
       </svg>
     ),
-    accent: "#BE185D",      // Vibrant Pink
-    bgLight: "#FDF2F8",     // Soft Light Pink
+    accent: "#BE185D",      
+    bgLight: "#FDF2F8",     
     borderLight: "#FCE7F3",
     glow: "rgba(244,114,182,0.08)",
   },
@@ -120,8 +136,8 @@ const services: ServiceItem[] = [
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
     ),
-    accent: "#047857",      // Emerald Green
-    bgLight: "#ECFDF5",     // Soft Light Emerald
+    accent: "#047857",      
+    bgLight: "#ECFDF5",     
     borderLight: "#D1FAE5",
     glow: "rgba(52,211,153,0.08)",
   },
@@ -136,8 +152,8 @@ const services: ServiceItem[] = [
         <path d="M18 20a6 6 0 00-12 0"/><circle cx="12" cy="10" r="4"/><path d="M22 20a9.965 9.965 0 00-2.895-7"/><path d="M2 20a9.965 9.965 0 012.895-7"/>
       </svg>
     ),
-    accent: "#6D28D9",      // Vibrant Purple
-    bgLight: "#F5F3FF",     // Soft Light Purple
+    accent: "#6D28D9",      
+    bgLight: "#F5F3FF",     
     borderLight: "#EDE9FE",
     glow: "rgba(139,92,246,0.08)",
   },
@@ -447,68 +463,7 @@ export default function ServicesPage() {
         .srv-card:hover .srv-card-link { gap: 10px; }
         .srv-card-link svg { width: 14px; height: 14px; }
 
-        /* ── New Tailored CTA Styles (Matching your ember-500 configuration) ── */
-        .srv-cta-section {
-          background-color: #F97316; /* bg-ember-500 match */
-          padding-top: 6rem; /* py-24 */
-          padding-bottom: 6rem;
-        }
-        .srv-cta-container {
-          margin-left: auto;
-          margin-right: auto;
-          max-width: 72rem; /* max-w-6xl */
-          padding-left: 1.5rem; /* px-6 */
-          padding-right: 1.5rem;
-        }
-        .srv-cta-flex {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 2rem; /* gap-8 */
-        }
-        .srv-cta-title-text {
-          font-size: 1.875rem; /* text-3xl */
-          font-weight: 600; /* font-semibold */
-          letter-spacing: -0.025em; /* tracking-tight */
-          color: #FFFFFF; /* text-white */
-        }
-        .srv-cta-p-text {
-          margin-top: 0.5rem; /* mt-2 */
-          color: rgba(255, 255, 255, 0.8); /* text-white/80 */
-        }
-        .srv-cta-button {
-          display: inline-flex;
-          flex-shrink: 0; /* shrink-0 */
-          align-items: center;
-          gap: 0.5rem; /* gap-2 */
-          border-radius: 0.75rem; /* rounded-xl */
-          background-color: #0F172A; /* bg-ink-950 */
-          padding: 1rem 1.75rem; /* px-7 py-4 */
-          font-size: 0.875rem; /* text-sm */
-          font-weight: 600; /* font-semibold */
-          color: #FFFFFF; /* text-white */
-          text-decoration: none;
-          transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          transition-duration: 200ms; /* duration-200 */
-        }
-        .srv-cta-button:hover {
-          background-color: #1E293B; /* hover:bg-ink-900 */
-        }
-
         /* ── Responsive ── */
-        @media (min-width: 640px) {
-          .srv-cta-flex {
-            flex-direction: row; /* sm:flex-row */
-            align-items: center; /* sm:items-center */
-          }
-        }
-        @media (min-width: 768px) {
-          .srv-cta-title-text {
-            font-size: 2.25rem; /* md:text-4xl */
-          }
-        }
         @media (max-width: 1120px) {
           .srv-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -582,33 +537,33 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {/* ── 6. CTA (Updated Style Framework Mapping) ────────────────────────── */}
-        <section className="srv-cta-section">
-          <div className="srv-cta-container">
+        {/* ── 6. CTA (Equipped with Slow and Graceful Scroll-Activated Animations) ── */}
+        <section className="bg-ember-500 py-24">
+          <div className="mx-auto max-w-6xl px-6">
             <motion.div
               variants={staggerContainer}
               initial="hidden"
               whileInView="show"
               viewport={{ once: true, margin: '-80px' }}
-              className="srv-cta-flex"
+              className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center"
             >
               <div>
                 <motion.h2
-                  variants={fadeLeft}
-                  className="srv-cta-title-text"
+                  variants={slowFadeLeft}
+                  className="text-3xl font-semibold tracking-tight text-white md:text-4xl"
                 >
-                  Not sure where to start?
+                  Like what you see?
                 </motion.h2>
-                <motion.p variants={fadeLeft} className="srv-cta-p-text">
-                  Book a free 30-minute discovery call. We'll map out exactly what your business needs — no pitch, no pressure.
+                <motion.p variants={slowFadeLeft} className="mt-2 text-white/80">
+                  Let us talk about what you are building.
                 </motion.p>
               </div>
-              <motion.div variants={fadeRight}>
-                <a
-                  href="/contact"
-                  className="srv-cta-button"
+              <motion.div variants={slowFadeRight}>
+                <Link
+                  href="#contact"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-ink-950 px-7 py-4 text-sm font-semibold text-white transition-colors duration-200 hover:bg-ink-900"
                 >
-                  Book a call
+                  Start a conversation
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                     <path
                       d="M5 12h14M13 5l7 7-7 7"
@@ -618,12 +573,11 @@ export default function ServicesPage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                </a>
+                </Link>
               </motion.div>
             </motion.div>
           </div>
         </section>
-
       </div>
     </>
   );
