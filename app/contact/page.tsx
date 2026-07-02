@@ -59,7 +59,7 @@ function InfoItem({ icon, label, value, href, delay }: {
       <div>
         <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 3, fontFamily: "var(--font-space-grotesk), sans-serif" }}>{label}</div>
         {href
-          ? <a href={href} style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.75)", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 500, textDecoration: "none", transition: "color 0.2s" }}
+          ? <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.75)", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 500, textDecoration: "none", transition: "color 0.2s" }}
               onMouseOver={e => (e.currentTarget.style.color = "#FF8466")}
               onMouseOut={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
             >{value}</a>
@@ -220,21 +220,44 @@ export default function ContactPage() {
           max-width: 320px; margin-bottom: 48px;
         }
 
-        .cp-info-stack { display: flex; flex-direction: column; gap: 24px; margin-bottom: 48px; }
+        .cp-info-stack { display: flex; flex-direction: column; gap: 24px; margin-bottom: 36px; }
+        
+        /* Social Media Section Grid styling */
+        .cp-social-label {
+          fontSize: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 12px; font-family: var(--font-space-grotesk), sans-serif;
+        }
+        .cp-social-grid {
+          display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 40px;
+        }
+        .cp-social-item {
+          display: flex; items-center: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); text-decoration: none; transition: all 0.22s ease;
+        }
+        .cp-social-item:hover {
+          background: rgba(255,107,74,0.06); border-color: rgba(255,107,74,0.25);
+        }
+        .cp-social-icon {
+          width: 28px; height: 28px; border-radius: 6px; background: rgba(255,107,74,0.12); display: flex; align-items: center; justify-content: center; color: #FF8466; flex-shrink: 0; transition: color 0.2s;
+        }
+        .cp-social-item:hover .cp-social-icon { color: #FF6B4A; }
+        .cp-social-name {
+          font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.6); font-family: var(--font-space-grotesk), sans-serif; transition: color 0.2s;
+        }
+        .cp-social-item:hover .cp-social-name { color: rgba(255,255,255,0.9); }
 
         .cp-divider {
           height: 1px; background: rgba(255,255,255,0.06); margin: 8px 0 24px;
         }
 
         /* ── Right white panel ── */
-        .cp-right {
-          background: #FFFFFF;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 80px 60px;
-          position: relative;
-        }
+       /* ── Right white panel ── */
+.cp-right {
+  background: #FFFFFF;
+  display: flex;
+  align-items: flex-start; /* Changed from center to pull it to the top */
+  justify-content: center;
+  padding: 40px 60px 80px;  /* Reduced top padding from 80px to 40px */
+  position: relative;
+}
         .cp-right-inner { width: 100%; max-width: 520px; }
 
         .cp-form-header { margin-bottom: 40px; }
@@ -318,6 +341,7 @@ export default function ContactPage() {
           .cp-tworow { grid-template-columns: 1fr; }
           .cp-left { padding: 48px 24px; }
           .cp-right { padding: 48px 24px; }
+          .cp-social-grid { grid-template-columns: 1fr; gap: 8px; }
         }
         @media (prefers-reduced-motion: reduce) {
           * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -352,16 +376,56 @@ export default function ContactPage() {
               <InfoItem delay={0.28} label="Email" value="hello@iconex.it" href="mailto:hello@iconex.it"
                 icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>}
               />
-              <InfoItem delay={0.34} label="Phone" value="+94 11 234 5678" href="tel:+94112345678"
+              <InfoItem delay={0.34} label="Phone" value="+94 81 234 5678" href="tel:+94112345678"
                 icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.05 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>}
               />
-              <InfoItem delay={0.40} label="Office" value="42 Galle Road, Colombo 03, Sri Lanka"
+              <InfoItem delay={0.40} label="Office" value="142/5, Dalada Veediya,Kandy 20000, Sri Lanka"
                 icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>}
               />
             </div>
+
+            {/* ── Social Channels Stack Grid ── */}
+            <motion.div custom={0.44} variants={fadeUp} initial="hidden" animate="show">
+              <div className="cp-social-label">Connect with us</div>
+              <div className="cp-social-grid">
+                
+                {/* LinkedIn */}
+                <a href="https://linkedin.com/company/iconex" target="_blank" rel="noopener noreferrer" className="cp-social-item">
+                  <div className="cp-social-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                  </div>
+                  <span className="cp-social-name">LinkedIn</span>
+                </a>
+
+                {/* Instagram */}
+                <a href="https://instagram.com/iconex" target="_blank" rel="noopener noreferrer" className="cp-social-item">
+                  <div className="cp-social-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                  </div>
+                  <span className="cp-social-name">Instagram</span>
+                </a>
+
+                {/* Facebook */}
+                <a href="https://facebook.com/iconex" target="_blank" rel="noopener noreferrer" className="cp-social-item">
+                  <div className="cp-social-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                  </div>
+                  <span className="cp-social-name">Facebook</span>
+                </a>
+
+                {/* TikTok */}
+                <a href="https://tiktok.com/@iconex" target="_blank" rel="noopener noreferrer" className="cp-social-item">
+                  <div className="cp-social-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+                  </div>
+                  <span className="cp-social-name">TikTok</span>
+                </a>
+
+              </div>
+            </motion.div>
           </div>
 
-          <motion.div custom={0.46} variants={fadeUp} initial="hidden" animate="show" style={{ position: "relative", zIndex: 1 }}>
+          <motion.div custom={0.52} variants={fadeUp} initial="hidden" animate="show" style={{ position: "relative", zIndex: 1 }}>
             <LiveClock />
             <div style={{ marginTop: 20, fontSize: "0.7rem", color: "rgba(255,255,255,0.2)", fontFamily: "var(--font-jetbrains-mono), monospace" }}>
               Mon – Fri · 09:00–18:00 LKT
@@ -370,9 +434,7 @@ export default function ContactPage() {
         </div>
 
         {/* ══ RIGHT — white form panel ═══════════════════════════════════════ */}
-        <div className="cp-right -mt-20">
-      
-
+        <div className="cp-right ">
           <motion.div className="cp-right-inner" custom={0.2} variants={fadeUp} initial="hidden" animate="show">
             <AnimatePresence mode="wait">
               {status === "sent" ? (

@@ -14,7 +14,9 @@ interface ServiceItem {
   label: string;
   description: string;
   icon: React.ReactNode;
-  accent: string;
+  accent: string;     // Text & dynamic feature color
+  bgLight: string;    // Light, colorful background color
+  borderLight: string;// Matching subtle border tint
   glow: string;
 }
 
@@ -30,8 +32,10 @@ const services: ServiceItem[] = [
         <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
       </svg>
     ),
-    accent: "#2563EB",
-    glow: "rgba(37,99,235,0.08)",
+    accent: "#1D4ED8",      // Rich Blue
+    bgLight: "#EFF6FF",     // Soft Light Blue
+    borderLight: "#DBEAFE",
+    glow: "rgba(37,99,235,0.12)",
   },
   {
     id: "02",
@@ -43,8 +47,10 @@ const services: ServiceItem[] = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
-    accent: "#06B6D4",
-    glow: "rgba(6,182,212,0.08)",
+    accent: "#0369A1",      // Deep Cyan/Sky
+    bgLight: "#F0F9FF",     // Soft Light Sky
+    borderLight: "#E0F2FE",
+    glow: "rgba(6,182,212,0.12)",
   },
   {
     id: "03",
@@ -57,8 +63,10 @@ const services: ServiceItem[] = [
         <polyline points="8 6 2 12 8 18" />
       </svg>
     ),
-    accent: "#818CF8",
-    glow: "rgba(129,140,248,0.08)",
+    accent: "#6366F1",      // Indigo
+    bgLight: "#EEF2F6",     // Soft Pale Indigo Tint
+    borderLight: "#E0E7FF",
+    glow: "rgba(129,140,248,0.12)",
   },
   {
     id: "04",
@@ -72,8 +80,10 @@ const services: ServiceItem[] = [
         <line x1="12" y1="22.08" x2="12" y2="12" />
       </svg>
     ),
-    accent: "#F472B6",
-    glow: "rgba(244,114,182,0.08)",
+    accent: "#BE185D",      // Vibrant Pink
+    bgLight: "#FDF2F8",     // Soft Light Pink
+    borderLight: "#FCE7F3",
+    glow: "rgba(244,114,182,0.12)",
   },
   {
     id: "05",
@@ -87,8 +97,10 @@ const services: ServiceItem[] = [
         <line x1="12" y1="16" x2="12.01" y2="16" />
       </svg>
     ),
-    accent: "#34D399",
-    glow: "rgba(52,211,153,0.08)",
+    accent: "#047857",      // Emerald Green
+    bgLight: "#ECFDF5",     // Soft Light Emerald
+    borderLight: "#D1FAE5",
+    glow: "rgba(52,211,153,0.12)",
   },
 ];
 
@@ -112,7 +124,6 @@ function ServiceCard({ service, index }: { service: ServiceItem; index: number }
   const isInView = useInView(ref, { once: true, margin: "-40px" });
   const isMobile = useIsMobile();
 
-  // Tilt — only created on desktop, idle on mobile
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useTransform(y, [-60, 60], [5, -5]);
@@ -132,7 +143,7 @@ function ServiceCard({ service, index }: { service: ServiceItem; index: number }
   return (
     <motion.div
       ref={ref}
-      style={{ perspective: isMobile ? undefined : 800 }}
+      style={{ perspective: isMobile ? undefined : 800, height: "100%" }}
       initial={{ opacity: 0, y: 32 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{
@@ -144,25 +155,32 @@ function ServiceCard({ service, index }: { service: ServiceItem; index: number }
       <motion.div
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        // Only apply 3D transforms on desktop
-        style={isMobile ? {} : { rotateX, rotateY, transformStyle: "preserve-3d" }}
+        style={{
+          rotateX: isMobile ? undefined : rotateX,
+          rotateY: isMobile ? undefined : rotateY,
+          transformStyle: isMobile ? undefined : "preserve-3d",
+          height: "100%",
+          backgroundColor: service.bgLight,
+          borderColor: service.borderLight,
+        }}
         whileHover={isMobile ? { y: -4 } : { scale: 1.02 }}
         transition={{ type: "spring", stiffness: 260, damping: 28 }}
         className="service-card"
       >
-        {/* Glow — desktop only */}
         {!isMobile && (
           <div className="card-glow" style={{ background: service.glow }} />
         )}
 
         <div className="card-top">
-          <span className="card-id">{service.id}</span>
-          <div className="card-icon" style={{ color: service.accent }}>
+          <span className="card-id" style={{ color: service.accent, opacity: 0.7 }}>
+            {service.id}
+          </span>
+          <div className="card-icon" style={{ color: service.accent, backgroundColor: `${service.accent}12` }}>
             {service.icon}
           </div>
         </div>
 
-        <h3 className="card-label">{service.label}</h3>
+        <h3 className="card-label" style={{ color: service.accent }}>{service.label}</h3>
         <p className="card-desc">{service.description}</p>
 
         <div className="card-footer">
@@ -203,7 +221,6 @@ export default function HeroSection() {
           width: 100%;
         }
 
-        /* Grid — hidden on mobile to save paint cost */
         .hero-grid {
           position: absolute;
           inset: 0;
@@ -216,14 +233,13 @@ export default function HeroSection() {
         }
         @media (max-width: 768px) { .hero-grid { display: none; } }
 
-        /* Orbs — static on mobile (no animation loop) */
         .orb {
           position: absolute;
           border-radius: 50%;
           filter: blur(100px);
           pointer-events: none;
           opacity: 0.55;
-          will-change: transform; /* promote to own GPU layer */
+          will-change: transform;
         }
         .orb-1 {
           width: 480px; height: 480px;
@@ -235,12 +251,7 @@ export default function HeroSection() {
           background: rgba(6,182,212,0.10);
           top: 60px; right: -60px;
         }
-        /* No animation on touch devices */
-        @media (hover: none) {
-          .orb { animation: none !important; }
-        }
 
-        /* Hero body */
         .hero-body {
           position: relative;
           z-index: 10;
@@ -315,21 +326,7 @@ export default function HeroSection() {
           transition: background 0.2s, transform 0.15s;
         }
         .btn-primary:hover { background: #e05333; transform: translateY(-1px); }
-        .btn-ghost {
-          background: transparent;
-          color: #475569;
-          border: 1px solid rgba(0,0,0,0.1);
-          padding: 13px 26px;
-          border-radius: 10px;
-          font-family: 'Inter', sans-serif;
-          font-size: 0.9375rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: border-color 0.2s, color 0.2s;
-        }
-        .btn-ghost:hover { border-color: rgba(0,0,0,0.2); color: #0F172A; }
 
-        /* Services */
         .services-section {
           position: relative;
           z-index: 10;
@@ -337,39 +334,39 @@ export default function HeroSection() {
         }
         .services-label {
           font-size: 0.75rem;
-          font-weight: 500;
+          font-weight: 600;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: #94A3B8;
+          color: #64748B;
           margin-bottom: 32px;
         }
+
         .services-grid {
           display: grid;
           grid-template-columns: repeat(5, 1fr);
+          grid-auto-rows: 1fr;
           gap: 16px;
         }
 
-        /* Card — NO backdrop-filter on any device */
+        /* COLORFUL LIGHT CARD SYSTEM */
         .service-card {
           position: relative;
-          background: #FAFAFA;
-          border: 1px solid rgba(15,23,42,0.08);
+          border: 1px solid transparent;
           border-radius: 16px;
           padding: 28px 24px 24px;
           cursor: default;
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          transition: border-color 0.25s, box-shadow 0.25s;
-          /* GPU composite layer — avoids layout thrash on hover */
+          height: 100%;
+          transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s, background-color 0.25s;
           will-change: transform;
         }
         .service-card:hover {
-          border-color: rgba(15,23,42,0.13);
-          box-shadow: 0 8px 24px -8px rgba(0,0,0,0.07);
+          box-shadow: 0 12px 30px -10px rgba(15, 23, 42, 0.06);
+          filter: brightness(0.99); /* Gentle hover indicator feedback */
         }
 
-        /* Glow blob — desktop only via JS */
         .card-glow {
           position: absolute;
           inset: -40px;
@@ -389,30 +386,34 @@ export default function HeroSection() {
         }
         .card-id {
           font-family: 'Space Grotesk', sans-serif;
-          font-size: 0.7rem;
-          font-weight: 600;
-          letter-spacing: 0.1em;
-          color: #CBD5E1;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.05em;
         }
-        .card-icon { width: 28px; height: 28px; flex-shrink: 0; }
+        .card-icon { 
+          width: 32px; 
+          height: 32px; 
+          flex-shrink: 0; 
+          padding: 6px;
+          border-radius: 8px;
+        }
         .card-icon svg { width: 100%; height: 100%; }
 
         .card-label {
           font-family: 'Space Grotesk', sans-serif;
-          font-size: 0.9375rem;
-          font-weight: 600;
-          color: #0F172A;
-          line-height: 1.3;
-          margin-bottom: 10px;
+          font-size: 1rem;
+          font-weight: 700;
+          line-height: 1.35;
+          margin-bottom: 12px;
         }
         .card-desc {
           font-size: 0.8125rem;
           line-height: 1.65;
-          color: #64748B;
+          color: #334155; /* Higher structural gray value for extreme light canvas accessibility */
           flex: 1;
         }
         .card-footer {
-          margin-top: 20px;
+          margin-top: 24px;
           display: flex;
           flex-direction: column;
           gap: 14px;
@@ -422,14 +423,13 @@ export default function HeroSection() {
           align-items: center;
           gap: 6px;
           font-size: 0.8125rem;
-          font-weight: 500;
+          font-weight: 600;
           transition: gap 0.2s;
         }
         .service-card:hover .card-cta { gap: 10px; }
         .card-cta svg { width: 14px; height: 14px; }
-        .card-line { height: 1px; width: 100%; opacity: 0.2; }
+        .card-line { height: 1.5px; width: 100%; opacity: 0.25; }
 
-        /* Responsive */
         @media (max-width: 1100px) {
           .services-grid { grid-template-columns: repeat(3, 1fr); }
         }
@@ -451,7 +451,6 @@ export default function HeroSection() {
       <div className="hero-container">
         <div className="hero-grid" />
 
-        {/* Orbs: animated on desktop, static on mobile */}
         {isMobile ? (
           <>
             <div className="orb orb-1" />
@@ -516,7 +515,6 @@ export default function HeroSection() {
                 <path d="M3 8h10M9 4l4 4-4 4" />
               </svg>
             </button>
-            <button className="btn-ghost">Watch showreel</button>
           </motion.div>
         </div>
 

@@ -101,8 +101,8 @@ export default function AboutPage() {
   return (
     <div className="overflow-x-hidden">
 
-      {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
-      <section className="relative flex min-h-screen items-start bg-ink-950 pb-20 pt-32">
+     {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
+      <section className="relative flex h-[60vh] min-h-[420px] items-start bg-ink-950 pb-12 pt-14 md:h-[70vh] md:min-h-[550px] md:pb-16 md:pt-16">
         <Image
           src="/Images/abstract img.jpg"
           alt=""
@@ -121,14 +121,14 @@ export default function AboutPage() {
         >
           <motion.p
             variants={fadeUp}
-            className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-ember-400"
+            className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-ember-400 md:mb-3"
           >
             Our story
           </motion.p>
 
           <motion.h1
             variants={fadeUp}
-            className="max-w-3xl text-5xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl"
+            className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl"
           >
             We started with a{' '}
             <em className="not-italic text-ember-400">frustration.</em>
@@ -136,7 +136,7 @@ export default function AboutPage() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-6 max-w-xl text-lg leading-relaxed text-slate-300"
+            className="mt-3 max-w-xl text-base leading-relaxed text-slate-300 md:mt-5 md:text-lg"
           >
             Too many companies were being handed polished decks and slow software.
             We left our agency jobs to build the kind of studio we always wished existed.
@@ -144,7 +144,7 @@ export default function AboutPage() {
 
           <motion.div
             variants={fadeUp}
-            className="mt-10 flex items-center gap-3 text-slate-500"
+            className="mt-6 flex items-center gap-3 text-slate-500 md:mt-8"
           >
             <div className="h-px w-10 bg-slate-600" />
             <span className="font-mono text-[11px] uppercase tracking-widest">
@@ -153,7 +153,7 @@ export default function AboutPage() {
           </motion.div>
         </motion.div>
       </section>
-      
+     
       {/* ── 2. ORIGIN ────────────────────────────────────────────────────────── */}
       <section className="bg-white py-28">
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-2 lg:gap-24">
@@ -179,7 +179,7 @@ export default function AboutPage() {
               that studios promised everything and built very little.&rdquo;
             </motion.blockquote>
             <motion.p variants={fadeLeft} className="mb-5 leading-relaxed text-slate-500">
-              Iconex IT started as two engineers, a laptop apiece, and a shared
+              Iconex IT started as four engineers, a laptop apiece, and a shared
               conviction that software consultancies had a trust problem. Clients
               received glossy presentations, then months of silence, then a product
               that did not match either.
@@ -220,7 +220,7 @@ export default function AboutPage() {
                 N
               </span>
               <div>
-                <p className="text-sm font-semibold text-slate-900">Colombo-based</p>
+                <p className="text-sm font-semibold text-slate-900">Kandy-based</p>
                 <p className="font-mono text-[11px] text-slate-400">Serving clients globally</p>
               </div>
             </motion.div>
