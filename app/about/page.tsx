@@ -327,6 +327,7 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+      
       {/* ── 5. STATS ─────────────────────────────────────────────────────────── */}
       <section className="border-y border-slate-100 bg-slate-50 py-20">
         <div className="mx-auto max-w-6xl px-6">

@@ -85,16 +85,10 @@ export default function Navbar() {
 
         {/* Right cluster: status + CTA */}
         <div className="hidden md:flex items-center gap-5">
-          <div className="hidden lg:flex items-center gap-2 rounded-full border border-slate-200 bg-white/40 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-slate-600 backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-            </span>
-            Systems operational
-          </div>
+         
 
           <Link
-            href="#contact"
+            href="/contact"
             className="group inline-flex items-center gap-1.5 rounded-lg bg-ember-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-ember-600"
           >
             Start a project
@@ -179,12 +173,9 @@ export default function Navbar() {
         </div>
 
         <div className="mt-auto flex flex-col gap-4 px-6 pb-10">
-          <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-slate-500">
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            Systems operational
-          </div>
+         
           <Link
-            href="#contact"
+            href="/contact"
             onClick={() => setMenuOpen(false)}
             className="flex items-center justify-center gap-1.5 rounded-lg bg-ember-500 px-4 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-ember-600"
           >
