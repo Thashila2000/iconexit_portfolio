@@ -102,7 +102,7 @@ export default function AboutPage() {
     <div className="overflow-x-hidden">
 
       {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
-      <section className="relative flex min-h-screen items-end bg-ink-950 pb-20 pt-40">
+      <section className="relative flex min-h-screen items-start bg-ink-950 pb-20 pt-32">
         <Image
           src="/Images/abstract img.jpg"
           alt=""
@@ -121,7 +121,7 @@ export default function AboutPage() {
         >
           <motion.p
             variants={fadeUp}
-            className="mb-6 font-mono text-xs uppercase tracking-[0.2em] text-ember-400"
+            className="mb-4 font-mono text-xs uppercase tracking-[0.2em] text-ember-400"
           >
             Our story
           </motion.p>
@@ -136,7 +136,7 @@ export default function AboutPage() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-8 max-w-xl text-lg leading-relaxed text-slate-300"
+            className="mt-6 max-w-xl text-lg leading-relaxed text-slate-300"
           >
             Too many companies were being handed polished decks and slow software.
             We left our agency jobs to build the kind of studio we always wished existed.
@@ -144,7 +144,7 @@ export default function AboutPage() {
 
           <motion.div
             variants={fadeUp}
-            className="mt-16 flex items-center gap-3 text-slate-500"
+            className="mt-10 flex items-center gap-3 text-slate-500"
           >
             <div className="h-px w-10 bg-slate-600" />
             <span className="font-mono text-[11px] uppercase tracking-widest">
@@ -153,7 +153,7 @@ export default function AboutPage() {
           </motion.div>
         </motion.div>
       </section>
-
+      
       {/* ── 2. ORIGIN ────────────────────────────────────────────────────────── */}
       <section className="bg-white py-28">
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-2 lg:gap-24">
