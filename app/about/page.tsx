@@ -104,7 +104,7 @@ export default function AboutPage() {
       {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
       <section className="relative flex min-h-screen items-end bg-ink-950 pb-20 pt-40">
         <Image
-          src="/images/abstract img.jpg"
+          src="/Images/abstract img.jpg"
           alt=""
           fill
           priority
@@ -201,7 +201,7 @@ export default function AboutPage() {
           >
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl">
               <Image
-                src="/images/abstract image 3.jpg"
+                src="/Images/abstract image 3.jpg"
                 alt="Abstract composition representing our approach"
                 fill
                 className="object-cover"
@@ -231,7 +231,7 @@ export default function AboutPage() {
       {/* ── 3. MISSION ───────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-ink-950 py-36">
         <Image
-          src="/images/abstract image 4.jpg"
+          src="/Images/abstract image 4.jpg"
           alt=""
           fill
           className="object-cover opacity-10 mix-blend-screen"
