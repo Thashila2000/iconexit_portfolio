@@ -104,7 +104,7 @@ export default function AboutPage() {
       {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
       <section className="relative flex min-h-screen items-end bg-ink-950 pb-20 pt-40">
         <Image
-          src="/images/abstract-1.jpg"
+          src="/images/abstract img.jpg"
           alt=""
           fill
           priority
@@ -179,7 +179,7 @@ export default function AboutPage() {
               that studios promised everything and built very little.&rdquo;
             </motion.blockquote>
             <motion.p variants={fadeLeft} className="mb-5 leading-relaxed text-slate-500">
-              Nexbyte started as two engineers, a laptop apiece, and a shared
+              Iconex IT started as two engineers, a laptop apiece, and a shared
               conviction that software consultancies had a trust problem. Clients
               received glossy presentations, then months of silence, then a product
               that did not match either.
@@ -201,7 +201,7 @@ export default function AboutPage() {
           >
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl">
               <Image
-                src="/images/abstract-2.jpg"
+                src="/images/abstract image 3.jpg"
                 alt="Abstract composition representing our approach"
                 fill
                 className="object-cover"
@@ -231,7 +231,7 @@ export default function AboutPage() {
       {/* ── 3. MISSION ───────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-ink-950 py-36">
         <Image
-          src="/images/abstract-1.jpg"
+          src="/images/abstract image 4.jpg"
           alt=""
           fill
           className="object-cover opacity-10 mix-blend-screen"
@@ -261,6 +261,7 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
+      
       {/* ── 4. VALUES ────────────────────────────────────────────────────────── */}
       <section className="bg-white py-28">
         <div className="mx-auto max-w-6xl px-6">
@@ -296,6 +297,23 @@ export default function AboutPage() {
                 className="group grid grid-cols-1 gap-6 py-10 transition-colors duration-300 hover:bg-slate-50 sm:-mx-6 sm:grid-cols-[6rem_1fr] sm:gap-10 sm:rounded-2xl sm:px-6"
               >
                 <motion.span
+                  initial="inactive"
+                  whileInView="active"
+                  viewport={{ 
+                    once: false, 
+                    amount: "some",
+                    margin: "-25% 0px -25% 0px" 
+                  }}
+                  variants={{
+                    inactive: { 
+                      color: '#E2E8F0', 
+                      transition: { duration: 0.3 } 
+                    },
+                    active: { 
+                      color: '#FB923C', 
+                      transition: { duration: 0.3, ease: "easeOut" } 
+                    }
+                  }}
                   className="font-mono text-4xl font-medium text-slate-200 transition-colors duration-300 group-hover:text-ember-400"
                 >
                   {v.num}
@@ -309,7 +327,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
       {/* ── 5. STATS ─────────────────────────────────────────────────────────── */}
       <section className="border-y border-slate-100 bg-slate-50 py-20">
         <div className="mx-auto max-w-6xl px-6">
