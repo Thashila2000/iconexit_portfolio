@@ -1,6 +1,6 @@
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import Navbar from '@/app/components/navbar';
-import LoadingProvider from '@/app/components/LoadingProvider';
+import { LoadingProvider } from '@/app/components/LoadingContext';
 import './globals.css';
 
 const display = Space_Grotesk({
@@ -21,7 +21,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-white font-display text-slate-900 min-h-screen relative">
         <LoadingProvider>
           <Navbar />
-          <main className="pt-28">{children}</main>
+          {/* Changed pt-28 to pt-0 so child pages can layout completely full-screen */}
+          <main className="pt-0">{children}</main>
         </LoadingProvider>
       </body>
     </html>

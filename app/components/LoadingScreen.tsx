@@ -94,14 +94,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
         overflow: "hidden",
       }}
     >
-      {/* Grid */}
-      <div style={{
-        position: "absolute", inset: 0,
-        backgroundImage:
-          "linear-gradient(rgba(255,107,74,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,107,74,0.04) 1px, transparent 1px)",
-        backgroundSize: "64px 64px",
-        pointerEvents: "none",
-      }} />
+     
 
       {/* Glow orb */}
       <div style={{

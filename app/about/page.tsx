@@ -102,67 +102,60 @@ export default function AboutPage() {
     <div className="overflow-x-hidden">
 
      {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
-{/* Reduced from h-[60vh] min-h-[420px] down to h-[45vh] min-h-[320px] on mobile screens */}
-<section className="relative flex h-[45vh] min-h-[320px] items-start bg-ink-950 pb-8 pt-10 md:h-[70vh] md:min-h-[550px] md:pb-16 md:pt-16 overflow-hidden">
-  
-  {/* Background Image Wrapper */}
-  <div className="absolute inset-0 h-full w-full z-0">
-    <Image
-      src="/Images/abstract img.jpg"
-      alt=""
-      fill
-      priority
-      className="object-cover opacity-25 mix-blend-luminosity"
-      sizes="100vw"
-    />
-  </div>
-  
-  {/* Ambient Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-b from-ink-950/20 via-ink-950/60 to-ink-950 z-0" />
+      <section className="relative flex min-h-[500px] items-start bg-ink-950 pb-16 pt-32 md:min-h-[620px] md:pb-24 md:pt-40">
+        <Image
+          src="/Images/abstract img.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover opacity-30 mix-blend-luminosity"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink-950/20 via-ink-950/50 to-ink-950" />
 
-  <motion.div
-    className="relative z-10 mx-auto w-full max-w-6xl px-6"
-    variants={staggerContainer}
-    initial="hidden"
-    animate="show"
-  >
-    <motion.p
-      variants={fadeUp}
-      className="mb-1 font-mono text-[10px] uppercase tracking-[0.2em] text-ember-400 md:mb-3 md:text-xs"
-    >
-      Our story
-    </motion.p>
+        <motion.div
+          className="relative mx-auto w-full max-w-6xl px-6"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
+        >
+          <motion.p
+            variants={fadeUp}
+            className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-ember-400 md:mb-3"
+          >
+            Our story
+          </motion.p>
 
-    <motion.h1
-      variants={fadeUp}
-      className="max-w-3xl text-3xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl"
-    >
-      We started with a{' '}
-      <em className="not-italic text-ember-400">frustration.</em>
-    </motion.h1>
+          <motion.h1
+            variants={fadeUp}
+            className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl"
+          >
+            We started with a{' '}
+            <em className="not-italic text-ember-400">frustration.</em>
+          </motion.h1>
 
-    <motion.p
-      variants={fadeUp}
-      className="mt-2 max-w-xl text-sm leading-relaxed text-slate-300 md:mt-5 md:text-lg"
-    >
-      Too many companies were being handed polished decks and slow software.
-      We left our agency jobs to build the kind of studio we always wished existed.
-    </motion.p>
+          <motion.p
+            variants={fadeUp}
+            className="mt-3 max-w-xl text-base leading-relaxed text-slate-300 md:mt-5 md:text-lg"
+          >
+            Too many companies were being handed polished decks and slow software.
+            We left our agency jobs to build the kind of studio we always wished existed.
+          </motion.p>
 
-    <motion.div
-      variants={fadeUp}
-      className="mt-25 flex items-center gap-3 text-slate-500 md:mt-8"
-    >
-      <div className="h-px w-8 bg-slate-600 md:w-10" />
-      <span className="font-mono text-[10px] uppercase tracking-widest md:text-[11px]">
-        Scroll to explore
-      </span>
-    </motion.div>
-  </motion.div>
-</section>
+          <motion.div
+            variants={fadeUp}
+            className="mt-6 flex items-center gap-3 text-slate-500 md:mt-8"
+          >
+            <div className="h-px w-10 bg-slate-600" />
+            <span className="font-mono text-[11px] uppercase tracking-widest">
+              Scroll to explore
+            </span>
+          </motion.div>
+        </motion.div>
+      </section>
      
       {/* ── 2. ORIGIN ────────────────────────────────────────────────────────── */}
-      <section className="bg-white py-15">
+      <section className="bg-white py-28">
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-2 lg:gap-24">
 
           {/* text */}
@@ -174,7 +167,7 @@ export default function AboutPage() {
           >
             <motion.p
               variants={fadeLeft}
-              className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400"
+              className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-600"
             >
               Founded 2019
             </motion.p>
@@ -182,19 +175,19 @@ export default function AboutPage() {
               variants={fadeLeft}
               className="mb-10 border-l-2 border-ember-500 pl-6 text-2xl font-semibold leading-snug tracking-tight text-slate-900 md:text-3xl"
             >
-              &ldquo;The problem was not that clients wanted too much &mdash; it was
+              &ldquo;The problem was not that clients wanted too much, it was
               that studios promised everything and built very little.&rdquo;
             </motion.blockquote>
-            <motion.p variants={fadeLeft} className="mb-5 leading-relaxed text-slate-500">
+            <motion.p variants={fadeLeft} className="mb-5 leading-relaxed text-slate-700">
               Iconex IT started as four engineers, a laptop apiece, and a shared
               conviction that software consultancies had a trust problem. Clients
               received glossy presentations, then months of silence, then a product
               that did not match either.
             </motion.p>
-            <motion.p variants={fadeLeft} className="leading-relaxed text-slate-500">
+            <motion.p variants={fadeLeft} className="leading-relaxed text-slate-700">
               We built something different: small, senior teams who stay close to the
               problem, communicate in plain language, and measure success by the
-              outcomes our clients can see &mdash; not the hours we can bill.
+              outcomes our clients can see not the hours we can bill.
             </motion.p>
           </motion.div>
 
@@ -227,7 +220,7 @@ export default function AboutPage() {
                 N
               </span>
               <div>
-                <p className="text-sm font-semibold text-slate-900">Kandy-based</p>
+                <p className="text-sm font-semibold text-slate-900">Kandy based</p>
                 <p className="font-mono text-[11px] text-slate-400">Serving clients globally</p>
               </div>
             </motion.div>
@@ -263,12 +256,11 @@ export default function AboutPage() {
           >
             Build software that makes the companies we believe in{' '}
             <span className="text-ember-400">genuinely better </span> at what they
-            do &mdash; and stay honest about when they do not need us.
+            do and stay honest about when they do not need us.
           </motion.p>
         </motion.div>
       </section>
 
-      
       {/* ── 4. VALUES ────────────────────────────────────────────────────────── */}
       <section className="bg-white py-28">
         <div className="mx-auto max-w-6xl px-6">
@@ -353,7 +345,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 6. CTA ───────────────────────────────────────────────────────────── */}
-      <section className="bg-ember-500 py-24">
+      <section className="bg-ember-500 py-15">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             variants={staggerContainer}

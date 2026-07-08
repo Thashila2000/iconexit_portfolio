@@ -68,18 +68,18 @@ function Field({ label, name, type = "text", required = false, textarea = false 
   const inputStyle: React.CSSProperties = {
     width: "100%", background: "transparent", border: "none", outline: "none",
     color: "#0B0F19", fontSize: "0.9375rem",
-    fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 500,
+    fontFamily: "var(--font-inter), sans-serif", fontWeight: 500,
     paddingTop: 20, paddingBottom: 8, resize: "none",
   };
   return (
     <div style={{ position: "relative", marginBottom: 28 }}>
-      <label htmlFor={name} style={{ position: "absolute", top: active ? 2 : 14, left: 0, fontSize: active ? "0.6rem" : "0.875rem", fontWeight: active ? 700 : 500, letterSpacing: active ? "0.12em" : "0", textTransform: active ? "uppercase" : "none", color: focused ? "#FF6B4A" : "#94A3B8", transition: "all 0.22s ease", pointerEvents: "none", fontFamily: "var(--font-space-grotesk), sans-serif" }}>{label}</label>
+      <label htmlFor={name} style={{ position: "absolute", top: active ? 2 : 14, left: 0, fontSize: active ? "0.65rem" : "0.875rem", fontWeight: active ? 600 : 400, letterSpacing: active ? "0.05em" : "0", textTransform: active ? "uppercase" : "none", color: focused ? "#FF6B4A" : "#64748B", transition: "all 0.22s ease", pointerEvents: "none", fontFamily: "var(--font-inter), sans-serif" }}>{label}</label>
       {textarea
         ? <textarea id={name} name={name} required={required} rows={4} value={value} style={inputStyle} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onChange={e => setValue(e.target.value)} />
         : <input id={name} name={name} type={type} required={required} value={value} style={inputStyle} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onChange={e => setValue(e.target.value)} />
       }
       <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: focused ? "#FF6B4A" : "#E2E8F0", transition: "background 0.22s" }} />
-      {focused && <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: "#FF6B4A", boxShadow: "0 0 8px rgba(255,107,74,0.5)" }} />}
+      {focused && <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: "#FF6B4A", boxShadow: "0 0 8px rgba(255,107,74,0.3)" }} />}
     </div>
   );
 }
@@ -91,14 +91,14 @@ function ServiceChips() {
   const toggle = (s: string) => setSelected(p => p.includes(s) ? p.filter(x => x !== s) : [...p, s]);
   return (
     <div style={{ marginBottom: 28 }}>
-      <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#94A3B8", marginBottom: 10, fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+      <div style={{ fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", color: "#64748B", marginBottom: 12, fontFamily: "var(--font-inter), sans-serif" }}>
         I&apos;m interested in
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         {SERVICES.map(s => {
           const on = selected.includes(s);
           return (
-            <button key={s} type="button" onClick={() => toggle(s)} style={{ padding: "6px 14px", borderRadius: 999, cursor: "pointer", border: on ? "1.5px solid #FF6B4A" : "1.5px solid #E2E8F0", background: on ? "rgba(255,107,74,0.07)" : "transparent", color: on ? "#E8512F" : "#64748B", fontSize: "0.8rem", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 600, transition: "all 0.2s" }}>{s}</button>
+            <button key={s} type="button" onClick={() => toggle(s)} style={{ padding: "7px 15px", borderRadius: 999, cursor: "pointer", border: on ? "1.5px solid #FF6B4A" : "1.5px solid #E2E8F0", background: on ? "rgba(255,107,74,0.07)" : "transparent", color: on ? "#E8512F" : "#475569", fontSize: "0.8rem", fontFamily: "var(--font-inter), sans-serif", fontWeight: 500, transition: "all 0.2s" }}>{s}</button>
           );
         })}
       </div>
@@ -119,9 +119,14 @@ export default function ContactPage() {
   return (
     <>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+          --font-inter: 'Inter', sans-serif;
+        }
+
         *, *::before, *::after { box-sizing: border-box; }
 
-        /* Prevent the ElectricBorder canvas from causing horizontal scroll */
         html, body { overflow-x: hidden; }
 
         .cp-wrap {
@@ -131,7 +136,7 @@ export default function ContactPage() {
           font-family: var(--font-space-grotesk), sans-serif;
         }
 
-        /* ── Left dark panel ── */
+        /* ── Left dark panel (Desktop) ── */
         .cp-left {
           background: #0B0F19;
           position: relative;
@@ -139,17 +144,10 @@ export default function ContactPage() {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding: 64px 52px;
+          padding: 150px 52px 64px !important; 
           min-height: 100vh;
         }
-        .cp-left-grid {
-          position: absolute; inset: 0; pointer-events: none;
-          background-image:
-            linear-gradient(rgba(255,107,74,0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,107,74,0.06) 1px, transparent 1px);
-          background-size: 48px 48px;
-          mask-image: radial-gradient(ellipse 100% 100% at 0% 0%, black 30%, transparent 80%);
-        }
+        
         .cp-left-glow {
           position: absolute; top: -80px; left: -80px;
           width: 360px; height: 360px; border-radius: 50%;
@@ -190,67 +188,62 @@ export default function ContactPage() {
         .cp-social-item:hover .cp-social-name { color: rgba(255,255,255,0.9); }
         .cp-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 8px 0 24px; }
 
-        /* ── Right white panel ── */
+        /* ── Right white panel (Desktop) ── */
         .cp-right {
           background: #FFFFFF;
           display: flex;
           align-items: flex-start;
           justify-content: center;
-          /* clip-path prevents the ElectricBorder canvas from triggering
-             horizontal scroll while still letting the glow visually spill
-             into the white area */
-          padding: 60px 60px 80px;
+          padding: 150px 60px 80px !important; 
           position: relative;
           overflow: clip;
+          font-family: var(--font-inter), sans-serif;
         }
         .cp-right-inner { width: 100%; max-width: 520px; }
 
-        /* The electric border wrapper needs visible overflow on desktop so the
-           canvas glow shows — we restore it only above mobile breakpoint */
         .cp-border-shell { overflow: visible; }
 
         .cp-formwrap {
           padding: 48px 44px;
           background: #fff;
           border-radius: 20px;
-          /* No static border — ElectricBorder handles the visual edge */
-           border: 3px solid #f59e0b; 
+          border: none !important;
+          box-shadow: none !important;
         }
 
         .cp-form-header { margin-bottom: 40px; }
-        .cp-form-tag { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #FF6B4A; background: rgba(255,107,74,0.08); border: 1px solid rgba(255,107,74,0.2); padding: 4px 10px; border-radius: 999px; margin-bottom: 16px; }
-        .cp-form-title { font-size: clamp(1.6rem, 2.5vw, 2.25rem); font-weight: 700; letter-spacing: -0.03em; color: #0B0F19; line-height: 1.1; margin-bottom: 10px; }
-        .cp-form-sub { font-size: 0.9rem; color: #64748B; line-height: 1.6; }
+        .cp-form-tag { display: inline-block; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #FF6B4A; background: rgba(255,107,74,0.08); border: 1px solid rgba(255,107,74,0.2); padding: 4px 10px; border-radius: 999px; margin-bottom: 16px; font-family: var(--font-inter), sans-serif; }
+        .cp-form-title { font-size: clamp(1.6rem, 2.5vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; color: #0B0F19; line-height: 1.15; margin-bottom: 10px; font-family: var(--font-inter), sans-serif; }
+        .cp-form-sub { font-size: 0.9375rem; color: #64748B; line-height: 1.6; font-family: var(--font-inter), sans-serif; }
         .cp-tworow { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
 
-        .cp-submit { width: 100%; padding: 15px 28px; background: #0B0F19; color: #fff; border: none; border-radius: 10px; font-family: var(--font-space-grotesk), sans-serif; font-size: 0.9375rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.2s, transform 0.15s; margin-top: 8px; position: relative; overflow: hidden; }
+        .cp-submit { width: 100%; padding: 15px 28px; background: #0B0F19; color: #fff; border: none; border-radius: 10px; font-family: var(--font-inter), sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.2s, transform 0.15s; margin-top: 8px; position: relative; overflow: hidden; }
         .cp-submit::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 40%, rgba(255,107,74,0.15)); transition: opacity 0.3s; }
         .cp-submit:hover:not(:disabled) { background: #FF6B4A; transform: translateY(-1px); }
         .cp-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-        .cp-privacy { margin-top: 14px; font-size: 0.7rem; color: #CBD5E1; text-align: center; }
+        .cp-privacy { margin-top: 14px; font-size: 0.75rem; color: #94A3B8; text-align: center; font-family: var(--font-inter), sans-serif; }
 
-        .cp-success { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 40px 0; text-align: center; }
+        .cp-success { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 40px 0; text-align: center; font-family: var(--font-inter), sans-serif; }
         .cp-success-ring { width: 64px; height: 64px; border-radius: 50%; background: rgba(34,197,94,0.08); border: 1.5px solid #22C55E; display: flex; align-items: center; justify-content: center; color: #22C55E; }
-        .cp-success-title { font-size: 1.375rem; font-weight: 700; color: #0B0F19; letter-spacing: -0.02em; }
-        .cp-success-body { font-size: 0.875rem; color: #64748B; line-height: 1.65; max-width: 300px; }
-        .cp-reset { margin-top: 8px; background: transparent; border: 1.5px solid #E2E8F0; color: #64748B; padding: 10px 22px; border-radius: 8px; font-family: var(--font-space-grotesk), sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .cp-success-title { font-size: 1.375rem; font-weight: 700; color: #0B0F19; letter-spacing: -0.01em; }
+        .cp-success-body { font-size: 0.9375rem; color: #64748B; line-height: 1.6; max-width: 320px; }
+        .cp-reset { margin-top: 8px; background: transparent; border: 1.5px solid #E2E8F0; color: #64748B; padding: 10px 22px; border-radius: 8px; font-family: var(--font-inter), sans-serif; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
         .cp-reset:hover { border-color: #0B0F19; color: #0B0F19; }
 
         @keyframes spin { to { transform: rotate(360deg); } }
         .spin { animation: spin 0.8s linear infinite; }
 
-        /* ── Tablet (≤ 960px): stack vertically ── */
+        /* ── Tablet (≤ 960px): Stacked view spacing ── */
         @media (max-width: 960px) {
           .cp-wrap {
             grid-template-columns: 1fr;
           }
           .cp-left {
             min-height: auto;
-            padding: 56px 32px 48px;
+            padding: 150px 32px 48px !important; 
           }
           .cp-right {
-            padding: 52px 32px 72px;
-            /* Clip is fine here — glow is mostly decorative on mobile */
+            padding: 130px 32px 72px !important; 
             overflow: hidden;
           }
           .cp-big-text {
@@ -261,7 +254,7 @@ export default function ContactPage() {
         /* ── Mobile (≤ 600px) ── */
         @media (max-width: 600px) {
           .cp-left {
-            padding: 40px 20px 40px;
+            padding: 120px 20px 40px !important; 
           }
           .cp-big-text {
             font-size: clamp(2.4rem, 10vw, 3.2rem);
@@ -272,7 +265,7 @@ export default function ContactPage() {
             margin-bottom: 32px;
           }
           .cp-right {
-            padding: 36px 16px 56px;
+            padding: 90px 16px 56px !important; 
           }
           .cp-right-inner {
             max-width: 100%;
@@ -290,24 +283,22 @@ export default function ContactPage() {
           .cp-form-title {
             font-size: 1.4rem;
           }
-          /* Make info items a bit tighter on small screens */
           .cp-info-stack {
             gap: 18px;
             margin-bottom: 28px;
           }
-          /* Reduce badge margin */
           .cp-badge {
             margin-bottom: 20px;
           }
         }
 
-        /* ── Very small (≤ 380px) ── */
+        /* ── Very small screens (≤ 380px) ── */
         @media (max-width: 380px) {
           .cp-social-grid {
             grid-template-columns: 1fr;
           }
           .cp-left {
-            padding: 36px 16px 36px;
+            padding: 80px 16px 36px !important; 
           }
           .cp-formwrap {
             padding: 24px 16px;
@@ -323,7 +314,6 @@ export default function ContactPage() {
 
         {/* ══ LEFT ══════════════════════════════════════════════════════════ */}
         <div className="cp-left">
-          <div className="cp-left-grid" />
           <div className="cp-left-glow" />
           <div className="cp-left-glow2" />
 
@@ -338,7 +328,7 @@ export default function ContactPage() {
             </motion.h1>
 
             <motion.p className="cp-tagline" custom={0.2} variants={fadeUp} initial="hidden" animate="show">
-              Drop us a message and we&apos;ll respond within one business day &mdash; with a concrete plan, not a pitch.
+              Drop us a message and we&apos;ll respond within one business day with a concrete plan, not a pitch.
             </motion.p>
 
             <div className="cp-divider" />
@@ -348,7 +338,7 @@ export default function ContactPage() {
                 icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>}
               />
               <InfoItem delay={0.34} label="Phone" value="+94 81 234 5678" href="tel:+94812345678"
-                icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.05 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>}
+                icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79(19.79) 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79(19.79) 0 01.05 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>}
               />
               <InfoItem delay={0.40} label="Office" value="142/5, Dalada Veediya, Kandy 20000, Sri Lanka"
                 icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>}
