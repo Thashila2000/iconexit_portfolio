@@ -101,7 +101,7 @@ export default function Navbar() {
         }
         .nav-bubble {
           position: absolute; inset: 0; border-radius: 999px;
-          background: #FF6B4A;
+          background: #F15C31;
           opacity: 0; transform: scale(0.8);
           transition: opacity 0.25s, transform 0.25s;
           z-index: 0;
@@ -132,8 +132,8 @@ export default function Navbar() {
           color: #0B0F19; text-decoration: none;
           transition: color 0.2s, transform 0.3s, opacity 0.3s;
         }
-        .mobile-nav-link.active { color: #FF6B4A; }
-        .mobile-nav-link:hover  { color: #FF6B4A; }
+        .mobile-nav-link.active { color: #F15C31; }
+        .mobile-nav-link:hover  { color: #F15C31; }
 
         /* stagger in */
         .mobile-overlay.open  .mobile-nav-link { transform: translateY(0); opacity: 1; }
@@ -233,11 +233,11 @@ export default function Navbar() {
                 whiteSpace: 'nowrap',
               }}
               onMouseOver={e => {
-                (e.currentTarget as HTMLElement).style.background = '#E8512F';
+                (e.currentTarget as HTMLElement).style.background = '#F15C31';
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
               }}
               onMouseOut={e => {
-                (e.currentTarget as HTMLElement).style.background = '#FF6B4A';
+                (e.currentTarget as HTMLElement).style.background = '#F15C31';
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
               }}
             >
@@ -294,9 +294,7 @@ export default function Navbar() {
 
         {/* Logo in overlay */}
         <div style={{ padding: '24px 28px 8px' }}>
-          <span style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#94A3B8' }}>
-            Navigation
-          </span>
+         
         </div>
 
         {/* Links */}

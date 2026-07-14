@@ -23,7 +23,7 @@ interface ElectricBorderProps {
 
 const ElectricBorder: React.FC<ElectricBorderProps> = ({
   children,
-  color = '#FF6B4A',
+  color = '#F15C31',
   speed = 1,
   chaos = 0.12,
   borderRadius = 20,

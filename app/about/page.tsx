@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, Variants } from 'framer-motion';
 
-// ── Animation variants ────────────────────────────────────────────────────────
-
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   show:   { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
@@ -27,16 +25,11 @@ const staggerContainer: Variants = {
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
 };
 
-// ── Animated counter ──────────────────────────────────────────────────────────
-
 function AnimatedStat({ value, label }: { value: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
-
-  // split value into numeric part and trailing suffix like '+' or '%'
   const numeric = parseFloat(value.replace(/[^0-9.]/g, ''));
   const suffix  = value.replace(/[0-9.]/g, '');
-
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
@@ -45,7 +38,7 @@ function AnimatedStat({ value, label }: { value: string; label: string }) {
     const start = performance.now();
     const tick = (now: number) => {
       const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
       setDisplay(Math.round(eased * numeric));
       if (progress < 1) requestAnimationFrame(tick);
     };
@@ -53,11 +46,7 @@ function AnimatedStat({ value, label }: { value: string; label: string }) {
   }, [inView, numeric]);
 
   return (
-    <motion.div
-      ref={ref}
-      variants={fadeUp}
-      className="flex flex-col items-center gap-2"
-    >
+    <motion.div ref={ref} variants={fadeUp} className="flex flex-col items-center gap-2">
       <span className="text-5xl font-bold tracking-tight text-slate-900 md:text-6xl tabular-nums">
         {inView ? `${display}${suffix}` : `0${suffix}`}
       </span>
@@ -67,8 +56,6 @@ function AnimatedStat({ value, label }: { value: string; label: string }) {
     </motion.div>
   );
 }
-
-// ── Data ──────────────────────────────────────────────────────────────────────
 
 const VALUES = [
   {
@@ -95,19 +82,15 @@ const STATS = [
   { value: '97%', label: 'Client retention'  },
 ];
 
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 export default function AboutPage() {
   return (
     <div className="overflow-x-hidden">
 
-     {/* ── 1. HERO ──────────────────────────────────────────────────────────── */}
+      {/* ── 1. HERO ── */}
       <section className="relative flex min-h-[500px] items-start bg-ink-950 pb-16 pt-32 md:min-h-[620px] md:pb-24 md:pt-40">
         <Image
           src="/Images/abstract img.jpg"
-          alt=""
-          fill
-          priority
+          alt="" fill priority
           className="object-cover opacity-30 mix-blend-luminosity"
           sizes="100vw"
         />
@@ -115,64 +98,39 @@ export default function AboutPage() {
 
         <motion.div
           className="relative mx-auto w-full max-w-6xl px-6"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="show"
+          variants={staggerContainer} initial="hidden" animate="show"
         >
-          <motion.p
-            variants={fadeUp}
-            className="mb-2 font-mono text-xs uppercase tracking-[0.2em] text-ember-400 md:mb-3"
-          >
+          <motion.p variants={fadeUp} className="mb-2 font-mono text-xs uppercase tracking-[0.2em] md:mb-3"
+            style={{ color: '#F15C31' }}>
             Our story
           </motion.p>
 
-          <motion.h1
-            variants={fadeUp}
-            className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl"
-          >
+          <motion.h1 variants={fadeUp}
+            className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl">
             We started with a{' '}
-            <em className="not-italic text-ember-400">frustration.</em>
+            <em className="not-italic" style={{ color: '#F15C31' }}>frustration.</em>
           </motion.h1>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-3 max-w-xl text-base leading-relaxed text-slate-300 md:mt-5 md:text-lg"
-          >
+          <motion.p variants={fadeUp}
+            className="mt-3 max-w-xl text-base leading-relaxed text-slate-300 md:mt-5 md:text-lg">
             Too many companies were being handed polished decks and slow software.
             We left our agency jobs to build the kind of studio we always wished existed.
           </motion.p>
 
-          <motion.div
-            variants={fadeUp}
-            className="mt-6 flex items-center gap-3 text-slate-500 md:mt-8"
-          >
-            
-           
-          </motion.div>
+          <motion.div variants={fadeUp} className="mt-6 flex items-center gap-3 text-slate-500 md:mt-8" />
         </motion.div>
       </section>
-      
-      {/* ── 2. ORIGIN ────────────────────────────────────────────────────────── */}
+
+      {/* ── 2. ORIGIN ── */}
       <section className="bg-white py-28">
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-2 lg:gap-24">
-
-          {/* text */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-100px' }}
-          >
-            <motion.p
-              variants={fadeLeft}
-              className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-600"
-            >
+          <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-100px' }}>
+            <motion.p variants={fadeLeft} className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-600">
               Founded 2019
             </motion.p>
-            <motion.blockquote
-              variants={fadeLeft}
-              className="mb-10 border-l-2 border-ember-500 pl-6 text-2xl font-semibold leading-snug tracking-tight text-slate-900 md:text-3xl"
-            >
+            <motion.blockquote variants={fadeLeft}
+              className="mb-10 pl-6 text-2xl font-semibold leading-snug tracking-tight text-slate-900 md:text-3xl"
+              style={{ borderLeft: '2px solid #F15C31' }}>
               &ldquo;The problem was not that clients wanted too much, it was
               that studios promised everything and built very little.&rdquo;
             </motion.blockquote>
@@ -189,32 +147,23 @@ export default function AboutPage() {
             </motion.p>
           </motion.div>
 
-          {/* image */}
-          <motion.div
-            className="relative"
-            variants={fadeRight}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-100px' }}
-          >
+          <motion.div className="relative" variants={fadeRight} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-100px' }}>
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl">
               <Image
                 src="/Images/abstract image 3.jpg"
                 alt="Abstract composition representing our approach"
-                fill
-                className="object-cover"
+                fill className="object-cover"
                 sizes="(min-width: 1024px) 50vw, 100vw"
               />
-              <div className="absolute inset-0 bg-ember-500/10 mix-blend-multiply" />
+              <div className="absolute inset-0 mix-blend-multiply" style={{ background: 'rgba(241,92,49,0.10)' }} />
             </div>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }} viewport={{ once: true }}
               className="absolute -bottom-5 -left-5 flex items-center gap-3 rounded-xl border border-slate-100 bg-white px-5 py-4 shadow-lg shadow-slate-200/80"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-ember-500 text-sm font-bold text-white">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold text-white"
+                style={{ background: '#F15C31' }}>
                 N
               </span>
               <div>
@@ -226,58 +175,39 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── 3. MISSION ───────────────────────────────────────────────────────── */}
+      {/* ── 3. MISSION ── */}
       <section className="relative overflow-hidden bg-ink-950 py-36">
         <Image
           src="/Images/abstract image 4.jpg"
-          alt=""
-          fill
+          alt="" fill
           className="object-cover opacity-10 mix-blend-screen"
           sizes="100vw"
         />
         <motion.div
           className="relative mx-auto max-w-4xl px-6 text-center"
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: '-80px' }}
+          variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}
         >
-          <motion.p
-            variants={fadeUp}
-            className="mb-8 font-mono text-[11px] uppercase tracking-[0.2em] text-ember-400"
-          >
+          <motion.p variants={fadeUp} className="mb-8 font-mono text-[11px] uppercase tracking-[0.2em]"
+            style={{ color: '#F15C31' }}>
             Our mission
           </motion.p>
-          <motion.p
-            variants={fadeUp}
-            className="text-3xl font-semibold leading-snug tracking-tight text-white sm:text-4xl md:text-5xl"
-          >
+          <motion.p variants={fadeUp}
+            className="text-3xl font-semibold leading-snug tracking-tight text-white sm:text-4xl md:text-5xl">
             Build software that makes the companies we believe in{' '}
-            <span className="text-ember-400">genuinely better </span> at what they
+            <span style={{ color: '#F15C31' }}>genuinely better </span> at what they
             do and stay honest about when they do not need us.
           </motion.p>
         </motion.div>
       </section>
 
-      {/* ── 4. VALUES ────────────────────────────────────────────────────────── */}
+      {/* ── 4. VALUES ── */}
       <section className="bg-white py-28">
         <div className="mx-auto max-w-6xl px-6">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-80px' }}
-          >
-            <motion.p
-              variants={fadeUp}
-              className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400"
-            >
+          <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
+            <motion.p variants={fadeUp} className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400">
               What guides us
             </motion.p>
-            <motion.h2
-              variants={fadeUp}
-              className="mb-20 text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl"
-            >
+            <motion.h2 variants={fadeUp} className="mb-20 text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">
               Three things we <br />will not compromise on.
             </motion.h2>
           </motion.div>
@@ -286,9 +216,7 @@ export default function AboutPage() {
             {VALUES.map((v, i) => (
               <motion.div
                 key={v.num}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="show"
+                variants={fadeUp} initial="hidden" whileInView="show"
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ delay: i * 0.1 }}
                 className="group grid grid-cols-1 gap-6 py-10 transition-colors duration-300 hover:bg-slate-50 sm:-mx-6 sm:grid-cols-[6rem_1fr] sm:gap-10 sm:rounded-2xl sm:px-6"
@@ -296,22 +224,12 @@ export default function AboutPage() {
                 <motion.span
                   initial="inactive"
                   whileInView="active"
-                  viewport={{ 
-                    once: false, 
-                    amount: "some",
-                    margin: "-25% 0px -25% 0px" 
-                  }}
+                  viewport={{ once: false, amount: 'some', margin: '-25% 0px -25% 0px' }}
                   variants={{
-                    inactive: { 
-                      color: '#E2E8F0', 
-                      transition: { duration: 0.3 } 
-                    },
-                    active: { 
-                      color: '#FB923C', 
-                      transition: { duration: 0.3, ease: "easeOut" } 
-                    }
+                    inactive: { color: '#E2E8F0', transition: { duration: 0.3 } },
+                    active:   { color: '#F15C31', transition: { duration: 0.3, ease: 'easeOut' } },
                   }}
-                  className="font-mono text-4xl font-medium text-slate-200 transition-colors duration-300 group-hover:text-ember-400"
+                  className="font-mono text-4xl font-medium"
                 >
                   {v.num}
                 </motion.span>
@@ -324,16 +242,13 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      
-      {/* ── 5. STATS ─────────────────────────────────────────────────────────── */}
+
+      {/* ── 5. STATS ── */}
       <section className="border-y border-slate-100 bg-slate-50 py-20">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             className="grid grid-cols-2 gap-y-14 md:grid-cols-4"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-80px' }}
+            variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}
           >
             {STATS.map((s) => (
               <AnimatedStat key={s.label} value={s.value} label={s.label} />
@@ -342,58 +257,43 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── 6. CTA ───────────────────────────────────────────────────────────── */}
-<section className="bg-ember-500 py-15">
-  <div className="mx-auto max-w-6xl px-6">
-    <motion.div
-      variants={staggerContainer}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: '-80px' }}
-      className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center"
-    >
-      <div>
-        <motion.h2
-          variants={fadeLeft}
-          className="text-3xl font-semibold tracking-tight text-white md:text-4xl"
-        >
-          Like what you see?
-        </motion.h2>
-        <motion.p variants={fadeLeft} className="mt-2 text-white/80">
-          Let us talk about what you are building.
-        </motion.p>
-      </div>
-      
-      {/* 
-        Instead of modifying the Link inner styles, we apply the hover animation 
-        directly onto the animated motion wrapper itself so Framer Motion coordinates it perfectly.
-      */}
-      <motion.div 
-        variants={fadeRight}
-        whileHover={{ scale: 1.05 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-        className="inline-flex shrink-0"
-      >
-        <Link
-          href="#contact"
-          className="inline-flex items-center gap-2 rounded-xl px-7 py-4 text-sm font-semibold text-white"
-          style={{ backgroundColor: '#132B50' }}
-        >
-          Start a conversation
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M5 12h14M13 5l7 7-7 7"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </Link>
-      </motion.div>
-    </motion.div>
-  </div>
-</section>
+      {/* ── 6. CTA ── */}
+      <section className="py-15" style={{ background: '#F15C31' }}>
+        <div className="mx-auto max-w-6xl px-6">
+          <motion.div
+            variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}
+            className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center"
+          >
+            <div>
+              <motion.h2 variants={fadeLeft} className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
+                Like what you see?
+              </motion.h2>
+              <motion.p variants={fadeLeft} className="mt-2 text-white/80">
+                Let us talk about what you are building.
+              </motion.p>
+            </div>
+
+            <motion.div
+              variants={fadeRight}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="inline-flex shrink-0"
+            >
+              <Link
+                href="#contact"
+                className="inline-flex items-center gap-2 rounded-xl px-7 py-4 text-sm font-semibold text-white"
+                style={{ backgroundColor: '#132B50' }}
+              >
+                Start a conversation
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
     </div>
   );
 }

@@ -47,11 +47,15 @@ function InfoItem({ icon, label, value, href, delay }: {
     <motion.div custom={delay} variants={fadeUp} initial="hidden" animate="show"
       style={{ display: "flex", gap: 14, alignItems: "flex-start" }}
     >
-      <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, background: "rgba(255,107,74,0.12)", border: "1px solid rgba(255,107,74,0.2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#FF8466" }}>{icon}</div>
+      <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, background: "rgba(241,92,49,0.12)", border: "1px solid rgba(241,92,49,0.2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#F15C31" }}>{icon}</div>
       <div>
         <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 3, fontFamily: "var(--font-space-grotesk), sans-serif" }}>{label}</div>
         {href
-          ? <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined} style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.75)", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 500, textDecoration: "none", transition: "color 0.2s" }} onMouseOver={e => (e.currentTarget.style.color = "#FF8466")} onMouseOut={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}>{value}</a>
+          ? <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+              style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.75)", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 500, textDecoration: "none", transition: "color 0.2s" }}
+              onMouseOver={e => (e.currentTarget.style.color = "#F15C31")}
+              onMouseOut={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
+            >{value}</a>
           : <span style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.75)", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 500 }}>{value}</span>
         }
       </div>
@@ -73,13 +77,22 @@ function Field({ label, name, type = "text", required = false, textarea = false 
   };
   return (
     <div style={{ position: "relative", marginBottom: 28 }}>
-      <label htmlFor={name} style={{ position: "absolute", top: active ? 2 : 14, left: 0, fontSize: active ? "0.65rem" : "0.875rem", fontWeight: active ? 600 : 400, letterSpacing: active ? "0.05em" : "0", textTransform: active ? "uppercase" : "none", color: focused ? "#FF6B4A" : "#64748B", transition: "all 0.22s ease", pointerEvents: "none", fontFamily: "var(--font-inter), sans-serif" }}>{label}</label>
+      <label htmlFor={name} style={{
+        position: "absolute", top: active ? 2 : 14, left: 0,
+        fontSize: active ? "0.65rem" : "0.875rem", fontWeight: active ? 600 : 400,
+        letterSpacing: active ? "0.05em" : "0", textTransform: active ? "uppercase" : "none",
+        color: focused ? "#F15C31" : "#64748B",
+        transition: "all 0.22s ease", pointerEvents: "none",
+        fontFamily: "var(--font-inter), sans-serif",
+      }}>{label}</label>
       {textarea
-        ? <textarea id={name} name={name} required={required} rows={4} value={value} style={inputStyle} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onChange={e => setValue(e.target.value)} />
-        : <input id={name} name={name} type={type} required={required} value={value} style={inputStyle} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onChange={e => setValue(e.target.value)} />
+        ? <textarea id={name} name={name} required={required} rows={4} value={value} style={inputStyle}
+            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onChange={e => setValue(e.target.value)} />
+        : <input id={name} name={name} type={type} required={required} value={value} style={inputStyle}
+            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onChange={e => setValue(e.target.value)} />
       }
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: focused ? "#FF6B4A" : "#E2E8F0", transition: "background 0.22s" }} />
-      {focused && <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: "#FF6B4A", boxShadow: "0 0 8px rgba(255,107,74,0.3)" }} />}
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: focused ? "#F15C31" : "#E2E8F0", transition: "background 0.22s" }} />
+      {focused && <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: "#F15C31", boxShadow: "0 0 8px rgba(241,92,49,0.3)" }} />}
     </div>
   );
 }
@@ -98,7 +111,14 @@ function ServiceChips() {
         {SERVICES.map(s => {
           const on = selected.includes(s);
           return (
-            <button key={s} type="button" onClick={() => toggle(s)} style={{ padding: "7px 15px", borderRadius: 999, cursor: "pointer", border: on ? "1.5px solid #FF6B4A" : "1.5px solid #E2E8F0", background: on ? "rgba(255,107,74,0.07)" : "transparent", color: on ? "#E8512F" : "#475569", fontSize: "0.8rem", fontFamily: "var(--font-inter), sans-serif", fontWeight: 500, transition: "all 0.2s" }}>{s}</button>
+            <button key={s} type="button" onClick={() => toggle(s)} style={{
+              padding: "7px 15px", borderRadius: 999, cursor: "pointer",
+              border: on ? "1.5px solid #F15C31" : "1.5px solid #E2E8F0",
+              background: on ? "rgba(241,92,49,0.07)" : "transparent",
+              color: on ? "#D44E25" : "#475569",
+              fontSize: "0.8rem", fontFamily: "var(--font-inter), sans-serif", fontWeight: 500,
+              transition: "all 0.2s",
+            }}>{s}</button>
           );
         })}
       </div>
@@ -120,13 +140,9 @@ export default function ContactPage() {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-        :root {
-          --font-inter: 'Inter', sans-serif;
-        }
+        :root { --font-inter: 'Inter', sans-serif; }
 
         *, *::before, *::after { box-sizing: border-box; }
-
         html, body { overflow-x: hidden; }
 
         .cp-wrap {
@@ -136,22 +152,17 @@ export default function ContactPage() {
           font-family: var(--font-space-grotesk), sans-serif;
         }
 
-        /* ── Left dark panel (Desktop) ── */
         .cp-left {
           background: #0B0F19;
-          position: relative;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          padding: 150px 52px 64px !important; 
+          position: relative; overflow: hidden;
+          display: flex; flex-direction: column; justify-content: space-between;
+          padding: 150px 52px 64px !important;
           min-height: 100vh;
         }
-        
         .cp-left-glow {
           position: absolute; top: -80px; left: -80px;
           width: 360px; height: 360px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(255,107,74,0.15) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(241,92,49,0.15) 0%, transparent 70%);
           pointer-events: none;
         }
         .cp-left-glow2 {
@@ -164,16 +175,16 @@ export default function ContactPage() {
         .cp-badge {
           display: inline-flex; align-items: center; gap: 8px;
           font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em;
-          text-transform: uppercase; color: #FF8466; margin-bottom: 32px;
+          text-transform: uppercase; color: #F15C31; margin-bottom: 32px;
         }
-        .cp-badge-dot { width: 5px; height: 5px; background: #FF6B4A; border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+        .cp-badge-dot { width: 5px; height: 5px; background: #F15C31; border-radius: 50%; animation: blink 2s ease-in-out infinite; }
         @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
         .cp-big-text {
           font-size: clamp(3.2rem, 4.5vw, 5rem); font-weight: 700;
           letter-spacing: -0.04em; line-height: 0.92; color: #fff; margin-bottom: 24px;
         }
-        .cp-big-text .ember { color: #FF6B4A; }
+        .cp-big-text .ember { color: #F15C31; }
 
         .cp-tagline { font-size: 0.9rem; line-height: 1.75; color: rgba(255,255,255,0.4); max-width: 320px; margin-bottom: 48px; }
         .cp-info-stack { display: flex; flex-direction: column; gap: 24px; margin-bottom: 36px; }
@@ -181,45 +192,35 @@ export default function ContactPage() {
         .cp-social-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 12px; font-family: var(--font-space-grotesk), sans-serif; }
         .cp-social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 40px; }
         .cp-social-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); text-decoration: none; transition: all 0.22s ease; }
-        .cp-social-item:hover { background: rgba(255,107,74,0.06); border-color: rgba(255,107,74,0.25); }
-        .cp-social-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,107,74,0.12); display: flex; align-items: center; justify-content: center; color: #FF8466; flex-shrink: 0; transition: color 0.2s; }
-        .cp-social-item:hover .cp-social-icon { color: #FF6B4A; }
+        .cp-social-item:hover { background: rgba(241,92,49,0.06); border-color: rgba(241,92,49,0.25); }
+        .cp-social-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(241,92,49,0.12); display: flex; align-items: center; justify-content: center; color: #F15C31; flex-shrink: 0; transition: color 0.2s; }
+        .cp-social-item:hover .cp-social-icon { color: #D44E25; }
         .cp-social-name { font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.6); font-family: var(--font-space-grotesk), sans-serif; transition: color 0.2s; }
         .cp-social-item:hover .cp-social-name { color: rgba(255,255,255,0.9); }
         .cp-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 8px 0 24px; }
 
-        /* ── Right white panel (Desktop) ── */
         .cp-right {
           background: #FFFFFF;
-          display: flex;
-          align-items: flex-start;
-          justify-content: center;
-          padding: 150px 60px 80px !important; 
-          position: relative;
-          overflow: clip;
+          display: flex; align-items: flex-start; justify-content: center;
+          padding: 150px 60px 80px !important;
+          position: relative; overflow: clip;
           font-family: var(--font-inter), sans-serif;
         }
         .cp-right-inner { width: 100%; max-width: 520px; }
-
         .cp-border-shell { overflow: visible; }
 
         .cp-formwrap {
-          padding: 48px 44px;
-          background: #fff;
-          border-radius: 20px;
-          border: none !important;
-          box-shadow: none !important;
+          padding: 48px 44px; background: #fff; border-radius: 20px;
+          border: none !important; box-shadow: none !important;
         }
 
         .cp-form-header { margin-bottom: 40px; }
-        .cp-form-tag { display: inline-block; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #FF6B4A; background: rgba(255,107,74,0.08); border: 1px solid rgba(255,107,74,0.2); padding: 4px 10px; border-radius: 999px; margin-bottom: 16px; font-family: var(--font-inter), sans-serif; }
+        .cp-form-tag { display: inline-block; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #F15C31; background: rgba(241,92,49,0.08); border: 1px solid rgba(241,92,49,0.2); padding: 4px 10px; border-radius: 999px; margin-bottom: 16px; font-family: var(--font-inter), sans-serif; }
         .cp-form-title { font-size: clamp(1.6rem, 2.5vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; color: #0B0F19; line-height: 1.15; margin-bottom: 10px; font-family: var(--font-inter), sans-serif; }
         .cp-form-sub { font-size: 0.9375rem; color: #64748B; line-height: 1.6; font-family: var(--font-inter), sans-serif; }
         .cp-tworow { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
 
-        /* ── Submit Button Updated: Default Dark Navy (#132B50), color changes removed ── */
-        .cp-submit {
-          width: 100%; padding: 15px 28px; background: #132B50; color: #fff; border: none; border-radius: 10px; font-family: var(--font-inter), sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; position: relative; overflow: hidden; }
+        .cp-submit { width: 100%; padding: 15px 28px; background: #132B50; color: #fff; border: none; border-radius: 10px; font-family: var(--font-inter), sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; position: relative; overflow: hidden; }
         .cp-submit::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.05)); pointer-events: none; }
         .cp-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .cp-privacy { margin-top: 14px; font-size: 0.75rem; color: #94A3B8; text-align: center; font-family: var(--font-inter), sans-serif; }
@@ -234,78 +235,30 @@ export default function ContactPage() {
         @keyframes spin { to { transform: rotate(360deg); } }
         .spin { animation: spin 0.8s linear infinite; }
 
-        /* ── Tablet (≤ 960px): Stacked view spacing ── */
         @media (max-width: 960px) {
-          .cp-wrap {
-            grid-template-columns: 1fr;
-          }
-          .cp-left {
-            min-height: auto;
-            padding: 150px 32px 48px !important; 
-          }
-          .cp-right {
-            padding: 130px 32px 72px !important; 
-            overflow: hidden;
-          }
-          .cp-big-text {
-            font-size: clamp(2.8rem, 8vw, 4rem);
-          }
+          .cp-wrap { grid-template-columns: 1fr; }
+          .cp-left { min-height: auto; padding: 150px 32px 48px !important; }
+          .cp-right { padding: 130px 32px 72px !important; overflow: hidden; }
+          .cp-big-text { font-size: clamp(2.8rem, 8vw, 4rem); }
         }
-
-        /* ── Mobile (≤ 600px) ── */
         @media (max-width: 600px) {
-          .cp-left {
-            padding: 120px 20px 40px !important; 
-          }
-          .cp-big-text {
-            font-size: clamp(2.4rem, 10vw, 3.2rem);
-            margin-bottom: 16px;
-          }
-          .cp-tagline {
-            font-size: 0.85rem;
-            margin-bottom: 32px;
-          }
-          .cp-right {
-            padding: 90px 16px 56px !important; 
-          }
-          .cp-right-inner {
-            max-width: 100%;
-          }
-          .cp-formwrap {
-            padding: 28px 20px;
-          }
-          .cp-tworow {
-            grid-template-columns: 1fr;
-          }
-          .cp-social-grid {
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-          }
-          .cp-form-title {
-            font-size: 1.4rem;
-          }
-          .cp-info-stack {
-            gap: 18px;
-            margin-bottom: 28px;
-          }
-          .cp-badge {
-            margin-bottom: 20px;
-          }
+          .cp-left { padding: 120px 20px 40px !important; }
+          .cp-big-text { font-size: clamp(2.4rem, 10vw, 3.2rem); margin-bottom: 16px; }
+          .cp-tagline { font-size: 0.85rem; margin-bottom: 32px; }
+          .cp-right { padding: 90px 16px 56px !important; }
+          .cp-right-inner { max-width: 100%; }
+          .cp-formwrap { padding: 28px 20px; }
+          .cp-tworow { grid-template-columns: 1fr; }
+          .cp-social-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+          .cp-form-title { font-size: 1.4rem; }
+          .cp-info-stack { gap: 18px; margin-bottom: 28px; }
+          .cp-badge { margin-bottom: 20px; }
         }
-
-        /* ── Very small screens (≤ 380px) ── */
         @media (max-width: 380px) {
-          .cp-social-grid {
-            grid-template-columns: 1fr;
-          }
-          .cp-left {
-            padding: 80px 16px 36px !important; 
-          }
-          .cp-formwrap {
-            padding: 24px 16px;
-          }
+          .cp-social-grid { grid-template-columns: 1fr; }
+          .cp-left { padding: 80px 16px 36px !important; }
+          .cp-formwrap { padding: 24px 16px; }
         }
-
         @media (prefers-reduced-motion: reduce) {
           * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
@@ -338,26 +291,9 @@ export default function ContactPage() {
               <InfoItem delay={0.28} label="Email" value="hello@iconex.it" href="mailto:hello@iconex.it"
                 icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>}
               />
-              <InfoItem 
-  delay={0.34} 
-  label="Phone" 
-  value="+94 81 234 5678" 
-  href="tel:+94812345678"
-  icon={
-    <svg 
-      width="16" 
-      height="16" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth={1.75} 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    >
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-  }
-/>
+              <InfoItem delay={0.34} label="Phone" value="+94 81 234 5678" href="tel:+94812345678"
+                icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>}
+              />
               <InfoItem delay={0.40} label="Office" value="142/5, Dalada Veediya, Kandy 20000, Sri Lanka"
                 icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>}
               />
@@ -388,16 +324,16 @@ export default function ContactPage() {
 
           <motion.div custom={0.52} variants={fadeUp} initial="hidden" animate="show" style={{ position: "relative", zIndex: 1 }}>
             <LiveClock />
-           <div style={{ marginTop: 24, fontSize: "0.825rem", color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-inter), sans-serif", fontWeight: 500, letterSpacing: "0.02em" }}>
-  Mon &ndash; Fri &middot; 09:00&ndash;18:00 LKT
-</div>
+            <div style={{ marginTop: 24, fontSize: "0.825rem", color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-inter), sans-serif", fontWeight: 500, letterSpacing: "0.02em" }}>
+              Mon &ndash; Fri &middot; 09:00&ndash;18:00 LKT
+            </div>
           </motion.div>
         </div>
 
         {/* ══ RIGHT ═════════════════════════════════════════════════════════ */}
         <div className="cp-right">
           <motion.div className="cp-right-inner" custom={0.2} variants={fadeUp} initial="hidden" animate="show">
-            <ElectricBorder color="#FF6B4A" speed={0.8} chaos={0.10} borderRadius={20}>
+            <ElectricBorder color="#F15C31" speed={0.8} chaos={0.10} borderRadius={20}>
               <div className="cp-formwrap">
                 <AnimatePresence mode="wait">
                   {status === "sent" ? (
@@ -430,11 +366,8 @@ export default function ContactPage() {
                         <ServiceChips />
                         <Field label="How can we help?" name="message" required textarea />
 
-                        {/* Updated Submit Button: Set background to Dark Navy (#132B50), scales to 1.04 on hover, duration handled nicely by spring/easing */}
-                        <motion.button 
-                          type="submit" 
-                          className="cp-submit" 
-                          disabled={status === "sending"}
+                        <motion.button
+                          type="submit" className="cp-submit" disabled={status === "sending"}
                           whileHover={status === "idle" ? { scale: 1.04 } : {}}
                           whileTap={status === "idle" ? { scale: 0.98 } : {}}
                           transition={{ type: "spring", stiffness: 400, damping: 25 }}

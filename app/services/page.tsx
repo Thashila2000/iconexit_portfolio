@@ -236,15 +236,6 @@ export default function ServicesPage() {
         .srv-hero {
           position:relative; padding:160px 60px 80px;
           overflow:hidden; background:#FFFFFF;
-          border-bottom:1px solid rgba(15,23,42,0.05);
-        }
-        .srv-hero-grid {
-          position:absolute; inset:0; pointer-events:none;
-          background-image:
-            linear-gradient(rgba(255,107,74,0.03) 1px,transparent 1px),
-            linear-gradient(90deg,rgba(255,107,74,0.03) 1px,transparent 1px);
-          background-size:64px 64px;
-          mask-image:radial-gradient(ellipse 80% 100% at 50% 0%,black 40%,transparent 100%);
         }
         .srv-hero-glow {
           position:absolute; top:-100px; right:-80px;
@@ -257,34 +248,33 @@ export default function ServicesPage() {
           font-size:0.75rem; font-weight:700; letter-spacing:0.16em;
           text-transform:uppercase; color: #C74646; margin-bottom:16px;
         }
-        .srv-eyebrow-dot { width:5px; height:5px; background:#FF6B4A; border-radius:50%; }
+        .srv-eyebrow-dot { width:5px; height:5px; background:#F15C31; border-radius:50%; }
         .srv-hero-title {
           font-size:clamp(2.25rem,5vw,4.5rem); font-weight:700;
           letter-spacing:-0.03em; line-height:1.1; color:#132B50;
           max-width:800px; margin-bottom:24px;
           font-family:'Plus Jakarta Sans',sans-serif;
         }
-        .srv-hero-title em { font-style:normal; color:#FF6B4A; }
-        .srv-hero-sub { font-size:1.125rem; line-height:1.65; color:#132B50; opacity: 0.85; max-width:576px; margin-bottom:32px; }
-        
-        /* ── Hero CTA updated with scaling support ── */
+        .srv-hero-title em { font-style:normal; color:#F15C31; }
+        .srv-hero-sub { font-size:1.125rem; line-height:1.65; color:#132B50; opacity:0.85; max-width:576px; margin-bottom:32px; }
+
         .srv-hero-cta {
           display:inline-flex; align-items:center; gap:8px;
-          background:#FF6B4A; color:#fff; border:none;
+          background:#F15C31; color:#fff; border:none;
           padding:14px 28px; border-radius:12px;
           font-size:0.875rem; font-weight:600; cursor:pointer;
           text-decoration:none; transition:background 0.2s;
         }
         .srv-hero-cta:hover { background:#E8512F; }
 
-       /* ── Grid section ── */
-.srv-grid-section { padding:80px 60px 120px; background:#FFFFFF; }
-.srv-section-label {
-  font-family:'Plus Jakarta Sans', sans-serif;
-  font-size:0.85rem; font-weight:900; letter-spacing:0.08em;
-  text-transform:uppercase; color:#94A3B8; margin-bottom:48px;
-}
-.srv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+        /* ── Grid section ── */
+        .srv-grid-section { padding:80px 60px 120px; background:#FFFFFF; }
+        .srv-section-label {
+          font-family:'Plus Jakarta Sans', sans-serif;
+          font-size:0.85rem; font-weight:900; letter-spacing:0.08em;
+          text-transform:uppercase; color:#94A3B8; margin-bottom:48px;
+        }
+        .srv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
 
         /* ── Card shell ── */
         .srv-card {
@@ -421,7 +411,6 @@ export default function ServicesPage() {
 
         {/* ── Hero ── */}
         <section className="srv-hero">
-          <div className="srv-hero-grid" />
           <div className="srv-hero-glow" />
 
           <motion.div className="srv-eyebrow" custom={0} variants={fadeUp} initial="hidden" animate="show">
@@ -437,12 +426,12 @@ export default function ServicesPage() {
             From a single integration to a full digital overhaul we bring the engineering depth and strategic clarity to make it stick.
           </motion.p>
 
-          <motion.a 
-            href="/contact" 
-            className="srv-hero-cta" 
-            custom={0.3} 
-            variants={fadeUp} 
-            initial="hidden" 
+          <motion.a
+            href="/contact"
+            className="srv-hero-cta"
+            custom={0.3}
+            variants={fadeUp}
+            initial="hidden"
             animate="show"
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.98 }}

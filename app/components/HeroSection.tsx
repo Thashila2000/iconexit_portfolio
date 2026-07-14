@@ -22,19 +22,21 @@ export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoError, setVideoError] = useState(false);
 
+  // Controlled Playback
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      
-      const playPromise = videoRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          console.warn("Autoplay block detected.", error);
-        });
-      }
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (ready) {
+      video.muted = true;
+      video.play().catch((error) => {
+        console.warn("Autoplay block detected:", error);
+      });
+    } else {
+      video.pause();
+      video.currentTime = 0;
     }
-  }, []);
+  }, [ready]);
 
   const heroAnim = (delay: number) => ({
     initial: { opacity: 0, y: 15 },
@@ -44,10 +46,6 @@ export default function HeroSection() {
 
   return (
     <>
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet" />
-
       <style>{`
         .hero-container {
           min-height: calc(100vh - 112px);
@@ -60,7 +58,9 @@ export default function HeroSection() {
           flex-direction: column;
           justify-content: center;
           align-items: flex-start;
-          width: 100%;
+          width: 100vw;
+          margin: 0;
+          padding: 0;
         }
 
         .hero-fallback-grid {
@@ -77,7 +77,10 @@ export default function HeroSection() {
         }
         
         .hero-video {
-          position: absolute; top: 0; left: -2%; width: 104%; height: calc(100% + 60px); object-fit: cover;
+          position: absolute; top: 0; left: 0; 
+          width: 100%; height: 100%; 
+          object-fit: cover;
+          display: block;
         }
         
         .hero-video-overlay {
@@ -92,33 +95,32 @@ export default function HeroSection() {
           padding: 80px 40px; max-width: 1200px; width: 100%; margin-left: 5%; 
         }
 
-        /* Red-Orange Bottom-Right Floating CTA */
         .cta-bottom-right {
           position: absolute; bottom: 40px; right: 40px; z-index: 20;
         }
         .btn-red-orange {
           display: flex; align-items: center; gap: 10px;
-          background: #FF8466;
+          background: #F15C31;
           color: #FFFFFF;
           padding: 14px 28px;
           border-radius: 50px;
           font-weight: 600;
           font-size: 0.9rem;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 15px rgba(255, 132, 102, 0.3);
+          box-shadow: 0 4px 15px rgba(241, 92, 49, 0.3);
         }
         .btn-red-orange:hover {
-          background: #FF6B4A;
+          background: #d6502a;
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(255, 132, 102, 0.4);
+          box-shadow: 0 8px 25px rgba(241, 92, 49, 0.4);
         }
 
         .eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
           font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em;
-          text-transform: uppercase; color: #FF8466; margin-top: 30px; 
+          text-transform: uppercase; color: #F15C31; margin-top: 30px; 
         }
-        .eyebrow-dot { width: 6px; height: 6px; background: #FF8466; border-radius: 50%; }
+        .eyebrow-dot { width: 6px; height: 6px; background: #F15C31; border-radius: 50%; }
 
         .headline {
           font-family: 'Space Grotesk', sans-serif;
@@ -126,7 +128,7 @@ export default function HeroSection() {
           letter-spacing: -0.04em; color: #FFFFFF; margin-top: 20px; max-width: 920px;
         }
         .headline-em {
-          background: linear-gradient(135deg, #FF8466 0%, #FF6B4A 100%);
+          background: linear-gradient(135deg, #F15C31 0%, #F15C31 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
@@ -135,21 +137,7 @@ export default function HeroSection() {
           line-height: 1.7; color: #FFFFFF; opacity: 0.85; max-width: 620px;
         }
 
-        .actions { display: flex; align-items: center; gap: 14px; margin-top: 48px; flex-wrap: wrap; }
-        .btn-ghost {
-          background: transparent; color: #FFFFFF;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          padding: 16px 32px; border-radius: 12px; font-weight: 600;
-          transition: border-color 0.2s, background 0.2s;
-        }
-        .btn-ghost:hover { border-color: #FFFFFF; background: rgba(255, 255, 255, 0.05); }
-
-        .orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.15; pointer-events: none; }
-        .orb-1 { width: 400px; height: 400px; background: #FF8466; top: -100px; right: -50px; }
-        .orb-2 { width: 500px; height: 500px; background: #132B50; bottom: -150px; left: -100px; }
-
         @media (max-width: 768px) {
-          .hero-video { width: 100%; left: 0; height: 100%; top: 0; }
           .hero-body { padding: 80px 24px; margin-left: 0; }
           .cta-bottom-right { bottom: 20px; right: 20px; }
         }
@@ -160,8 +148,15 @@ export default function HeroSection() {
 
         {!videoError && (
           <div className="hero-video-wrapper">
-            <video ref={videoRef} autoPlay loop muted playsInline className="hero-video" preload="auto" onError={() => setVideoError(true)}>
-              <source src="/Videos/company.mp4" type="video/mp4" />
+            <video 
+              ref={videoRef} 
+              loop 
+              muted 
+              playsInline 
+              className="hero-video" 
+              preload="auto" 
+              onError={() => setVideoError(true)}
+            >
               <source src="/Videos/company.mp4" type="video/mp4" />
             </video>
             <div className="hero-video-overlay" />
@@ -184,14 +179,12 @@ export default function HeroSection() {
           </motion.h1>
 
           <motion.p className="sub" {...heroAnim(0.25)}>
-            From cloud infrastructure to AI-driven insights, we deliver technology that scales, secures, and accelerates your organization.
+            From cloud infrastructure to AI driven insights, we deliver technology that scales, secures, and accelerates your organization.
           </motion.p>
           
           <motion.p className="sub" {...heroAnim(0.30)} style={{ marginTop: '16px' }}>
-            Our bespoke solutions integrate seamlessly into your existing workflows, transforming legacy systems into high-performance engines for growth.
+            Our bespoke solutions integrate seamlessly into your existing workflows, transforming legacy systems into high performance engines for growth.
           </motion.p>
-
-        
         </div>
       </div>
     </>
