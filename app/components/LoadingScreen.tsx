@@ -2,57 +2,24 @@
 
 import { useEffect, useState } from "react";
 
-const LETTERS = ["I", "C", "O", "N", "E", "X", " ", "I", "T"];
-
-// interpolate hex colour based on progress 0–100
-function getBarColor(p: number): string {
-  // 0%   → red    #FF2D2D
-  // 50%  → orange #FF6B4A (brand ember)
-  // 100% → green  #22C55E
-
-  let r: number, g: number, b: number;
-
-  if (p <= 50) {
-    const t = p / 50;
-    r = Math.round(255 + (255 - 255) * t);           // 255 → 255
-    g = Math.round(45  + (107 - 45)  * t);           // 45  → 107
-    b = Math.round(45  + (74  - 45)  * t);           // 45  → 74
-  } else {
-    const t = (p - 50) / 50;
-    r = Math.round(255 + (34  - 255) * t);           // 255 → 34
-    g = Math.round(107 + (197 - 107) * t);           // 107 → 197
-    b = Math.round(74  + (94  - 74)  * t);           // 74  → 94
-  }
-
-  return `rgb(${r},${g},${b})`;
-}
-
-function getGlowColor(p: number): string {
-  if (p <= 50) return `rgba(255,${Math.round(45 + (107-45)*(p/50))},45,0.55)`;
-  const t = (p - 50) / 50;
-  return `rgba(${Math.round(255+(34-255)*t)},${Math.round(107+(197-107)*t)},${Math.round(74+(94-74)*t)},0.55)`;
-}
-
 export default function LoadingScreen({ onComplete }: { onComplete: () => void }) {
-  const [visibleCount, setVisibleCount] = useState(0);
+  const [logoVisible, setLogoVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const [exiting, setExiting] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
-  // Step 1 — reveal letters one by one sliding from right
+  // Step 1 — Reveal logo
   useEffect(() => {
     if (!mounted) return;
-    if (visibleCount >= LETTERS.length) return;
-    const delay = visibleCount === 0 ? 400 : 180;
-    const t = setTimeout(() => setVisibleCount((c) => c + 1), delay);
+    const t = setTimeout(() => setLogoVisible(true), 300);
     return () => clearTimeout(t);
-  }, [mounted, visibleCount]);
+  }, [mounted]);
 
-  // Step 2 — progress bar starts after all letters are visible
+  // Step 2 — Progress sequence
   useEffect(() => {
-    if (visibleCount < LETTERS.length) return;
+    if (!logoVisible) return;
     const startDelay = setTimeout(() => {
       const id = setInterval(() => {
         setProgress((p) => {
@@ -60,22 +27,18 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             clearInterval(id);
             setTimeout(() => {
               setExiting(true);
-              setTimeout(onComplete, 700);
-            }, 500);
+              setTimeout(onComplete, 500); // faster exit
+            }, 300);
             return 100;
           }
-          const inc = p < 50 ? 0.55 : p < 80 ? 0.35 : p < 95 ? 0.2 : 0.45;
+          const inc = p < 50 ? 1.0 : p < 80 ? 0.7 : p < 95 ? 0.5 : 1.2;
           return Math.min(p + inc, 100);
         });
-      }, 30);
+      }, 25); // faster tick
       return () => clearInterval(id);
-    }, 300);
+    }, 500);
     return () => clearTimeout(startDelay);
-  }, [visibleCount, onComplete]);
-
-  const barColor   = getBarColor(progress);
-  const glowColor  = getGlowColor(progress);
-  const allIn      = visibleCount >= LETTERS.length;
+  }, [logoVisible, onComplete]);
 
   return (
     <div
@@ -94,8 +57,6 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
         overflow: "hidden",
       }}
     >
-     
-
       {/* Glow orb */}
       <div style={{
         position: "absolute",
@@ -105,48 +66,25 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
         pointerEvents: "none",
       }} />
 
-      {/* ── Letters ── */}
-      <div style={{ display: "flex", alignItems: "baseline", position: "relative" }}>
-        {LETTERS.map((char, i) => {
-          const isVisible = i < visibleCount;
-          const isSpace   = char === " ";
-          const isIT      = i >= 7;
-          return (
-            <span
-              key={i}
-              style={{
-                display: "inline-block",
-                fontSize: isSpace ? 0 : "clamp(3.5rem, 9vw, 8rem)",
-                fontWeight: 700,
-                letterSpacing: "-0.02em",
-                lineHeight: 1,
-                color: isIT ? "#FF6B4A" : "#FFFFFF",
-                marginRight: isSpace ? "clamp(10px, 2vw, 22px)" : 0,
-                fontFamily: "var(--font-space-grotesk), sans-serif",
-                userSelect: "none",
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? "translateX(0)" : "translateX(80px)",
-                transition: isVisible
-                  ? "opacity 0.5s ease, transform 0.55s cubic-bezier(0.22,1,0.36,1)"
-                  : "none",
-              }}
-            >
-              {isSpace ? "\u00A0" : char}
-            </span>
-          );
-        })}
-
-        {/* Underline sweep */}
-        <div style={{
-          position: "absolute",
-          bottom: -8, left: 0, right: 0,
-          height: 2,
-          background: "linear-gradient(90deg, transparent, #FF6B4A 40%, #FF8466 60%, transparent)",
-          transformOrigin: "left center",
-          transform: allIn ? "scaleX(1)" : "scaleX(0)",
-          opacity: allIn ? 1 : 0,
-          transition: "transform 0.55s cubic-bezier(0.22,1,0.36,1) 0.1s, opacity 0.4s ease 0.1s",
-        }} />
+      {/* ── Logo Container ── */}
+      <div 
+        style={{ 
+          display: "flex", 
+          alignItems: "center", 
+          position: "relative",
+          opacity: logoVisible ? 1 : 0,
+          transform: logoVisible ? "translateY(0) scale(1)" : "translateY(15px) scale(0.97)",
+          transition: "opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)",
+        }}
+      >
+        <img 
+          src="/iconex-logo.png" 
+          alt="ICONEX IT Logo" 
+          style={{
+          height: "clamp(20rem, 24vw, 24rem)",
+            userSelect: "none",
+          }} 
+        />
       </div>
 
       {/* ── Progress block ── */}
@@ -157,8 +95,8 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           left: "50%",
           transform: "translateX(-50%)",
           width: "min(640px, 88vw)",
-          opacity: allIn ? 1 : 0,
-          transition: "opacity 0.5s ease 0.3s",
+          opacity: logoVisible ? 1 : 0,
+          transition: "opacity 0.6s ease 0.4s",
         }}
       >
         {/* Labels row */}
@@ -186,7 +124,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             fontWeight: 700,
             letterSpacing: "-0.04em",
             lineHeight: 1,
-            color: barColor,
+            color: "#FF6B4A",
             transition: "color 0.3s ease",
           }}>
             {String(Math.floor(progress)).padStart(2, "0")}
@@ -194,7 +132,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           </span>
         </div>
 
-        {/* ── Track ── */}
+        {/* Track */}
         <div style={{
           width: "100%",
           height: 8,
@@ -203,18 +141,16 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           overflow: "hidden",
           border: "1px solid rgba(255,255,255,0.06)",
         }}>
-          {/* Filled portion */}
           <div style={{
             height: "100%",
             width: `${progress}%`,
-            background: barColor,
-            boxShadow: `0 0 14px ${glowColor}`,
+            background: "#FF6B4A",
+            boxShadow: `0 0 14px rgba(255,107,74,0.55)`,
             borderRadius: 999,
             transition: "width 0.03s linear, background 0.3s ease, box-shadow 0.3s ease",
             position: "relative",
             overflow: "hidden",
           }}>
-            {/* shimmer sweep */}
             <div style={{
               position: "absolute",
               top: 0, bottom: 0,
@@ -226,7 +162,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           </div>
         </div>
 
-        {/* Colour legend — shows phase label */}
+        {/* Phase label */}
         <div style={{
           marginTop: 10,
           display: "flex",
@@ -237,7 +173,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             fontSize: "0.6rem",
             letterSpacing: "0.1em",
             textTransform: "uppercase",
-            color: barColor,
+            color: "#FF6B4A",
             fontFamily: "var(--font-jetbrains-mono), monospace",
             fontWeight: 500,
             transition: "color 0.3s ease",
@@ -260,16 +196,6 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           </span>
         </div>
       </div>
-
-      {/* Corner marks */}
-      {[
-        { top: 20, left: 20, borderTop: "1px solid rgba(255,107,74,0.2)", borderLeft: "1px solid rgba(255,107,74,0.2)" },
-        { top: 20, right: 20, borderTop: "1px solid rgba(255,107,74,0.2)", borderRight: "1px solid rgba(255,107,74,0.2)" },
-        { bottom: 20, left: 20, borderBottom: "1px solid rgba(255,107,74,0.2)", borderLeft: "1px solid rgba(255,107,74,0.2)" },
-        { bottom: 20, right: 20, borderBottom: "1px solid rgba(255,107,74,0.2)", borderRight: "1px solid rgba(255,107,74,0.2)" },
-      ].map((s, i) => (
-        <div key={i} style={{ position: "absolute", width: 14, height: 14, ...s }} />
-      ))}
     </div>
   );
 }

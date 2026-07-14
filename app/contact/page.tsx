@@ -217,9 +217,10 @@ export default function ContactPage() {
         .cp-form-sub { font-size: 0.9375rem; color: #64748B; line-height: 1.6; font-family: var(--font-inter), sans-serif; }
         .cp-tworow { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
 
-        .cp-submit { width: 100%; padding: 15px 28px; background: #0B0F19; color: #fff; border: none; border-radius: 10px; font-family: var(--font-inter), sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.2s, transform 0.15s; margin-top: 8px; position: relative; overflow: hidden; }
-        .cp-submit::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 40%, rgba(255,107,74,0.15)); transition: opacity 0.3s; }
-        .cp-submit:hover:not(:disabled) { background: #FF6B4A; transform: translateY(-1px); }
+        /* ── Submit Button Updated: Default Dark Navy (#132B50), color changes removed ── */
+        .cp-submit {
+          width: 100%; padding: 15px 28px; background: #132B50; color: #fff; border: none; border-radius: 10px; font-family: var(--font-inter), sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; position: relative; overflow: hidden; }
+        .cp-submit::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.05)); pointer-events: none; }
         .cp-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .cp-privacy { margin-top: 14px; font-size: 0.75rem; color: #94A3B8; text-align: center; font-family: var(--font-inter), sans-serif; }
 
@@ -337,9 +338,26 @@ export default function ContactPage() {
               <InfoItem delay={0.28} label="Email" value="hello@iconex.it" href="mailto:hello@iconex.it"
                 icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>}
               />
-              <InfoItem delay={0.34} label="Phone" value="+94 81 234 5678" href="tel:+94812345678"
-                icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79(19.79) 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79(19.79) 0 01.05 1.18 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>}
-              />
+              <InfoItem 
+  delay={0.34} 
+  label="Phone" 
+  value="+94 81 234 5678" 
+  href="tel:+94812345678"
+  icon={
+    <svg 
+      width="16" 
+      height="16" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth={1.75} 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+    </svg>
+  }
+/>
               <InfoItem delay={0.40} label="Office" value="142/5, Dalada Veediya, Kandy 20000, Sri Lanka"
                 icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>}
               />
@@ -370,9 +388,9 @@ export default function ContactPage() {
 
           <motion.div custom={0.52} variants={fadeUp} initial="hidden" animate="show" style={{ position: "relative", zIndex: 1 }}>
             <LiveClock />
-            <div style={{ marginTop: 20, fontSize: "0.7rem", color: "rgba(255,255,255,0.2)", fontFamily: "var(--font-jetbrains-mono), monospace" }}>
-              Mon &ndash; Fri &middot; 09:00&ndash;18:00 LKT
-            </div>
+           <div style={{ marginTop: 24, fontSize: "0.825rem", color: "rgba(255,255,255,0.45)", fontFamily: "var(--font-inter), sans-serif", fontWeight: 500, letterSpacing: "0.02em" }}>
+  Mon &ndash; Fri &middot; 09:00&ndash;18:00 LKT
+</div>
           </motion.div>
         </div>
 
@@ -412,9 +430,14 @@ export default function ContactPage() {
                         <ServiceChips />
                         <Field label="How can we help?" name="message" required textarea />
 
-                        <motion.button type="submit" className="cp-submit" disabled={status === "sending"}
-                          whileHover={status === "idle" ? { scale: 1.01 } : {}}
+                        {/* Updated Submit Button: Set background to Dark Navy (#132B50), scales to 1.04 on hover, duration handled nicely by spring/easing */}
+                        <motion.button 
+                          type="submit" 
+                          className="cp-submit" 
+                          disabled={status === "sending"}
+                          whileHover={status === "idle" ? { scale: 1.04 } : {}}
                           whileTap={status === "idle" ? { scale: 0.98 } : {}}
+                          transition={{ type: "spring", stiffness: 400, damping: 25 }}
                         >
                           {status === "sending" ? (
                             <><svg className="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Sending&hellip;</>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -72,7 +73,6 @@ export default function Navbar() {
     ? '0 4px 24px -4px rgba(15,23,42,0.08)'
     : 'none';
 
-  const logoText  = isDark && !scrolled ? '#FFFFFF' : '#0B0F19';
   const linkColor = isDark && !scrolled ? 'rgba(255,255,255,0.7)' : '#475569';
   const linkHover = isDark && !scrolled ? '#FFFFFF' : '#0B0F19';
 
@@ -82,7 +82,7 @@ export default function Navbar() {
         .nav-link {
           position: relative;
           display: block;
-          padding: 7px 16px;
+          padding: 6px 14px;
           border-radius: 999px;
           font-size: 0.875rem;
           font-weight: 500;
@@ -143,7 +143,7 @@ export default function Navbar() {
       <header
         style={{
           position: 'fixed', top: 0, left: 0, right: 0,
-          zIndex: 50, padding: '12px 16px',
+          zIndex: 50, padding: '8px 16px',
           fontFamily: 'var(--font-space-grotesk), sans-serif',
         }}
       >
@@ -154,8 +154,8 @@ export default function Navbar() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '10px 20px',
-            borderRadius: 16,
+            padding: '6px 20px',
+            borderRadius: 14,
             border: `1px solid ${navBorder}`,
             background: navBg,
             backdropFilter: 'blur(20px)',
@@ -164,34 +164,33 @@ export default function Navbar() {
             transition: 'background 0.35s, border-color 0.35s, box-shadow 0.35s',
           }}
         >
-          {/* ── Logo ── */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
-            <span style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              width: 32, height: 32, borderRadius: 8,
-              background: '#FF6B4A', color: '#fff',
-              fontWeight: 700, fontSize: '0.875rem',
-              flexShrink: 0,
-              transition: 'transform 0.3s',
-            }}
-              onMouseOver={e => (e.currentTarget.style.transform = 'rotate(-8deg)')}
-              onMouseOut={e  => (e.currentTarget.style.transform = 'rotate(0deg)')}
+          {/* ── Image Logo (Reduced height wrapper) ── */}
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <div 
+              style={{ 
+                position: 'relative', 
+                width: 150, 
+                height: 48,
+                marginLeft: '-4px' 
+              }}
             >
-              I
-            </span>
-            <span style={{
-              fontSize: '1.0625rem', fontWeight: 700,
-              letterSpacing: '-0.02em',
-              color: logoText,
-              transition: 'color 0.35s',
-            }}>
-              Iconex <span style={{ color: '#FF6B4A' }}>IT</span>
-            </span>
+              <Image
+                src="/images/iconex-logo.png"
+                alt="Iconex IT Logo"
+                fill
+                priority
+                sizes="150px" 
+                style={{
+                  objectFit: 'contain',
+                  objectPosition: 'left center', 
+                }}
+              />
+            </div>
           </Link>
 
           {/* ── Desktop links ── */}
           <ul style={{
-            display: 'flex', alignItems: 'center', gap: 4,
+            display: 'flex', alignItems: 'center', gap: 2,
             listStyle: 'none', margin: 0, padding: 0,
           }}
             className="hidden-mobile"
@@ -210,7 +209,7 @@ export default function Navbar() {
                       '--link-hover-bg': isDark && !scrolled
                         ? 'rgba(255,255,255,0.08)'
                         : 'rgba(11,15,25,0.05)',
-                    } as React.CSSProperties}
+                    }}
                   >
                     <span className="nav-bubble" />
                     <span className="nav-link-label">{link.label}</span>
@@ -227,8 +226,8 @@ export default function Navbar() {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 background: '#FF6B4A', color: '#fff',
-                padding: '9px 20px', borderRadius: 10,
-                fontSize: '0.875rem', fontWeight: 600,
+                padding: '8px 16px', borderRadius: 8,
+                fontSize: '0.8125rem', fontWeight: 600,
                 textDecoration: 'none',
                 transition: 'background 0.2s, transform 0.15s',
                 whiteSpace: 'nowrap',
@@ -243,7 +242,7 @@ export default function Navbar() {
               }}
             >
               Start a project
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </Link>
@@ -258,14 +257,14 @@ export default function Navbar() {
             style={{
               position: 'relative', zIndex: 50,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              width: 36, height: 36, background: 'transparent', border: 'none',
+              width: 32, height: 32, background: 'transparent', border: 'none',
               cursor: 'pointer',
               color: isDark && !scrolled ? '#fff' : '#0B0F19',
             }}
           >
-            <span className="ham-line" style={{ transform: menuOpen ? 'rotate(45deg)' : 'translateY(-6px)' }} />
+            <span className="ham-line" style={{ transform: menuOpen ? 'rotate(45deg)' : 'translateY(-5px)' }} />
             <span className="ham-line" style={{ opacity: menuOpen ? 0 : 1 }} />
-            <span className="ham-line" style={{ transform: menuOpen ? 'rotate(-45deg)' : 'translateY(6px)' }} />
+            <span className="ham-line" style={{ transform: menuOpen ? 'rotate(-45deg)' : 'translateY(5px)' }} />
           </button>
         </nav>
       </header>
@@ -346,8 +345,6 @@ export default function Navbar() {
           .hidden-mobile { display: none  !important; }
           .show-mobile   { display: flex  !important; }
         }
-
-        /* pt-28 offset for sticky nav — keep layout.tsx as-is */
       `}</style>
     </>
   );

@@ -146,14 +146,12 @@ export default function AboutPage() {
             variants={fadeUp}
             className="mt-6 flex items-center gap-3 text-slate-500 md:mt-8"
           >
-            <div className="h-px w-10 bg-slate-600" />
-            <span className="font-mono text-[11px] uppercase tracking-widest">
-              Scroll to explore
-            </span>
+            
+           
           </motion.div>
         </motion.div>
       </section>
-     
+      
       {/* ── 2. ORIGIN ────────────────────────────────────────────────────────── */}
       <section className="bg-white py-28">
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-2 lg:gap-24">
@@ -345,47 +343,57 @@ export default function AboutPage() {
       </section>
 
       {/* ── 6. CTA ───────────────────────────────────────────────────────────── */}
-      <section className="bg-ember-500 py-15">
-        <div className="mx-auto max-w-6xl px-6">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-80px' }}
-            className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center"
-          >
-            <div>
-              <motion.h2
-                variants={fadeLeft}
-                className="text-3xl font-semibold tracking-tight text-white md:text-4xl"
-              >
-                Like what you see?
-              </motion.h2>
-              <motion.p variants={fadeLeft} className="mt-2 text-white/80">
-                Let us talk about what you are building.
-              </motion.p>
-            </div>
-            <motion.div variants={fadeRight}>
-              <Link
-                href="#contact"
-                className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-ink-950 px-7 py-4 text-sm font-semibold text-white transition-colors duration-200 hover:bg-ink-900"
-              >
-                Start a conversation
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M5 12h14M13 5l7 7-7 7"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </Link>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
+<section className="bg-ember-500 py-15">
+  <div className="mx-auto max-w-6xl px-6">
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: '-80px' }}
+      className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center"
+    >
+      <div>
+        <motion.h2
+          variants={fadeLeft}
+          className="text-3xl font-semibold tracking-tight text-white md:text-4xl"
+        >
+          Like what you see?
+        </motion.h2>
+        <motion.p variants={fadeLeft} className="mt-2 text-white/80">
+          Let us talk about what you are building.
+        </motion.p>
+      </div>
+      
+      {/* 
+        Instead of modifying the Link inner styles, we apply the hover animation 
+        directly onto the animated motion wrapper itself so Framer Motion coordinates it perfectly.
+      */}
+      <motion.div 
+        variants={fadeRight}
+        whileHover={{ scale: 1.05 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+        className="inline-flex shrink-0"
+      >
+        <Link
+          href="#contact"
+          className="inline-flex items-center gap-2 rounded-xl px-7 py-4 text-sm font-semibold text-white"
+          style={{ backgroundColor: '#132B50' }}
+        >
+          Start a conversation
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M5 12h14M13 5l7 7-7 7"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
+      </motion.div>
+    </motion.div>
+  </div>
+</section>
     </div>
   );
 }

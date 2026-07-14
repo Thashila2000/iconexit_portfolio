@@ -17,6 +17,8 @@ interface ServiceItem {
   icon: React.ReactNode;
 }
 
+const MotionLink = motion(Link);
+
 const staggerContainer = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.15 } },
@@ -128,7 +130,6 @@ function useIsMobile() {
   return isMobile;
 }
 
-// ── Card — matches hero card style exactly ────────────────────────────────────
 function ServiceCard({ service, index }: { service: ServiceItem; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-40px" });
@@ -171,11 +172,9 @@ function ServiceCard({ service, index }: { service: ServiceItem; index: number }
         transition={{ type: "spring", stiffness: 350, damping: 22 }}
         className={`srv-card ${hovered ? "is-hovered" : ""}`}
       >
-        {/* Ambient glow on hover */}
         <div className="srv-ambient-glow" style={{ opacity: hovered ? 1 : 0 }} />
 
         <div className="srv-card-body">
-          {/* Top row: icon + tag */}
           <div className="srv-card-top">
             <motion.div
               className="srv-icon-wrap"
@@ -192,13 +191,10 @@ function ServiceCard({ service, index }: { service: ServiceItem; index: number }
             <span className="srv-tag">{service.tag}</span>
           </div>
 
-          {/* Title */}
           <h3 className="srv-card-title">{service.title}</h3>
 
-          {/* Description */}
           <p className="srv-card-desc">{service.description}</p>
 
-          {/* Features */}
           <div className="srv-card-features">
             {service.features.map((f, fi) => (
               <motion.div
@@ -214,7 +210,6 @@ function ServiceCard({ service, index }: { service: ServiceItem; index: number }
             ))}
           </div>
 
-          {/* Footer CTA */}
           <div className="srv-footer">
             <span className="srv-cta">
               Explore service
@@ -229,12 +224,10 @@ function ServiceCard({ service, index }: { service: ServiceItem; index: number }
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
 export default function ServicesPage() {
   return (
     <>
       <style>{`
-        /* ── Fonts — same as hero ── */
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Roboto+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap');
 
         .srv-page { background:#FFFFFF; min-height:100vh; color:#334155; font-family:'Inter',sans-serif; }
@@ -267,12 +260,14 @@ export default function ServicesPage() {
         .srv-eyebrow-dot { width:5px; height:5px; background:#FF6B4A; border-radius:50%; }
         .srv-hero-title {
           font-size:clamp(2.25rem,5vw,4.5rem); font-weight:700;
-          letter-spacing:-0.03em; line-height:1.1; color:#0F172A;
+          letter-spacing:-0.03em; line-height:1.1; color:#132B50;
           max-width:800px; margin-bottom:24px;
           font-family:'Plus Jakarta Sans',sans-serif;
         }
         .srv-hero-title em { font-style:normal; color:#FF6B4A; }
-        .srv-hero-sub { font-size:1.125rem; line-height:1.65; color:#475569; max-width:576px; margin-bottom:32px; }
+        .srv-hero-sub { font-size:1.125rem; line-height:1.65; color:#132B50; opacity: 0.85; max-width:576px; margin-bottom:32px; }
+        
+        /* ── Hero CTA updated with scaling support ── */
         .srv-hero-cta {
           display:inline-flex; align-items:center; gap:8px;
           background:#FF6B4A; color:#fff; border:none;
@@ -282,19 +277,19 @@ export default function ServicesPage() {
         }
         .srv-hero-cta:hover { background:#E8512F; }
 
-        /* ── Grid section ── */
-        .srv-grid-section { padding:80px 60px 120px; background:#FFFFFF; }
-        .srv-section-label {
-          font-family:'Roboto Mono',monospace;
-          font-size:0.7rem; font-weight:700; letter-spacing:0.16em;
-          text-transform:uppercase; color:#94A3B8; margin-bottom:48px;
-        }
-        .srv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+       /* ── Grid section ── */
+.srv-grid-section { padding:80px 60px 120px; background:#FFFFFF; }
+.srv-section-label {
+  font-family:'Plus Jakarta Sans', sans-serif;
+  font-size:0.85rem; font-weight:900; letter-spacing:0.08em;
+  text-transform:uppercase; color:#94A3B8; margin-bottom:48px;
+}
+.srv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
 
-        /* ── Card shell — dark by default, ember on hover ── */
+        /* ── Card shell ── */
         .srv-card {
           position:relative;
-          background:#0A0E17;          /* dark ink — default */
+          background:#132B50;
           border:1px solid rgba(255,255,255,0.07);
           border-radius:20px;
           overflow:hidden;
@@ -302,7 +297,6 @@ export default function ServicesPage() {
           height:100%;
           will-change:transform;
           cursor:default;
-          /* diagonal texture — same as hero cards */
           background-image:
             repeating-linear-gradient(
               135deg,
@@ -311,7 +305,7 @@ export default function ServicesPage() {
               transparent 1px,
               transparent 12px
             );
-          background-color:#0A0E17;
+          background-color:#132B50;
           transition:border-color 0.4s cubic-bezier(0.16,1,0.3,1),
                      box-shadow 0.4s ease;
         }
@@ -320,7 +314,6 @@ export default function ServicesPage() {
           box-shadow:0 30px 60px -20px rgba(199,70,70,0.2);
         }
 
-        /* Ambient glow overlay */
         .srv-ambient-glow {
           position:absolute; inset:-40px; pointer-events:none; z-index:0;
           background:radial-gradient(circle at center,rgba(199,70,70,0.12) 0%,transparent 70%);
@@ -328,7 +321,6 @@ export default function ServicesPage() {
           transition:opacity 0.5s cubic-bezier(0.16,1,0.3,1);
         }
 
-        /* Card body */
         .srv-card-body {
           position:relative; z-index:1;
           padding:32px 28px;
@@ -341,7 +333,6 @@ export default function ServicesPage() {
           margin-bottom:32px;
         }
 
-        /* Icon — same style as hero */
         .srv-icon-wrap {
           width:36px; height:36px;
           display:flex; align-items:center; justify-content:center;
@@ -351,7 +342,6 @@ export default function ServicesPage() {
         .srv-card.is-hovered .srv-icon-wrap { color:#FFFFFF; }
         .srv-icon-wrap svg { width:34px; height:34px; stroke-width:1.35; }
 
-        /* Tag — Roboto Mono, same as hero */
         .srv-tag {
           font-family:'Roboto Mono',monospace;
           font-size:0.6rem; font-weight:700;
@@ -361,7 +351,6 @@ export default function ServicesPage() {
         }
         .srv-card.is-hovered .srv-tag { color:#C74646; }
 
-        /* Title — Plus Jakarta Sans, same as hero */
         .srv-card-title {
           font-family:'Plus Jakarta Sans',sans-serif;
           font-size:1.15rem; font-weight:700;
@@ -369,7 +358,6 @@ export default function ServicesPage() {
           color:#FFFFFF; margin-bottom:12px;
         }
 
-        /* Description */
         .srv-card-desc {
           font-family:'Inter',sans-serif;
           font-size:0.875rem; line-height:1.65;
@@ -379,7 +367,6 @@ export default function ServicesPage() {
         }
         .srv-card.is-hovered .srv-card-desc { color:#94A3B8; }
 
-        /* Features */
         .srv-card-features {
           display:flex; flex-direction:column; gap:9px;
           margin-bottom:28px;
@@ -399,7 +386,6 @@ export default function ServicesPage() {
         }
         .srv-card.is-hovered .srv-feature-dot { opacity:1; }
 
-        /* Footer CTA — same arrow style as hero */
         .srv-footer {
           display:flex; align-items:center;
           padding-top:18px;
@@ -451,7 +437,17 @@ export default function ServicesPage() {
             From a single integration to a full digital overhaul we bring the engineering depth and strategic clarity to make it stick.
           </motion.p>
 
-          <motion.a href="/contact" className="srv-hero-cta" custom={0.3} variants={fadeUp} initial="hidden" animate="show">
+          <motion.a 
+            href="/contact" 
+            className="srv-hero-cta" 
+            custom={0.3} 
+            variants={fadeUp} 
+            initial="hidden" 
+            animate="show"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          >
             Talk to our team
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2}>
               <path d="M3 8h10M9 4l4 4-4 4" />
@@ -478,7 +474,7 @@ export default function ServicesPage() {
         </section>
 
         {/* ── CTA Band ── */}
-        <section className="bg-ember-500 py-15">
+        <section className="bg-ember-500 py-15" style={{ overflow: "hidden" }}>
           <div className="mx-auto max-w-6xl px-6">
             <motion.div
               variants={staggerContainer}
@@ -499,15 +495,19 @@ export default function ServicesPage() {
                 </motion.p>
               </div>
               <motion.div variants={slowFadeRight}>
-                <Link
+                <MotionLink
                   href="/contact"
-                  className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-ink-950 px-7 py-4 text-sm font-semibold text-white transition-colors duration-200 hover:bg-ink-900"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-xl px-7 py-4 text-sm font-semibold text-white transition-colors duration-300"
+                  style={{ backgroundColor: '#132B50' }}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 21 }}
                 >
                   Start a conversation
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                     <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                </Link>
+                </MotionLink>
               </motion.div>
             </motion.div>
           </div>
