@@ -175,7 +175,7 @@ export default function Navbar() {
               }}
             >
               <Image
-                src="/images/iconex-logo.png"
+                src="/Images/iconex-logo.png"
                 alt="Iconex IT Logo"
                 fill
                 priority

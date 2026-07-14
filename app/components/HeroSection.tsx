@@ -161,8 +161,8 @@ export default function HeroSection() {
         {!videoError && (
           <div className="hero-video-wrapper">
             <video ref={videoRef} autoPlay loop muted playsInline className="hero-video" preload="auto" onError={() => setVideoError(true)}>
-              <source src="/videos/company.mp4" type="video/mp4" />
-              <source src="/company.mp4" type="video/mp4" />
+              <source src="/Videos/company.mp4" type="video/mp4" />
+              <source src="/Videos/company.mp4" type="video/mp4" />
             </video>
             <div className="hero-video-overlay" />
           </div>
