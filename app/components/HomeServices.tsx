@@ -267,12 +267,7 @@ export default function HomeServices() {
     flex-wrap:wrap; 
 }
 
-.hs-heading-left { 
-    max-width: 680px; 
-    /* Pulls the text out to the left. Adjust this number higher if you need it even more left! */
-    margin-left: -40px; 
-    position: relative; /* Ensures it renders smoothly while offset */
-}
+
 
 
         .hs-heading-left  { max-width:680px; }
