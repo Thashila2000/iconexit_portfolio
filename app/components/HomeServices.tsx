@@ -24,7 +24,7 @@ const services: ServiceItem[] = [
     title: "Cloud & Infrastructure",
     description: "We design and manage resilient cloud ecosystems that auto-scale with your traffic — from zero-downtime migrations to intelligent cost-saving orchestration across AWS, Azure, and GCP.",
     features: ["Cloud migration", "Infrastructure as code", "Cost optimisation", "24/7 monitoring"],
-    imagePath: "/images/service1.jpg",
+    imagePath: "/Images/service1.jpg",
     accent: "#F15C31",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -45,7 +45,7 @@ const services: ServiceItem[] = [
     title: "Cybersecurity",
     description: "Military-grade threat detection, advanced penetration testing, and ironclad compliance frameworks (SOC 2, ISO) to safeguard your proprietary data and keep your systems audit-ready.",
     features: ["Penetration testing", "SOC 2 compliance", "Threat monitoring", "Incident response"],
-    imagePath: "/images/service2.png",
+    imagePath: "/Images/service2.png",
     accent: "#E85555",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,7 +66,7 @@ const services: ServiceItem[] = [
     title: "Software Development",
     description: "Bespoke full-stack systems built with clean, scalable, modular architectures. We write test-driven code your team will actually love to maintain.",
     features: ["Web & mobile apps", "API development", "System integration", "Code audits"],
-    imagePath: "/images/service3.png",
+    imagePath: "/Images/service3.png",
     accent: "#132B50",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -87,7 +87,7 @@ const services: ServiceItem[] = [
     title: "AI & Data Analytics",
     description: "Transform chaotic data trails into predictable, actionable revenue. We deploy secure machine learning models and high-throughput analytical pipelines.",
     features: ["ML model development", "Data pipelines", "BI dashboards", "Predictive analytics"],
-    imagePath: "/images/service4.jpg",
+    imagePath: "/Images/service4.jpg",
     accent: "#7C3AED",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -107,7 +107,7 @@ const services: ServiceItem[] = [
     title: "IT Consulting",
     description: "Pragmatic digital transformation roadmaps and independent vendor selection based entirely on objective benchmarks, not speculative buzzwords.",
     features: ["Tech roadmapping", "Vendor evaluation", "Digital transformation", "CTO advisory"],
-    imagePath: "/images/service5.jpg",
+    imagePath: "/Images/service5.jpg",
     accent: "#0891B2",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +128,7 @@ const services: ServiceItem[] = [
     title: "Managed IT Support",
     description: "Ultra-responsive, SLA-backed engineers monitoring your endpoints 24/7. We resolve performance roadblocks silently in the background before they slow your workflow.",
     features: ["Help desk support", "SLA guarantees", "Remote & on-site", "Proactive maintenance"],
-    imagePath: "/images/service6.png",
+    imagePath: "/Images/service6.png",
     accent: "#059669",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
