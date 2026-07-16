@@ -106,8 +106,8 @@ const services: ServiceItem[] = [
 
 export default function HomeServices() {
   const containerRef      = useRef<HTMLDivElement>(null);
-  const mobilePinRef      = useRef<HTMLDivElement>(null);
-  const tabletDesktopRef  = useRef<HTMLDivElement>(null);
+  const mobilePinRef      = useRef<HTMLDivElement>(null);  // < 640px only
+  const tabletDesktopRef  = useRef<HTMLDivElement>(null);  // >= 640px (tablet + desktop)
   const headingRef        = useRef<HTMLDivElement>(null);
   const progressBarRef    = useRef<HTMLDivElement>(null);
   const counterRef        = useRef<HTMLSpanElement>(null);
@@ -146,7 +146,7 @@ export default function HomeServices() {
   useGSAP(() => {
     const mm = gsap.matchMedia();
 
-    // ── Heading Animation ────────────────────────────────────────────────
+    // ── Heading ───────────────────────────────────────────────────────────
     if (headingRef.current) {
       const eyebrow = headingRef.current.querySelector<HTMLElement>(".hs-eyebrow");
       const title   = headingRef.current.querySelector<HTMLElement>(".hs-section-title");
@@ -161,7 +161,8 @@ export default function HomeServices() {
       if (link)    tl.from(link, { x: 20, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.4);
     }
 
-    // ── Mobile Screen Optimization (< 640px) ─────────────────────────────
+    // ── MOBILE only (< 640px): vertical layout, image top / text bottom ──
+    // Uses flexbox so image and text are physically separated — no overlap.
     mm.add("(max-width: 639px)", () => {
       const mobileCards = gsap.utils.toArray<HTMLElement>(".hs-mobile-stacked-card");
       const mobileImgs  = gsap.utils.toArray<HTMLElement>(".hs-mobile-img-layer");
@@ -170,7 +171,7 @@ export default function HomeServices() {
       if (!mobileCards.length || !mobilePinRef.current) return;
 
       const total = services.length;
-      gsap.set(mobileCards, { opacity: 0, y: 30, pointerEvents: "none" });
+      gsap.set(mobileCards, { opacity: 0, y: 40, pointerEvents: "none" });
       gsap.set(mobileImgs,  { opacity: 0 });
       gsap.set(mobileCards[0], { opacity: 1, y: 0, pointerEvents: "auto" });
       gsap.set(mobileImgs[0],  { opacity: 1 });
@@ -180,11 +181,8 @@ export default function HomeServices() {
         scrollTrigger: {
           trigger: mobilePinRef.current,
           start: "top 80px",
-          end: `+=${total * 100}%`,
-          pin: true,
-          scrub: 1.2,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
+          end: `+=${total * 120}%`,
+          pin: true, scrub: 1.4, anticipatePin: 1, invalidateOnRefresh: true,
           onUpdate: (self) => {
             const idx = Math.min(Math.round(self.progress * (total - 1)), total - 1);
             if (mCounter)  mCounter.textContent  = String(idx + 1).padStart(2, "0");
@@ -194,14 +192,17 @@ export default function HomeServices() {
       });
 
       for (let i = 1; i < total; i++) {
-        tl.to(mobileCards[i - 1], { opacity: 0, y: -30, pointerEvents: "none", duration: 1, ease: "none" }, i - 1)
-          .to(mobileImgs[i - 1],  { opacity: 0, duration: 1, ease: "none" }, i - 1)
-          .to(mobileCards[i],     { opacity: 1, y: 0,  pointerEvents: "auto", duration: 1, ease: "none" }, i - 0.7)
-          .to(mobileImgs[i],      { opacity: 1, duration: 1, ease: "none" }, i - 0.7);
+        const lbl = `ms${i}`;
+        tl.addLabel(lbl)
+          .to(mobileCards[i - 1], { opacity: 0, y: -40, pointerEvents: "none", duration: 1, ease: "power2.inOut" }, lbl)
+          .to(mobileCards[i],     { opacity: 1, y: 0,   pointerEvents: "auto", duration: 1, ease: "power2.inOut" }, lbl)
+          .to(mobileImgs[i],      { opacity: 1, duration: 1, ease: "power2.inOut" }, lbl)
+          .to(mobileImgs[i - 1],  { opacity: 0, duration: 0.3, ease: "power2.in"  }, `${lbl}+=0.7`)
+          .to({}, { duration: 0.6 });
       }
     });
 
-    // ── Tablet & Desktop Optimization (>= 640px) ─────────────────────────
+    // ── TABLET + DESKTOP (>= 640px): side-by-side layout, same crossfade ─
     mm.add("(min-width: 640px)", () => {
       const textCards   = gsap.utils.toArray<HTMLElement>(".hs-text-card");
       const imgLayers   = gsap.utils.toArray<HTMLElement>(".hs-img-layer");
@@ -211,7 +212,7 @@ export default function HomeServices() {
       if (!textCards.length || !imgLayers.length || !tabletDesktopRef.current) return;
 
       const total = services.length;
-      gsap.set(textCards, { opacity: 0, y: 30, pointerEvents: "none" });
+      gsap.set(textCards, { opacity: 0, y: 55, pointerEvents: "none" });
       gsap.set(imgLayers, { opacity: 0 });
       gsap.set(textCards[0], { opacity: 1, y: 0, pointerEvents: "auto" });
       gsap.set(imgLayers[0], { opacity: 1 });
@@ -221,11 +222,8 @@ export default function HomeServices() {
         scrollTrigger: {
           trigger: tabletDesktopRef.current,
           start: "top 80px",
-          end: `+=${total * 100}%`,
-          pin: true,
-          scrub: 1.2,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
+          end: `+=${total * 120}%`,
+          pin: true, scrub: 1.4, anticipatePin: 1, invalidateOnRefresh: true,
           onUpdate: (self) => {
             const idx = Math.min(Math.round(self.progress * (total - 1)), total - 1);
             if (counter)     counter.textContent     = String(idx + 1).padStart(2, "0");
@@ -235,11 +233,14 @@ export default function HomeServices() {
       });
 
       for (let i = 1; i < total; i++) {
-        tl.to(textCards[i - 1], { opacity: 0, y: -30, pointerEvents: "none", duration: 1, ease: "none" }, i - 1)
-          .to(imgLayers[i - 1], { opacity: 0, duration: 1, ease: "none" }, i - 1)
-          .to(textCards[i],     { opacity: 1, y: 0,  pointerEvents: "auto", duration: 1, ease: "none" }, i - 0.7)
-          .to(imgLayers[i],     { opacity: 1, duration: 1, ease: "none" }, i - 0.7)
-          .to(accentBar ?? {},  { backgroundColor: "#F15C31", duration: 0.3, ease: "none" }, i - 0.7);
+        const lbl = `step${i}`;
+        tl.addLabel(lbl)
+          .to(textCards[i - 1], { opacity: 0, y: -55, pointerEvents: "none", duration: 1, ease: "power2.inOut" }, lbl)
+          .to(textCards[i],     { opacity: 1, y: 0,   pointerEvents: "auto", duration: 1, ease: "power2.inOut" }, lbl)
+          .to(imgLayers[i],     { opacity: 1, duration: 1, ease: "power2.inOut" }, lbl)
+          .to(imgLayers[i - 1], { opacity: 0, duration: 0.3, ease: "power2.in"  }, `${lbl}+=0.7`)
+          .to(accentBar ?? {},  { backgroundColor: "#F15C31", duration: 0.8, ease: "power2.inOut" }, lbl)
+          .to({}, { duration: 0.6 });
       }
     });
 
@@ -249,32 +250,37 @@ export default function HomeServices() {
   return (
     <div ref={containerRef} className="hs-section">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=600;700;800&family=DM+Sans:ital,opsz,wght=0,9..40,300;0,9..40,400;0,9..40,500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&display=swap');
 
         .hs-section { background:#FFFFFF; color:#132B50; position:relative; width:100%; overflow-x:hidden; }
 
         /* ── Heading ── */
         .hs-heading-block { 
-          max-width:1200px; 
-          margin:0 auto; 
-          padding: 88px 5% 52px 2%; 
-          display:flex; 
-          align-items:center; 
-          justify-content:space-between; 
-          gap:24px; 
-          flex-wrap:wrap; 
-        }
+    max-width:1200px; 
+    margin:0 auto; 
+    /* Top: 88px, Right: 5%, Bottom: 52px, Left: 2% (or 0px) */
+    padding: 88px 5% 52px 2%; 
+    display:flex; 
+    align-items:center; 
+    justify-content:space-between; 
+    gap:24px; 
+    flex-wrap:wrap; 
+}
+
+
+
 
         .hs-heading-left  { max-width:680px; }
         .hs-eyebrow { display:inline-flex; align-items:center; gap:9px; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#F15C31; margin-bottom:14px; overflow:hidden; }
-        .hs-eyebrow-dot { 
-          width: 6px; 
-          height: 6px; 
-          background: #F15C31; 
-          border-radius: 50%; 
-          flex-shrink: 0; 
-          display: inline-block; 
-        }
+       .hs-eyebrow-dot { 
+    width: 6px; 
+    height: 6px; 
+    background: #F15C31; 
+    border-radius: 50%; 
+    flex-shrink: 0; /* Keeps it from squeezing if text gets tight */
+    display: inline-block; /* Ensures it renders its width/height perfectly */
+}
+        @keyframes pulse-dot { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.5);opacity:0.6;} }
         .hs-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2rem,3.5vw,3rem); font-weight:800; line-height:1.12; letter-spacing:-0.03em; color:#132B50; margin:0 0 14px; overflow:hidden; }
         .hs-section-title em { font-style:normal; color:#F15C31; }
         .hs-section-sub { font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:500; color:#64748B; line-height:1.65; margin:0; }
@@ -285,7 +291,7 @@ export default function HomeServices() {
 
         /* ── Shared card internals ── */
         .hs-tag-wrapper { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-        .hs-icon         { width:30px; height:30px; flex-shrink:0; }
+        .hs-icon        { width:30px; height:30px; flex-shrink:0; }
         .hs-tag { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#F15C31; }
         .hs-card-title { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; line-height:1.2; letter-spacing:-0.02em; color:#132B50; margin:0 0 10px; }
         .hs-card-desc  { font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:400; color:#475569; line-height:1.7; margin:0 0 20px; }
@@ -301,7 +307,11 @@ export default function HomeServices() {
         .hs-progress-track { flex:1; height:2px; background:#E2E8F0; border-radius:2px; overflow:hidden; }
         .hs-progress-fill  { height:100%; width:0%; background:#F15C31; border-radius:2px; }
 
-        /* ── Mobile View UI ── */
+        /* ══════════════════════════════════════════════════════════════════
+           MOBILE ONLY (< 640px)
+           Flexbox column: image is a fixed-height flex child, text follows
+           naturally below — zero overlap possible.
+        ══════════════════════════════════════════════════════════════════ */
         .hs-mobile-pin-wrapper {
           display: flex;
           flex-direction: column;
@@ -309,6 +319,8 @@ export default function HomeServices() {
           height: calc(100vh - 80px);
           position: relative;
         }
+
+        /* Image sits at the top as a flex child with fixed height */
         .hs-mobile-img-stack {
           flex: 0 0 36%;
           position: relative;
@@ -322,6 +334,8 @@ export default function HomeServices() {
           background-position: center;
           will-change: opacity;
         }
+
+        /* Text area occupies the remaining space below the image */
         .hs-mobile-text-stack {
           flex: 1;
           position: relative;
@@ -339,7 +353,11 @@ export default function HomeServices() {
         .hs-mobile-stacked-card .hs-card-desc  { font-size: 0.855rem; margin-bottom: 14px; }
         .hs-mobile-stacked-card .hs-features-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
 
-        /* ── Tablet & Desktop View UI ── */
+        /* ══════════════════════════════════════════════════════════════════
+           TABLET + DESKTOP (>= 640px)
+           Side-by-side layout: text left, image right.
+           Same crossfade animation as desktop — one unified GSAP block.
+        ══════════════════════════════════════════════════════════════════ */
         .hs-tablet-desktop-pin {
           display: none;
           width: 100%;
@@ -354,6 +372,8 @@ export default function HomeServices() {
           align-items: center;
           gap: 5%;
         }
+
+        /* Left: stacked text cards */
         .hs-left-side {
           flex: 1.1;
           position: relative;
@@ -370,6 +390,7 @@ export default function HomeServices() {
         .hs-text-card .hs-card-title { font-size: 1.5rem; }
         .hs-text-card .hs-card-desc  { font-size: 0.9rem; }
 
+        /* Right: stacked image layers */
         .hs-right-side {
           flex: 0.9;
           aspect-ratio: 4/3;
@@ -392,6 +413,7 @@ export default function HomeServices() {
           background:#F15C31; z-index:2;
         }
 
+        /* Desktop: bigger text */
         @media (min-width: 1024px) {
           .hs-text-card .hs-card-title { font-size: 2.1rem; }
           .hs-text-card .hs-card-desc  { font-size: 1.05rem; }
@@ -400,7 +422,7 @@ export default function HomeServices() {
           .hs-tablet-desktop-pin { padding: 0 6%; }
         }
 
-        /* Responsive Layout Toggles */
+        /* Visibility toggles */
         @media (max-width: 639px) {
           .hs-tablet-desktop-pin { display: none !important; }
           .hs-mobile-pin-wrapper  { display: flex; }
@@ -410,12 +432,16 @@ export default function HomeServices() {
           .hs-tablet-desktop-pin  { display: flex; }
         }
 
+        /* Heading stacks on small screens */
         @media (max-width: 768px) {
           .hs-heading-block { flex-direction:column; align-items:flex-start; padding:64px 5% 40px; }
           .hs-features-grid { grid-template-columns:1fr; }
         }
         @media (max-width: 480px) {
           .hs-mobile-stacked-card .hs-features-grid { grid-template-columns:1fr; }
+        }
+        @media (prefers-reduced-motion:reduce) {
+          .hs-eyebrow-dot { animation:none !important; }
         }
       `}</style>
 
@@ -430,10 +456,12 @@ export default function HomeServices() {
             Six practice areas. One unified team. Delivered with engineering depth and strategic clarity.
           </p>
         </div>
+        
       </div>
 
-      {/* ══ MOBILE VIEW (< 640px) ══════════════════════════════════════════ */}
+      {/* ══ MOBILE ONLY (< 640px) ══════════════════════════════════════════ */}
       <div ref={mobilePinRef} className="hs-mobile-pin-wrapper">
+        {/* Image — flex child, sits at top with no overlap risk */}
         <div className="hs-mobile-img-stack">
           {services.map((s) => (
             <div key={`mi-${s.tag}`} className="hs-mobile-img-layer"
@@ -441,6 +469,7 @@ export default function HomeServices() {
           ))}
         </div>
 
+        {/* Text — flex child, naturally placed below image */}
         <div className="hs-mobile-text-stack">
           {services.map((s) => (
             <div key={`mt-${s.tag}`} className="hs-mobile-stacked-card">
@@ -460,23 +489,19 @@ export default function HomeServices() {
                   </div>
                 ))}
               </div>
+             
             </div>
           ))}
         </div>
 
-        <div className="hs-progress-strip">
-          <div className="hs-counter"><span ref={mobileCounterRef}>01</span> / {String(services.length).padStart(2, '0')}</div>
-          <div className="hs-progress-track">
-            <div ref={mobileProgressRef} className="hs-progress-fill" />
-          </div>
-        </div>
+      
       </div>
 
-      {/* ══ TABLET + DESKTOP VIEW (>= 640px) ═══════════════════════════════ */}
+      {/* ══ TABLET + DESKTOP (>= 640px): text left, image right ═══════════ */}
       <div ref={tabletDesktopRef} className="hs-tablet-desktop-pin">
         <div className="hs-td-inner">
-          
-          {/* Left Side: Text Cards */}
+
+          {/* Left: stacked text cards */}
           <div className="hs-left-side">
             {services.map((s) => (
               <div key={`d-${s.tag}`} className="hs-text-card">
@@ -496,11 +521,12 @@ export default function HomeServices() {
                     </div>
                   ))}
                 </div>
+                
               </div>
             ))}
           </div>
 
-          {/* Right Side: Visual Layers */}
+          {/* Right: stacked image layers */}
           <div className="hs-right-side">
             <div className="hs-accent-bar" />
             {services.map((s) => (
@@ -511,12 +537,7 @@ export default function HomeServices() {
 
         </div>
 
-        <div className="hs-progress-strip">
-          <div className="hs-counter"><span ref={counterRef}>01</span> / {String(services.length).padStart(2, '0')}</div>
-          <div className="hs-progress-track">
-            <div ref={progressBarRef} className="hs-progress-fill" />
-          </div>
-        </div>
+        
       </div>
 
     </div>
