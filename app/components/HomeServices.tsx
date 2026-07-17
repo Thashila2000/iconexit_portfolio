@@ -104,16 +104,26 @@ const services: ServiceItem[] = [
   },
 ];
 
+// ── Shared feature check icon ─────────────────────────────────────────────────
+const CheckIcon = () => (
+  <span className="hs-feature-check">
+    <svg viewBox="0 0 10 10" fill="none">
+      <path d="M2 5.5l2 2 4-4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  </span>
+);
+
 export default function HomeServices() {
   const containerRef      = useRef<HTMLDivElement>(null);
-  const mobilePinRef      = useRef<HTMLDivElement>(null);  // < 640px only
-  const tabletDesktopRef  = useRef<HTMLDivElement>(null);  // >= 640px (tablet + desktop)
+  const mobilePinRef      = useRef<HTMLDivElement>(null);
+  const tabletDesktopRef  = useRef<HTMLDivElement>(null);
   const headingRef        = useRef<HTMLDivElement>(null);
   const progressBarRef    = useRef<HTMLDivElement>(null);
   const counterRef        = useRef<HTMLSpanElement>(null);
   const mobileProgressRef = useRef<HTMLDivElement>(null);
   const mobileCounterRef  = useRef<HTMLSpanElement>(null);
 
+  // ── Word splitter (no Club license) ──────────────────────────────────────
   const splitWords = (el: HTMLElement): HTMLSpanElement[] => {
     const spans: HTMLSpanElement[] = [];
     const wrap = (node: ChildNode) => {
@@ -151,79 +161,46 @@ export default function HomeServices() {
       const eyebrow = headingRef.current.querySelector<HTMLElement>(".hs-eyebrow");
       const title   = headingRef.current.querySelector<HTMLElement>(".hs-section-title");
       const sub     = headingRef.current.querySelector<HTMLElement>(".hs-section-sub");
-      const link    = headingRef.current.querySelector<HTMLElement>(".hs-all-link");
       const tl = gsap.timeline({
         scrollTrigger: { trigger: headingRef.current, start: "top 88%", toggleActions: "play none none none" },
       });
       if (eyebrow) tl.from(splitWords(eyebrow), { y: "110%", opacity: 0, duration: 0.5, ease: "power3.out", stagger: 0.04 }, 0);
       if (title)   tl.from(splitWords(title),   { y: "110%", opacity: 0, duration: 0.75, ease: "power4.out", stagger: 0.055 }, 0.1);
-      if (sub)     tl.from(sub,  { y: 20, opacity: 0, duration: 0.6, ease: "power3.out" }, 0.35);
-      if (link)    tl.from(link, { x: 20, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.4);
+      if (sub)     tl.from(sub, { y: 20, opacity: 0, duration: 0.6, ease: "power3.out" }, 0.35);
     }
 
-    // ── MOBILE only (< 640px): vertical layout, image top / text bottom ──
-    // Uses flexbox so image and text are physically separated — no overlap.
-    mm.add("(max-width: 639px)", () => {
-      const mobileCards = gsap.utils.toArray<HTMLElement>(".hs-mobile-stacked-card");
-      const mobileImgs  = gsap.utils.toArray<HTMLElement>(".hs-mobile-img-layer");
-      const mCounter    = mobileCounterRef.current;
-      const mProgress   = mobileProgressRef.current;
-      if (!mobileCards.length || !mobilePinRef.current) return;
-
+    // ── Helper: build the crossfade timeline ─────────────────────────────
+    // KEY FIX: outgoing image drops to 0 BEFORE incoming rises to 1.
+    // This ensures opacity never sums to > 1.0 — eliminating the white mist.
+    const buildCrossfade = (
+      textCards: HTMLElement[],
+      imgLayers: HTMLElement[],
+      trigger: HTMLElement,
+      counter: HTMLSpanElement | null,
+      progressBar: HTMLDivElement | null,
+      accentBar?: HTMLElement | null,
+    ) => {
       const total = services.length;
-      gsap.set(mobileCards, { opacity: 0, y: 40, pointerEvents: "none" });
-      gsap.set(mobileImgs,  { opacity: 0 });
-      gsap.set(mobileCards[0], { opacity: 1, y: 0, pointerEvents: "auto" });
-      gsap.set(mobileImgs[0],  { opacity: 1 });
-      if (mCounter) mCounter.textContent = "01";
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: mobilePinRef.current,
-          start: "top 80px",
-          end: `+=${total * 120}%`,
-          pin: true, scrub: 1.4, anticipatePin: 1, invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const idx = Math.min(Math.round(self.progress * (total - 1)), total - 1);
-            if (mCounter)  mCounter.textContent  = String(idx + 1).padStart(2, "0");
-            if (mProgress) mProgress.style.width = `${self.progress * 100}%`;
-          },
-        },
-      });
-
-      for (let i = 1; i < total; i++) {
-        const lbl = `ms${i}`;
-        tl.addLabel(lbl)
-          .to(mobileCards[i - 1], { opacity: 0, y: -40, pointerEvents: "none", duration: 1, ease: "power2.inOut" }, lbl)
-          .to(mobileCards[i],     { opacity: 1, y: 0,   pointerEvents: "auto", duration: 1, ease: "power2.inOut" }, lbl)
-          .to(mobileImgs[i],      { opacity: 1, duration: 1, ease: "power2.inOut" }, lbl)
-          .to(mobileImgs[i - 1],  { opacity: 0, duration: 0.3, ease: "power2.in"  }, `${lbl}+=0.7`)
-          .to({}, { duration: 0.6 });
-      }
-    });
-
-    // ── TABLET + DESKTOP (>= 640px): side-by-side layout, same crossfade ─
-    mm.add("(min-width: 640px)", () => {
-      const textCards   = gsap.utils.toArray<HTMLElement>(".hs-text-card");
-      const imgLayers   = gsap.utils.toArray<HTMLElement>(".hs-img-layer");
-      const accentBar   = containerRef.current?.querySelector<HTMLElement>(".hs-accent-bar");
-      const counter     = counterRef.current;
-      const progressBar = progressBarRef.current;
-      if (!textCards.length || !imgLayers.length || !tabletDesktopRef.current) return;
-
-      const total = services.length;
-      gsap.set(textCards, { opacity: 0, y: 55, pointerEvents: "none" });
-      gsap.set(imgLayers, { opacity: 0 });
-      gsap.set(textCards[0], { opacity: 1, y: 0, pointerEvents: "auto" });
-      gsap.set(imgLayers[0], { opacity: 1 });
+      // ── Initial state ─────────────────────────────────────────────────
+      // All cards and images start invisible except index 0
+      gsap.set(textCards,    { opacity: 0, y: 40, pointerEvents: "none" });
+      gsap.set(imgLayers,    { opacity: 0, zIndex: 0 });
+      gsap.set(textCards[0], { opacity: 1, y: 0,  pointerEvents: "auto" });
+      gsap.set(imgLayers[0], { opacity: 1, zIndex: 1 });
       if (counter) counter.textContent = "01";
 
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: tabletDesktopRef.current,
+          trigger,
           start: "top 80px",
-          end: `+=${total * 120}%`,
-          pin: true, scrub: 1.4, anticipatePin: 1, invalidateOnRefresh: true,
+          end: `+=${total * 110}%`,
+          pin: true,
+          // scrub: 0.6 — snappy enough to feel responsive, smooth enough not to lag
+          scrub: 0.6,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          fastScrollEnd: true,
           onUpdate: (self) => {
             const idx = Math.min(Math.round(self.progress * (total - 1)), total - 1);
             if (counter)     counter.textContent     = String(idx + 1).padStart(2, "0");
@@ -235,13 +212,68 @@ export default function HomeServices() {
       for (let i = 1; i < total; i++) {
         const lbl = `step${i}`;
         tl.addLabel(lbl)
-          .to(textCards[i - 1], { opacity: 0, y: -55, pointerEvents: "none", duration: 1, ease: "power2.inOut" }, lbl)
-          .to(textCards[i],     { opacity: 1, y: 0,   pointerEvents: "auto", duration: 1, ease: "power2.inOut" }, lbl)
-          .to(imgLayers[i],     { opacity: 1, duration: 1, ease: "power2.inOut" }, lbl)
-          .to(imgLayers[i - 1], { opacity: 0, duration: 0.3, ease: "power2.in"  }, `${lbl}+=0.7`)
-          .to(accentBar ?? {},  { backgroundColor: "#F15C31", duration: 0.8, ease: "power2.inOut" }, lbl)
-          .to({}, { duration: 0.6 });
+          // ── Text: outgoing fades up and out ───────────────────────────
+          .to(textCards[i - 1], {
+            opacity: 0, y: -40, pointerEvents: "none",
+            duration: 0.4, ease: "power2.in",
+          }, lbl)
+          // ── Image: outgoing drops to 0 FIRST ─────────────────────────
+          // Completed before incoming starts — no simultaneous opacity overlap
+          .to(imgLayers[i - 1], {
+            opacity: 0, zIndex: 0,
+            duration: 0.35, ease: "power2.in",
+          }, lbl)
+          // ── Image: incoming rises AFTER outgoing is done ──────────────
+          .set(imgLayers[i], { zIndex: 1 }, `${lbl}+=0.35`)
+          .to(imgLayers[i], {
+            opacity: 1,
+            duration: 0.35, ease: "power2.out",
+          }, `${lbl}+=0.35`)
+          // ── Text: incoming slides up into place ───────────────────────
+          .to(textCards[i], {
+            opacity: 1, y: 0, pointerEvents: "auto",
+            duration: 0.45, ease: "power2.out",
+          }, `${lbl}+=0.3`)
+          // ── Accent bar colour (desktop only, no-op if null) ───────────
+          .to(accentBar ?? {}, {
+            backgroundColor: "#F15C31",
+            duration: 0.3, ease: "none",
+          }, `${lbl}+=0.35`)
+          // ── Breathing pause before next step ─────────────────────────
+          .to({}, { duration: 0.5 });
       }
+    };
+
+    // ── MOBILE ONLY (< 640px) ─────────────────────────────────────────────
+    mm.add("(max-width: 639px)", () => {
+      const mobileCards = gsap.utils.toArray<HTMLElement>(".hs-mobile-stacked-card");
+      const mobileImgs  = gsap.utils.toArray<HTMLElement>(".hs-mobile-img-layer");
+      if (!mobileCards.length || !mobilePinRef.current) return;
+
+      buildCrossfade(
+        mobileCards,
+        mobileImgs,
+        mobilePinRef.current,
+        mobileCounterRef.current,
+        mobileProgressRef.current,
+      );
+    });
+
+    // ── TABLET + DESKTOP (>= 640px) ───────────────────────────────────────
+    mm.add("(min-width: 640px)", () => {
+      const textCards = gsap.utils.toArray<HTMLElement>(".hs-text-card");
+      const imgLayers = gsap.utils.toArray<HTMLElement>(".hs-img-layer");
+      const accentBar = containerRef.current?.querySelector<HTMLElement>(".hs-accent-bar");
+      if (!textCards.length || !imgLayers.length || !tabletDesktopRef.current) return;
+
+      buildCrossfade(
+        textCards,
+        imgLayers,
+        tabletDesktopRef.current,
+        counterRef.current,
+        progressBarRef.current,
+        accentBar,
+      );
     });
 
     return () => mm.revert();
@@ -255,189 +287,161 @@ export default function HomeServices() {
         .hs-section { background:#FFFFFF; color:#132B50; position:relative; width:100%; overflow-x:hidden; }
 
         /* ── Heading ── */
-        .hs-heading-block { 
-    max-width:1200px; 
-    margin:0 auto; 
-    /* Top: 88px, Right: 5%, Bottom: 52px, Left: 2% (or 0px) */
-    padding: 88px 5% 52px 2%; 
-    display:flex; 
-    align-items:center; 
-    justify-content:space-between; 
-    gap:24px; 
-    flex-wrap:wrap; 
-}
-
-
-
-
-        .hs-heading-left  { max-width:680px; }
-        .hs-eyebrow { display:inline-flex; align-items:center; gap:9px; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#F15C31; margin-bottom:14px; overflow:hidden; }
-       .hs-eyebrow-dot { 
-    width: 6px; 
-    height: 6px; 
-    background: #F15C31; 
-    border-radius: 50%; 
-    flex-shrink: 0; /* Keeps it from squeezing if text gets tight */
-    display: inline-block; /* Ensures it renders its width/height perfectly */
-}
+        .hs-heading-block {
+          max-width:1200px; margin:0 auto;
+          padding:88px 5% 52px 2%;
+          display:flex; align-items:center; justify-content:space-between;
+          gap:24px; flex-wrap:wrap;
+        }
+        .hs-heading-left { max-width:680px; }
+        .hs-eyebrow {
+          display:inline-flex; align-items:center; gap:9px;
+          font-family:'Plus Jakarta Sans',sans-serif;
+          font-size:0.72rem; font-weight:700; letter-spacing:0.18em;
+          text-transform:uppercase; color:#F15C31;
+          margin-bottom:14px; overflow:hidden;
+        }
+        .hs-eyebrow-dot {
+          width:6px; height:6px; background:#F15C31; border-radius:50%;
+          flex-shrink:0; display:inline-block;
+          animation:pulse-dot 2s ease-in-out infinite;
+        }
         @keyframes pulse-dot { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.5);opacity:0.6;} }
-        .hs-section-title { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(2rem,3.5vw,3rem); font-weight:800; line-height:1.12; letter-spacing:-0.03em; color:#132B50; margin:0 0 14px; overflow:hidden; }
+        .hs-section-title {
+          font-family:'Plus Jakarta Sans',sans-serif;
+          font-size:clamp(2rem,3.5vw,3rem); font-weight:800;
+          line-height:1.12; letter-spacing:-0.03em; color:#132B50;
+          margin:0 0 14px; overflow:hidden;
+        }
         .hs-section-title em { font-style:normal; color:#F15C31; }
-        .hs-section-sub { font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:500; color:#64748B; line-height:1.65; margin:0; }
-        .hs-all-link { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; border:1.5px solid #132B50; border-radius:10px; font-family:'Plus Jakarta Sans',sans-serif; font-size:0.825rem; font-weight:700; color:#132B50; text-decoration:none; white-space:nowrap; flex-shrink:0; transition:background 0.2s,color 0.2s; }
+        .hs-section-sub {
+          font-family:'DM Sans',sans-serif;
+          font-size:1rem; font-weight:500; color:#64748B; line-height:1.65; margin:0;
+        }
+        .hs-all-link {
+          display:inline-flex; align-items:center; gap:8px;
+          padding:12px 24px; border:1.5px solid #132B50; border-radius:10px;
+          font-family:'Plus Jakarta Sans',sans-serif;
+          font-size:0.825rem; font-weight:700; color:#132B50;
+          text-decoration:none; white-space:nowrap; flex-shrink:0;
+          transition:background 0.2s,color 0.2s;
+        }
         .hs-all-link:hover { background:#132B50; color:#fff; }
-        .hs-all-link svg  { transition:transform 0.2s; }
+        .hs-all-link svg   { transition:transform 0.2s; }
         .hs-all-link:hover svg { transform:translateX(3px); }
 
-        /* ── Shared card internals ── */
+        /* ── Shared card pieces ── */
         .hs-tag-wrapper { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
         .hs-icon        { width:30px; height:30px; flex-shrink:0; }
         .hs-tag { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#F15C31; }
-        .hs-card-title { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; line-height:1.2; letter-spacing:-0.02em; color:#132B50; margin:0 0 10px; }
-        .hs-card-desc  { font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:400; color:#475569; line-height:1.7; margin:0 0 20px; }
+        .hs-card-title  { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; line-height:1.2; letter-spacing:-0.02em; color:#132B50; margin:0 0 10px; }
+        .hs-card-desc   { font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:400; color:#475569; line-height:1.7; margin:0 0 20px; }
         .hs-features-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px 20px; }
-        .hs-feature-item { display:flex; align-items:center; gap:8px; font-family:'DM Sans',sans-serif; font-size:0.83rem; font-weight:500; color:#334155; }
+        .hs-feature-item  { display:flex; align-items:center; gap:8px; font-family:'DM Sans',sans-serif; font-size:0.83rem; font-weight:500; color:#334155; }
         .hs-feature-check { width:16px; height:16px; border-radius:50%; background:#F15C31; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
         .hs-feature-check svg { width:9px; height:9px; }
 
         /* ── Progress strip ── */
         .hs-progress-strip { position:absolute; bottom:20px; left:5%; right:5%; display:flex; align-items:center; gap:16px; z-index:10; }
-        .hs-counter { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; font-weight:700; letter-spacing:0.1em; color:#94A3B8; white-space:nowrap; }
-        .hs-counter span { color:#132B50; }
-        .hs-progress-track { flex:1; height:2px; background:#E2E8F0; border-radius:2px; overflow:hidden; }
-        .hs-progress-fill  { height:100%; width:0%; background:#F15C31; border-radius:2px; }
+        .hs-counter       { font-family:'Plus Jakarta Sans',sans-serif; font-size:0.75rem; font-weight:700; letter-spacing:0.1em; color:#94A3B8; white-space:nowrap; }
+        .hs-counter span  { color:#132B50; }
+        .hs-progress-track{ flex:1; height:2px; background:#E2E8F0; border-radius:2px; overflow:hidden; }
+        .hs-progress-fill { height:100%; width:0%; background:#F15C31; border-radius:2px; }
 
-        /* ══════════════════════════════════════════════════════════════════
-           MOBILE ONLY (< 640px)
-           Flexbox column: image is a fixed-height flex child, text follows
-           naturally below — zero overlap possible.
+        /* ══ MOBILE (< 640px) ══════════════════════════════════════════════
+           Column flex: image is a fixed-height flex child, text below.
+           No overlap — the two stacks are physically separated in the DOM.
         ══════════════════════════════════════════════════════════════════ */
         .hs-mobile-pin-wrapper {
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-          height: calc(100vh - 80px);
-          position: relative;
+          display:flex; flex-direction:column;
+          width:100%; height:calc(100vh - 80px);
+          position:relative;
         }
 
-        /* Image sits at the top as a flex child with fixed height */
+        /* Image zone — top 38% of the pinned viewport */
         .hs-mobile-img-stack {
-          flex: 0 0 36%;
-          position: relative;
-          overflow: hidden;
-          border-radius: 0 0 16px 16px;
+          flex:0 0 38%; position:relative; overflow:hidden;
+          border-radius:0 0 16px 16px;
+          /* Dark backing so background shows through before image loads */
+          background:#0A1323;
         }
         .hs-mobile-img-layer {
-          position: absolute;
-          inset: 0;
-          background-size: cover;
-          background-position: center;
-          will-change: opacity;
+          position:absolute; inset:0;
+          background-size:cover; background-position:center;
+          /* GPU composite — opacity only, no transform needed */
+          will-change:opacity;
+          /* Start transparent except first; GSAP sets this in JS */
         }
 
-        /* Text area occupies the remaining space below the image */
-        .hs-mobile-text-stack {
-          flex: 1;
-          position: relative;
-          overflow: hidden;
-          padding: 20px 5% 56px;
-        }
+        /* Text zone — remaining space */
+        .hs-mobile-text-stack { flex:1; position:relative; overflow:hidden; }
         .hs-mobile-stacked-card {
-          position: absolute;
-          inset: 0;
-          padding: 20px 5% 56px;
-          overflow-y: auto;
-          will-change: opacity, transform;
+          position:absolute; inset:0;
+          padding:20px 5% 56px;
+          overflow-y:auto;
+          will-change:opacity, transform;
         }
-        .hs-mobile-stacked-card .hs-card-title { font-size: 1.2rem; }
-        .hs-mobile-stacked-card .hs-card-desc  { font-size: 0.855rem; margin-bottom: 14px; }
-        .hs-mobile-stacked-card .hs-features-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+        .hs-mobile-stacked-card .hs-card-title { font-size:1.2rem; }
+        .hs-mobile-stacked-card .hs-card-desc  { font-size:0.855rem; margin-bottom:14px; }
+        .hs-mobile-stacked-card .hs-features-grid { grid-template-columns:1fr 1fr; gap:8px; }
 
-        /* ══════════════════════════════════════════════════════════════════
-           TABLET + DESKTOP (>= 640px)
-           Side-by-side layout: text left, image right.
-           Same crossfade animation as desktop — one unified GSAP block.
-        ══════════════════════════════════════════════════════════════════ */
+        /* ══ TABLET + DESKTOP (>= 640px) ══════════════════════════════════ */
         .hs-tablet-desktop-pin {
-          display: none;
-          width: 100%;
-          height: calc(100vh - 80px);
-          align-items: center;
-          padding: 0 5%;
-          position: relative;
+          display:none;
+          width:100%; height:calc(100vh - 80px);
+          align-items:center; padding:0 5%; position:relative;
         }
-        .hs-td-inner {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          gap: 5%;
-        }
+        .hs-td-inner { width:100%; display:flex; align-items:center; gap:5%; }
 
-        /* Left: stacked text cards */
-        .hs-left-side {
-          flex: 1.1;
-          position: relative;
-          height: 420px;
+        .hs-left-side  { flex:1.1; position:relative; height:420px; }
+        .hs-text-card  {
+          position:absolute; inset:0;
+          display:flex; flex-direction:column; justify-content:center;
+          will-change:opacity, transform;
         }
-        .hs-text-card {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          will-change: opacity, transform;
-        }
-        .hs-text-card .hs-card-title { font-size: 1.5rem; }
-        .hs-text-card .hs-card-desc  { font-size: 0.9rem; }
+        .hs-text-card .hs-card-title { font-size:1.5rem; }
+        .hs-text-card .hs-card-desc  { font-size:0.9rem; }
 
-        /* Right: stacked image layers */
         .hs-right-side {
-          flex: 0.9;
-          aspect-ratio: 4/3;
-          position: relative;
-          border-radius: 18px;
-          overflow: hidden;
-          background: #EEF2F8;
-          box-shadow: 0 0 0 1px rgba(19,43,80,0.06), 0 24px 48px -10px rgba(19,43,80,0.12);
+          flex:0.9; aspect-ratio:4/3; position:relative;
+          border-radius:18px; overflow:hidden;
+          /* Dark backing so there's never a white flash between images */
+          background:#0A1323;
+          box-shadow:0 0 0 1px rgba(19,43,80,0.06), 0 24px 48px -10px rgba(19,43,80,0.12);
         }
         .hs-img-layer {
-          position: absolute;
-          inset: 0;
-          background-size: cover;
-          background-position: center;
-          will-change: opacity;
+          position:absolute; inset:0;
+          background-size:cover; background-position:center;
+          /* opacity only — single cheapest GPU composite property */
+          will-change:opacity;
         }
         .hs-accent-bar {
-          position: absolute; left:0; top:10%; bottom:10%;
+          position:absolute; left:0; top:10%; bottom:10%;
           width:4px; border-radius:0 4px 4px 0;
           background:#F15C31; z-index:2;
         }
 
-        /* Desktop: bigger text */
-        @media (min-width: 1024px) {
-          .hs-text-card .hs-card-title { font-size: 2.1rem; }
-          .hs-text-card .hs-card-desc  { font-size: 1.05rem; }
-          .hs-left-side { height: 460px; }
-          .hs-td-inner  { gap: 7%; }
-          .hs-tablet-desktop-pin { padding: 0 6%; }
+        /* Responsive overrides */
+        @media (min-width:1024px) {
+          .hs-text-card .hs-card-title { font-size:2.1rem; }
+          .hs-text-card .hs-card-desc  { font-size:1.05rem; }
+          .hs-left-side { height:460px; }
+          .hs-td-inner  { gap:7%; }
+          .hs-tablet-desktop-pin { padding:0 6%; }
         }
-
-        /* Visibility toggles */
-        @media (max-width: 639px) {
-          .hs-tablet-desktop-pin { display: none !important; }
-          .hs-mobile-pin-wrapper  { display: flex; }
+        @media (max-width:639px) {
+          .hs-tablet-desktop-pin { display:none !important; }
+          .hs-mobile-pin-wrapper  { display:flex; }
         }
-        @media (min-width: 640px) {
-          .hs-mobile-pin-wrapper  { display: none !important; }
-          .hs-tablet-desktop-pin  { display: flex; }
+        @media (min-width:640px) {
+          .hs-mobile-pin-wrapper  { display:none !important; }
+          .hs-tablet-desktop-pin  { display:flex; }
         }
-
-        /* Heading stacks on small screens */
-        @media (max-width: 768px) {
+        @media (max-width:768px) {
           .hs-heading-block { flex-direction:column; align-items:flex-start; padding:64px 5% 40px; }
           .hs-features-grid { grid-template-columns:1fr; }
         }
-        @media (max-width: 480px) {
+        @media (max-width:480px) {
           .hs-mobile-stacked-card .hs-features-grid { grid-template-columns:1fr; }
         }
         @media (prefers-reduced-motion:reduce) {
@@ -456,20 +460,29 @@ export default function HomeServices() {
             Six practice areas. One unified team. Delivered with engineering depth and strategic clarity.
           </p>
         </div>
-        
+        <Link href="/services" className="hs-all-link">
+          All services
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2.5}>
+            <path d="M3 8h10M9 4l4 4-4 4"/>
+          </svg>
+        </Link>
       </div>
 
       {/* ══ MOBILE ONLY (< 640px) ══════════════════════════════════════════ */}
       <div ref={mobilePinRef} className="hs-mobile-pin-wrapper">
-        {/* Image — flex child, sits at top with no overlap risk */}
+
+        {/* Image stack — physically above text, no overlap */}
         <div className="hs-mobile-img-stack">
           {services.map((s) => (
-            <div key={`mi-${s.tag}`} className="hs-mobile-img-layer"
-              style={{ backgroundImage: `url(${s.imagePath})` }} />
+            <div
+              key={`mi-${s.tag}`}
+              className="hs-mobile-img-layer"
+              style={{ backgroundImage: `url(${s.imagePath})` }}
+            />
           ))}
         </div>
 
-        {/* Text — flex child, naturally placed below image */}
+        {/* Text stack — physically below image */}
         <div className="hs-mobile-text-stack">
           {services.map((s) => (
             <div key={`mt-${s.tag}`} className="hs-mobile-stacked-card">
@@ -481,23 +494,26 @@ export default function HomeServices() {
               <p className="hs-card-desc">{s.description}</p>
               <div className="hs-features-grid">
                 {s.features.map((f) => (
-                  <div key={f} className="hs-feature-item">
-                    <span className="hs-feature-check">
-                      <svg viewBox="0 0 10 10" fill="none"><path d="M2 5.5l2 2 4-4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                    </span>
-                    {f}
-                  </div>
+                  <div key={f} className="hs-feature-item"><CheckIcon />{f}</div>
                 ))}
               </div>
-             
             </div>
           ))}
         </div>
 
-      
+        {/* Mobile progress strip */}
+        <div className="hs-progress-strip">
+          <span className="hs-counter">
+            <span ref={mobileCounterRef}>01</span>
+            <span style={{ opacity: 0.35 }}> / {String(services.length).padStart(2, "0")}</span>
+          </span>
+          <div className="hs-progress-track">
+            <div ref={mobileProgressRef} className="hs-progress-fill" />
+          </div>
+        </div>
       </div>
 
-      {/* ══ TABLET + DESKTOP (>= 640px): text left, image right ═══════════ */}
+      {/* ══ TABLET + DESKTOP (>= 640px) ════════════════════════════════════ */}
       <div ref={tabletDesktopRef} className="hs-tablet-desktop-pin">
         <div className="hs-td-inner">
 
@@ -513,31 +529,47 @@ export default function HomeServices() {
                 <p className="hs-card-desc">{s.description}</p>
                 <div className="hs-features-grid">
                   {s.features.map((f) => (
-                    <div key={f} className="hs-feature-item">
-                      <span className="hs-feature-check">
-                        <svg viewBox="0 0 10 10" fill="none"><path d="M2 5.5l2 2 4-4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </span>
-                      {f}
-                    </div>
+                    <div key={f} className="hs-feature-item"><CheckIcon />{f}</div>
                   ))}
                 </div>
-                
+                <Link href="/services" style={{
+                  display:"inline-flex", alignItems:"center", gap:7, marginTop:28,
+                  fontFamily:"'Plus Jakarta Sans',sans-serif",
+                  fontSize:"0.82rem", fontWeight:700, color:"#F15C31", textDecoration:"none",
+                }}>
+                  Learn more
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                    <path d="M3 8h10M9 4l4 4-4 4"/>
+                  </svg>
+                </Link>
               </div>
             ))}
           </div>
 
-          {/* Right: stacked image layers */}
+          {/* Right: image layers — dark backing prevents white flash */}
           <div className="hs-right-side">
             <div className="hs-accent-bar" />
             {services.map((s) => (
-              <div key={`di-${s.tag}`} className="hs-img-layer"
-                style={{ backgroundImage: `url(${s.imagePath})` }} />
+              <div
+                key={`di-${s.tag}`}
+                className="hs-img-layer"
+                style={{ backgroundImage: `url(${s.imagePath})` }}
+              />
             ))}
           </div>
 
         </div>
 
-        
+        {/* Desktop/tablet progress strip */}
+        <div className="hs-progress-strip">
+          <span className="hs-counter">
+            <span ref={counterRef}>01</span>
+            <span style={{ opacity: 0.35 }}> / {String(services.length).padStart(2, "0")}</span>
+          </span>
+          <div className="hs-progress-track">
+            <div ref={progressBarRef} className="hs-progress-fill" />
+          </div>
+        </div>
       </div>
 
     </div>
