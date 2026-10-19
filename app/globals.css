@@ -4,10 +4,14 @@
 @theme {
   --color-ink-950: #0B0F19;
   --color-ink-900: #10141F;
-  --color-ember-400: #FF8466;
-  --color-ember-500: #FF6B4A;
-  --color-ember-600: #E8512F;
+  --color-ember-400: #00C2CE;
+  --color-ember-500: #0066EE;
+  --color-ember-600: #0047BA;
+  --color-brand-dark: #0038A8;
+  --color-brand-blue: #0066EE;
+  --color-brand-cyan: #00C2CE;
 
   --font-display: var(--font-space-grotesk), sans-serif;
   --font-mono: var(--font-jetbrains-mono), monospace;
 }
+

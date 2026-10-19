@@ -6,20 +6,20 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const NAV_LINKS = [
-  { href: '/',         label: 'Home'    },
+  { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
-  { href: '/work',     label: 'Work'    },
-  { href: '/about',    label: 'About'   },
-  { href: '/contact',  label: 'Contact' },
+  { href: '/work', label: 'Work' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 // Pages with dark hero backgrounds — navbar will use dark mode on these
 const DARK_BG_PAGES: string[] = [];
 
 export default function Navbar() {
-  const [scrolled,  setScrolled]  = useState(false);
-  const [menuOpen,  setMenuOpen]  = useState(false);
-  const [darkBg,    setDarkBg]    = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [darkBg, setDarkBg] = useState(false);
   const pathname = usePathname();
 
   // Detect if we are over a dark background section
@@ -101,7 +101,7 @@ export default function Navbar() {
         }
         .nav-bubble {
           position: absolute; inset: 0; border-radius: 999px;
-          background: #F15C31;
+          background: linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%);
           opacity: 0; transform: scale(0.8);
           transition: opacity 0.25s, transform 0.25s;
           z-index: 0;
@@ -132,8 +132,8 @@ export default function Navbar() {
           color: #0B0F19; text-decoration: none;
           transition: color 0.2s, transform 0.3s, opacity 0.3s;
         }
-        .mobile-nav-link.active { color: #F15C31; }
-        .mobile-nav-link:hover  { color: #F15C31; }
+        .mobile-nav-link.active { color: #0066EE; }
+        .mobile-nav-link:hover  { color: #0066EE; }
 
         /* stagger in */
         .mobile-overlay.open  .mobile-nav-link { transform: translateY(0); opacity: 1; }
@@ -166,23 +166,23 @@ export default function Navbar() {
         >
           {/* ── Image Logo (Reduced height wrapper) ── */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <div 
-              style={{ 
-                position: 'relative', 
-                width: 150, 
+            <div
+              style={{
+                position: 'relative',
+                width: 150,
                 height: 48,
-                marginLeft: '-4px' 
+                marginLeft: '-4px'
               }}
             >
               <Image
-                src="/Images/iconex-logo.png"
+                src="/Images/iconexit-logo.png"
                 alt="Iconex IT Logo"
                 fill
                 priority
-                sizes="150px" 
+                sizes="150px"
                 style={{
                   objectFit: 'contain',
-                  objectPosition: 'left center', 
+                  objectPosition: 'left center',
                 }}
               />
             </div>
@@ -205,7 +205,7 @@ export default function Navbar() {
                     style={{
                       color: active ? undefined : linkColor,
                       // @ts-ignore css var
-                      '--link-hover':    linkHover,
+                      '--link-hover': linkHover,
                       '--link-hover-bg': isDark && !scrolled
                         ? 'rgba(255,255,255,0.08)'
                         : 'rgba(11,15,25,0.05)',
@@ -219,34 +219,7 @@ export default function Navbar() {
             })}
           </ul>
 
-          {/* ── CTA ── */}
-          <div className="hidden-mobile" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <Link
-              href="/contact"
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                background: '#FF6B4A', color: '#fff',
-                padding: '8px 16px', borderRadius: 8,
-                fontSize: '0.8125rem', fontWeight: 600,
-                textDecoration: 'none',
-                transition: 'background 0.2s, transform 0.15s',
-                whiteSpace: 'nowrap',
-              }}
-              onMouseOver={e => {
-                (e.currentTarget as HTMLElement).style.background = '#F15C31';
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-              }}
-              onMouseOut={e => {
-                (e.currentTarget as HTMLElement).style.background = '#F15C31';
-                (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-              }}
-            >
-              Start a project
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Link>
-          </div>
+
 
           {/* ── Mobile hamburger ── */}
           <button
@@ -287,29 +260,29 @@ export default function Navbar() {
             }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>
 
-        {/* Logo in overlay */}
-        <div style={{ padding: '24px 28px 8px' }}>
-         
-        </div>
 
-        {/* Links */}
-        <nav style={{ padding: '0 28px', flex: 1 }}>
+       {/* Links */}
+        <nav style={{ padding: '52px 28px 0', flex: 1 }}>
           {NAV_LINKS.map((link, i) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
               className={`mobile-nav-link${pathname === link.href ? ' active' : ''}`}
-              style={{ transitionDelay: menuOpen ? `${i * 55}ms` : '0ms' }}
+              style={{ 
+                transitionDelay: menuOpen ? `${i * 55}ms` : '0ms',
+                paddingTop: '14px',
+                paddingBottom: '14px',
+              }}
             >
               {link.label}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>
           ))}
@@ -322,14 +295,16 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              background: '#FF6B4A', color: '#fff',
+              background: 'linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)',
+              boxShadow: '0 4px 16px rgba(0, 112, 198, 0.3)',
+              color: '#fff',
               padding: '14px 24px', borderRadius: 12,
               fontSize: '0.9375rem', fontWeight: 700, textDecoration: 'none',
             }}
           >
             Start a project
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
         </div>

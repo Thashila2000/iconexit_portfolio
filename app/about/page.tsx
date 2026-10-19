@@ -65,7 +65,7 @@ const VALUES = [
   },
   {
     num: '02',
-    title: 'Long-term thinking',
+    title: 'Long term thinking',
     body: 'We turn down fast work that creates slow problems. The code we ship today needs to be maintainable in five years, by a team that has not met us yet.',
   },
   {
@@ -87,32 +87,40 @@ export default function AboutPage() {
     <div className="overflow-x-hidden">
 
       {/* ── 1. HERO ── */}
-      <section className="relative flex min-h-[500px] items-start bg-ink-950 pb-16 pt-32 md:min-h-[620px] md:pb-24 md:pt-40">
+      <section className="relative flex min-h-[520px] items-start bg-[#0A101D] pb-20 pt-36 md:min-h-[620px] md:pb-28 md:pt-44 overflow-hidden">
         <Image
           src="/Images/abstract img.jpg"
-          alt="" fill priority
-          className="object-cover opacity-30 mix-blend-luminosity"
+          alt="About hero background"
+          fill
+          priority
           sizes="100vw"
+          className="object-cover object-center pointer-events-none"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink-950/20 via-ink-950/50 to-ink-950" />
+        {/* Dark shadow overlay same as mission section */}
+        <div className="absolute inset-0 bg-slate-950/70 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A101D]/90 via-transparent to-[#0A101D]/90 pointer-events-none" />
 
         <motion.div
-          className="relative mx-auto w-full max-w-6xl px-6"
+          className="relative z-10 w-full max-w-6xl px-6 md:px-14 text-left"
           variants={staggerContainer} initial="hidden" animate="show"
         >
-          <motion.p variants={fadeUp} className="mb-2 font-mono text-xs uppercase tracking-[0.2em] md:mb-3"
-            style={{ color: '#F15C31' }}>
+          <motion.p variants={fadeUp} className="mb-2 font-mono text-xs uppercase tracking-[0.2em] md:mb-3 font-semibold"
+            style={{ color: '#00C2CE' }}>
             Our story
           </motion.p>
 
           <motion.h1 variants={fadeUp}
             className="max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl">
             We started with a{' '}
-            <em className="not-italic" style={{ color: '#F15C31' }}>frustration.</em>
+            <em className="not-italic" style={{
+              background: 'linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>frustration.</em>
           </motion.h1>
 
           <motion.p variants={fadeUp}
-            className="mt-3 max-w-xl text-base leading-relaxed text-slate-300 md:mt-5 md:text-lg">
+            className="mt-4 max-w-xl text-base leading-relaxed text-slate-300 md:mt-5 md:text-lg">
             Too many companies were being handed polished decks and slow software.
             We left our agency jobs to build the kind of studio we always wished existed.
           </motion.p>
@@ -122,7 +130,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 2. ORIGIN ── */}
-      <section className="bg-white py-28">
+      <section className="bg-[#ffebeb] py-28">
         <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 lg:grid-cols-2 lg:gap-24">
           <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-100px' }}>
             <motion.p variants={fadeLeft} className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-600">
@@ -130,7 +138,7 @@ export default function AboutPage() {
             </motion.p>
             <motion.blockquote variants={fadeLeft}
               className="mb-10 pl-6 text-2xl font-semibold leading-snug tracking-tight text-slate-900 md:text-3xl"
-              style={{ borderLeft: '2px solid #F15C31' }}>
+              style={{ borderLeft: '3px solid #0066EE' }}>
               &ldquo;The problem was not that clients wanted too much, it was
               that studios promised everything and built very little.&rdquo;
             </motion.blockquote>
@@ -155,7 +163,7 @@ export default function AboutPage() {
                 fill className="object-cover"
                 sizes="(min-width: 1024px) 50vw, 100vw"
               />
-              <div className="absolute inset-0 mix-blend-multiply" style={{ background: 'rgba(241,92,49,0.10)' }} />
+              <div className="absolute inset-0 mix-blend-multiply" style={{ background: 'rgba(0,102,238,0.08)' }} />
             </div>
             <motion.div
               initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
@@ -163,7 +171,7 @@ export default function AboutPage() {
               className="absolute -bottom-5 -left-5 flex items-center gap-3 rounded-xl border border-slate-100 bg-white px-5 py-4 shadow-lg shadow-slate-200/80"
             >
               <span className="flex h-9 w-9 items-center justify-center rounded-lg text-sm font-bold text-white"
-                style={{ background: '#F15C31' }}>
+                style={{ background: 'linear-gradient(135deg, #0052D4, #0070C6)' }}>
                 N
               </span>
               <div>
@@ -176,32 +184,41 @@ export default function AboutPage() {
       </section>
 
       {/* ── 3. MISSION ── */}
-      <section className="relative overflow-hidden bg-ink-950 py-36">
+      <section className="relative overflow-hidden bg-[#0A101D] py-36">
         <Image
           src="/Images/abstract image 4.jpg"
-          alt="" fill
-          className="object-cover opacity-10 mix-blend-screen"
+          alt="Our mission abstract background"
+          fill
           sizes="100vw"
+          className="object-cover object-center pointer-events-none"
         />
+        {/* Dark shadow overlay to make fonts stand out with high contrast */}
+        <div className="absolute inset-0 bg-slate-950/70 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A101D]/90 via-transparent to-[#0A101D]/90 pointer-events-none" />
+
         <motion.div
-          className="relative mx-auto max-w-4xl px-6 text-center"
+          className="relative z-10 mx-auto max-w-4xl px-6 text-center"
           variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}
         >
-          <motion.p variants={fadeUp} className="mb-8 font-mono text-[11px] uppercase tracking-[0.2em]"
-            style={{ color: '#F15C31' }}>
+          <motion.p variants={fadeUp} className="mb-8 font-mono text-[11px] uppercase tracking-[0.2em] font-semibold"
+            style={{ color: '#00C2CE' }}>
             Our mission
           </motion.p>
           <motion.p variants={fadeUp}
             className="text-3xl font-semibold leading-snug tracking-tight text-white sm:text-4xl md:text-5xl">
             Build software that makes the companies we believe in{' '}
-            <span style={{ color: '#F15C31' }}>genuinely better </span> at what they
+            <span style={{
+              background: 'linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>genuinely better </span> at what they
             do and stay honest about when they do not need us.
           </motion.p>
         </motion.div>
       </section>
 
       {/* ── 4. VALUES ── */}
-      <section className="bg-white py-28">
+      <section className="bg-[#ffebeb] py-28">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
             <motion.p variants={fadeUp} className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400">
@@ -227,7 +244,7 @@ export default function AboutPage() {
                   viewport={{ once: false, amount: 'some', margin: '-25% 0px -25% 0px' }}
                   variants={{
                     inactive: { color: '#E2E8F0', transition: { duration: 0.3 } },
-                    active:   { color: '#F15C31', transition: { duration: 0.3, ease: 'easeOut' } },
+                    active:   { color: '#0066EE', transition: { duration: 0.3, ease: 'easeOut' } },
                   }}
                   className="font-mono text-4xl font-medium"
                 >
@@ -244,7 +261,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 5. STATS ── */}
-      <section className="border-y border-slate-100 bg-slate-50 py-20">
+      <section className="border-y border-pink-200/50 bg-[#ffebeb] py-20">
         <div className="mx-auto max-w-6xl px-6">
           <motion.div
             className="grid grid-cols-2 gap-y-14 md:grid-cols-4"
@@ -253,43 +270,6 @@ export default function AboutPage() {
             {STATS.map((s) => (
               <AnimatedStat key={s.label} value={s.value} label={s.label} />
             ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── 6. CTA ── */}
-      <section className="py-15" style={{ background: '#F15C31' }}>
-        <div className="mx-auto max-w-6xl px-6">
-          <motion.div
-            variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}
-            className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center"
-          >
-            <div>
-              <motion.h2 variants={fadeLeft} className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
-                Like what you see?
-              </motion.h2>
-              <motion.p variants={fadeLeft} className="mt-2 text-white/80">
-                Let us talk about what you are building.
-              </motion.p>
-            </div>
-
-            <motion.div
-              variants={fadeRight}
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-              className="inline-flex shrink-0"
-            >
-              <Link
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-xl px-7 py-4 text-sm font-semibold text-white"
-                style={{ backgroundColor: '#132B50' }}
-              >
-                Start a conversation
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </Link>
-            </motion.div>
           </motion.div>
         </div>
       </section>

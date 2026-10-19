@@ -1,6 +1,7 @@
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import Navbar from '@/app/components/navbar';
 import { LoadingProvider } from '@/app/components/LoadingContext';
+import IconexFooter from '@/components/ui/demo';
 import './globals.css';
 
 const display = Space_Grotesk({
@@ -18,11 +19,12 @@ const mono = JetBrains_Mono({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${mono.variable}`}>
-      <body className="bg-white font-display text-slate-900 min-h-screen relative">
+      <body className="bg-[#ffebeb] font-display text-slate-900 min-h-screen relative">
         <LoadingProvider>
           <Navbar />
           {/* Changed pt-28 to pt-0 so child pages can layout completely full-screen */}
           <main className="pt-0">{children}</main>
+          <IconexFooter />
         </LoadingProvider>
       </body>
     </html>

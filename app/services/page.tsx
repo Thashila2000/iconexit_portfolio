@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import {
   motion,
@@ -46,7 +47,7 @@ const services: ServiceItem[] = [
   {
     tag: "INFRASTRUCTURE",
     title: "Cloud & Infrastructure",
-    description: "We design and manage cloud environments that scale with your growth — from initial migration to ongoing optimisation across AWS, Azure, and GCP.",
+    description: "We design and manage cloud environments that scale with your growth from initial migration to ongoing optimisation across AWS, Azure, and GCP.",
     features: ["Cloud migration", "Infrastructure as code", "Cost optimisation", "24/7 monitoring"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -70,7 +71,7 @@ const services: ServiceItem[] = [
   {
     tag: "ENGINEERING",
     title: "Software Development",
-    description: "Full-stack engineering from MVP to enterprise scale — clean architecture, agile delivery, and code your team can actually maintain.",
+    description: "Full stack engineering from MVP to enterprise scale clean architecture, agile delivery, and code your team can actually maintain.",
     features: ["Web & mobile apps", "API development", "System integration", "Code audits"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -94,7 +95,7 @@ const services: ServiceItem[] = [
   {
     tag: "STRATEGY",
     title: "IT Consulting",
-    description: "Technology roadmaps, vendor selection, and digital transformation advisory — so your next platform decision is built on evidence, not guesswork.",
+    description: "Technology roadmaps, vendor selection, and digital transformation advisory so your next platform decision is built on evidence, not guesswork.",
     features: ["Tech roadmapping", "Vendor evaluation", "Digital transformation", "CTO advisory"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -107,7 +108,7 @@ const services: ServiceItem[] = [
   {
     tag: "SUPPORT",
     title: "Managed IT Support",
-    description: "Dedicated support teams, SLA-backed response times, and proactive system health checks — so your team stays focused on the work that matters.",
+    description: "Dedicated support teams, SLA-backed response times, and proactive system health checks so your team stays focused on the work that matters.",
     features: ["Help desk support", "SLA guarantees", "Remote & on-site", "Proactive maintenance"],
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -230,45 +231,41 @@ export default function ServicesPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Roboto+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap');
 
-        .srv-page { background:#FFFFFF; min-height:100vh; color:#334155; font-family:'Inter',sans-serif; }
+        .srv-page { background:#ffebeb; min-height:100vh; color:#334155; font-family:'Inter',sans-serif; }
 
         /* ── Hero ── */
         .srv-hero {
           position:relative; padding:160px 60px 80px;
-          overflow:hidden; background:#FFFFFF;
-        }
-        .srv-hero-glow {
-          position:absolute; top:-100px; right:-80px;
-          width:500px; height:500px; border-radius:50%; pointer-events:none;
-          background:radial-gradient(circle,rgba(255,107,74,0.06) 0%,transparent 70%);
+          overflow:hidden; background:#0A101D;
         }
         .srv-eyebrow {
           display:inline-flex; align-items:center; gap:8px;
           font-family:'Roboto Mono',monospace;
           font-size:0.75rem; font-weight:700; letter-spacing:0.16em;
-          text-transform:uppercase; color: #C74646; margin-bottom:16px;
+          text-transform:uppercase; color: #00C2CE; margin-bottom:16px;
         }
-        .srv-eyebrow-dot { width:5px; height:5px; background:#F15C31; border-radius:50%; }
+        .srv-eyebrow-dot { width:5px; height:5px; background:#00C2CE; border-radius:50%; box-shadow: 0 0 8px #00C2CE; }
         .srv-hero-title {
           font-size:clamp(2.25rem,5vw,4.5rem); font-weight:700;
-          letter-spacing:-0.03em; line-height:1.1; color:#132B50;
+          letter-spacing:-0.03em; line-height:1.1; color:#FFFFFF;
           max-width:800px; margin-bottom:24px;
           font-family:'Plus Jakarta Sans',sans-serif;
         }
-        .srv-hero-title em { font-style:normal; color:#F15C31; }
-        .srv-hero-sub { font-size:1.125rem; line-height:1.65; color:#132B50; opacity:0.85; max-width:576px; margin-bottom:32px; }
+        .srv-hero-title em { font-style:normal; background:linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .srv-hero-sub { font-size:1.125rem; line-height:1.65; color:#CBD5E1; opacity:0.9; max-width:576px; margin-bottom:32px; }
 
         .srv-hero-cta {
           display:inline-flex; align-items:center; gap:8px;
-          background:#F15C31; color:#fff; border:none;
+          background:linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%); color:#fff; border:none;
           padding:14px 28px; border-radius:12px;
           font-size:0.875rem; font-weight:600; cursor:pointer;
-          text-decoration:none; transition:background 0.2s;
+          text-decoration:none; transition:all 0.2s;
+          box-shadow: 0 4px 16px rgba(0, 112, 198, 0.35);
         }
-        .srv-hero-cta:hover { background:#E8512F; }
+        .srv-hero-cta:hover { filter:brightness(1.1); box-shadow: 0 6px 20px rgba(0, 112, 198, 0.5); }
 
         /* ── Grid section ── */
-        .srv-grid-section { padding:80px 60px 120px; background:#FFFFFF; }
+        .srv-grid-section { padding:80px 60px 120px; background:#ffebeb; }
         .srv-section-label {
           font-family:'Plus Jakarta Sans', sans-serif;
           font-size:0.85rem; font-weight:900; letter-spacing:0.08em;
@@ -300,13 +297,13 @@ export default function ServicesPage() {
                      box-shadow 0.4s ease;
         }
         .srv-card.is-hovered {
-          border-color:#C74646;
-          box-shadow:0 30px 60px -20px rgba(199,70,70,0.2);
+          border-color:#0070C6;
+          box-shadow:0 30px 60px -20px rgba(0,112,198,0.35);
         }
 
         .srv-ambient-glow {
           position:absolute; inset:-40px; pointer-events:none; z-index:0;
-          background:radial-gradient(circle at center,rgba(199,70,70,0.12) 0%,transparent 70%);
+          background:radial-gradient(circle at center,rgba(0,112,198,0.22) 0%,transparent 70%);
           mix-blend-mode:screen;
           transition:opacity 0.5s cubic-bezier(0.16,1,0.3,1);
         }
@@ -339,7 +336,7 @@ export default function ServicesPage() {
           color:rgba(255,255,255,0.4);
           transition:color 0.3s;
         }
-        .srv-card.is-hovered .srv-tag { color:#C74646; }
+        .srv-card.is-hovered .srv-tag { color:#00C2CE; }
 
         .srv-card-title {
           font-family:'Plus Jakarta Sans',sans-serif;
@@ -364,7 +361,7 @@ export default function ServicesPage() {
           padding-top:20px;
           transition:border-color 0.3s;
         }
-        .srv-card.is-hovered .srv-card-features { border-top-color:rgba(199,70,70,0.2); }
+        .srv-card.is-hovered .srv-card-features { border-top-color:rgba(0,112,198,0.25); }
         .srv-card-feature {
           display:flex; align-items:center; gap:10px;
           font-family:'Inter',sans-serif;
@@ -372,7 +369,7 @@ export default function ServicesPage() {
         }
         .srv-feature-dot {
           width:4px; height:4px; border-radius:50%;
-          background:#C74646; flex-shrink:0; opacity:0.7;
+          background:#00C2CE; flex-shrink:0; opacity:0.7;
         }
         .srv-card.is-hovered .srv-feature-dot { opacity:1; }
 
@@ -382,7 +379,7 @@ export default function ServicesPage() {
           border-top:1px solid rgba(255,255,255,0.06);
           transition:border-color 0.3s;
         }
-        .srv-card.is-hovered .srv-footer { border-top-color:rgba(199,70,70,0.2); }
+        .srv-card.is-hovered .srv-footer { border-top-color:rgba(0,112,198,0.25); }
         .srv-cta {
           font-family:'Plus Jakarta Sans',sans-serif;
           display:inline-flex; align-items:center; gap:6px;
@@ -391,7 +388,7 @@ export default function ServicesPage() {
           transition:color 0.3s, gap 0.2s;
           cursor:pointer;
         }
-        .srv-card.is-hovered .srv-cta { color:#C74646; gap:10px; }
+        .srv-card.is-hovered .srv-cta { color:#00C2CE; gap:10px; }
         .srv-cta svg { width:13px; height:13px; transition:transform 0.2s; }
         .srv-card:hover .srv-cta svg { transform:translateX(3px); }
 
@@ -411,12 +408,23 @@ export default function ServicesPage() {
 
         {/* ── Hero ── */}
         <section className="srv-hero">
-          <div className="srv-hero-glow" />
+          <Image
+            src="/Images/abstract img.jpg"
+            alt="Services hero background"
+            fill
+            priority
+            sizes="100vw"
+            style={{ objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none' }}
+          />
+          {/* Dark shadow overlay same as mission section */}
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(10, 16, 29, 0.72)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0A101D 0%, transparent 40%, rgba(10, 16, 29, 0.8) 100%)', pointerEvents: 'none' }} />
 
-          <motion.div className="srv-eyebrow" custom={0} variants={fadeUp} initial="hidden" animate="show">
-            <span className="srv-eyebrow-dot" />
-            Our Services
-          </motion.div>
+          <div style={{ position: 'relative', zIndex: 10 }}>
+            <motion.div className="srv-eyebrow" custom={0} variants={fadeUp} initial="hidden" animate="show">
+              <span className="srv-eyebrow-dot" />
+              Our Services
+            </motion.div>
 
           <motion.h1 className="srv-hero-title" custom={0.1} variants={fadeUp} initial="hidden" animate="show">
             Technology services built for <em>real scale.</em>
@@ -426,22 +434,8 @@ export default function ServicesPage() {
             From a single integration to a full digital overhaul we bring the engineering depth and strategic clarity to make it stick.
           </motion.p>
 
-          <motion.a
-            href="/contact"
-            className="srv-hero-cta"
-            custom={0.3}
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          >
-            Talk to our team
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path d="M3 8h10M9 4l4 4-4 4" />
-            </svg>
-          </motion.a>
+          
+          </div>
         </section>
 
         {/* ── Services Grid ── */}
@@ -459,46 +453,6 @@ export default function ServicesPage() {
             {services.map((s, i) => (
               <ServiceCard key={s.title} service={s} index={i} />
             ))}
-          </div>
-        </section>
-
-        {/* ── CTA Band ── */}
-        <section className="bg-ember-500 py-15" style={{ overflow: "hidden" }}>
-          <div className="mx-auto max-w-6xl px-6">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: "-80px" }}
-              className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-center"
-            >
-              <div>
-                <motion.h2
-                  variants={slowFadeLeft}
-                  className="text-3xl font-semibold tracking-tight text-white md:text-4xl"
-                >
-                  Like what you see?
-                </motion.h2>
-                <motion.p variants={slowFadeLeft} className="mt-2 text-white/80">
-                  Let&apos;s talk about what you&apos;re building.
-                </motion.p>
-              </div>
-              <motion.div variants={slowFadeRight}>
-                <MotionLink
-                  href="/contact"
-                  className="inline-flex shrink-0 items-center gap-2 rounded-xl px-7 py-4 text-sm font-semibold text-white transition-colors duration-300"
-                  style={{ backgroundColor: '#132B50' }}
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 21 }}
-                >
-                  Start a conversation
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                    <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </MotionLink>
-              </motion.div>
-            </motion.div>
           </div>
         </section>
 

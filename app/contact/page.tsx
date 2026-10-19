@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ElectricBorder from "@/app/components/ElectricBoarder";
@@ -33,9 +34,9 @@ function LiveClock() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: "0.8rem" }}>
       <span style={{ width: 7, height: 7, borderRadius: "50%", display: "inline-block", flexShrink: 0, background: isOpen ? "#22C55E" : "#EF4444", boxShadow: isOpen ? "0 0 6px rgba(34,197,94,0.8)" : "0 0 6px rgba(239,68,68,0.8)" }} />
-      <span style={{ color: isOpen ? "#16A34A" : "#DC2626", fontWeight: 600 }}>{isOpen ? "Open" : "Closed"}</span>
-      <span style={{ color: "rgba(255,255,255,0.3)" }}>·</span>
-      <span style={{ color: "rgba(255,255,255,0.5)" }}>{time} LKT</span>
+      <span style={{ color: isOpen ? "#4ADE80" : "#F87171", fontWeight: 600 }}>{isOpen ? "Open" : "Closed"}</span>
+      <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span>
+      <span style={{ color: "rgba(255,255,255,0.55)" }}>{time} LKT</span>
     </div>
   );
 }
@@ -47,16 +48,16 @@ function InfoItem({ icon, label, value, href, delay }: {
     <motion.div custom={delay} variants={fadeUp} initial="hidden" animate="show"
       style={{ display: "flex", gap: 14, alignItems: "flex-start" }}
     >
-      <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, background: "rgba(241,92,49,0.12)", border: "1px solid rgba(241,92,49,0.2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#F15C31" }}>{icon}</div>
+      <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, background: "rgba(0,194,206,0.12)", border: "1px solid rgba(0,194,206,0.25)", display: "flex", alignItems: "center", justifyContent: "center", color: "#00C2CE" }}>{icon}</div>
       <div>
-        <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: 3, fontFamily: "var(--font-space-grotesk), sans-serif" }}>{label}</div>
+        <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)", marginBottom: 3, fontFamily: "var(--font-space-grotesk), sans-serif" }}>{label}</div>
         {href
           ? <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-              style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.75)", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 500, textDecoration: "none", transition: "color 0.2s" }}
-              onMouseOver={e => (e.currentTarget.style.color = "#F15C31")}
-              onMouseOut={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
+              style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 600, textDecoration: "none", transition: "color 0.2s" }}
+              onMouseOver={e => (e.currentTarget.style.color = "#00C2CE")}
+              onMouseOut={e => (e.currentTarget.style.color = "rgba(255,255,255,0.9)")}
             >{value}</a>
-          : <span style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.75)", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 500 }}>{value}</span>
+          : <span style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.9)", fontFamily: "var(--font-space-grotesk), sans-serif", fontWeight: 600 }}>{value}</span>
         }
       </div>
     </motion.div>
@@ -81,7 +82,7 @@ function Field({ label, name, type = "text", required = false, textarea = false 
         position: "absolute", top: active ? 2 : 14, left: 0,
         fontSize: active ? "0.65rem" : "0.875rem", fontWeight: active ? 600 : 400,
         letterSpacing: active ? "0.05em" : "0", textTransform: active ? "uppercase" : "none",
-        color: focused ? "#F15C31" : "#64748B",
+        color: focused ? "#0066EE" : "#64748B",
         transition: "all 0.22s ease", pointerEvents: "none",
         fontFamily: "var(--font-inter), sans-serif",
       }}>{label}</label>
@@ -91,8 +92,8 @@ function Field({ label, name, type = "text", required = false, textarea = false 
         : <input id={name} name={name} type={type} required={required} value={value} style={inputStyle}
             onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} onChange={e => setValue(e.target.value)} />
       }
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: focused ? "#F15C31" : "#E2E8F0", transition: "background 0.22s" }} />
-      {focused && <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: "#F15C31", boxShadow: "0 0 8px rgba(241,92,49,0.3)" }} />}
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: focused ? "#0066EE" : "#E2E8F0", transition: "background 0.22s" }} />
+      {focused && <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: "#0066EE", boxShadow: "0 0 8px rgba(0,102,238,0.3)" }} />}
     </div>
   );
 }
@@ -113,9 +114,9 @@ function ServiceChips() {
           return (
             <button key={s} type="button" onClick={() => toggle(s)} style={{
               padding: "7px 15px", borderRadius: 999, cursor: "pointer",
-              border: on ? "1.5px solid #F15C31" : "1.5px solid #E2E8F0",
-              background: on ? "rgba(241,92,49,0.07)" : "transparent",
-              color: on ? "#D44E25" : "#475569",
+              border: on ? "1.5px solid #0066EE" : "1.5px solid #E2E8F0",
+              background: on ? "rgba(0,102,238,0.08)" : "transparent",
+              color: on ? "#0066EE" : "#475569",
               fontSize: "0.8rem", fontFamily: "var(--font-inter), sans-serif", fontWeight: 500,
               transition: "all 0.2s",
             }}>{s}</button>
@@ -153,7 +154,8 @@ export default function ContactPage() {
         }
 
         .cp-left {
-          background: #0B0F19;
+          background: #0A101D;
+          border-right: 1px solid rgba(255,255,255,0.1);
           position: relative; overflow: hidden;
           display: flex; flex-direction: column; justify-content: space-between;
           padding: 150px 52px 64px !important;
@@ -162,45 +164,49 @@ export default function ContactPage() {
         .cp-left-glow {
           position: absolute; top: -80px; left: -80px;
           width: 360px; height: 360px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(241,92,49,0.15) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(0,102,238,0.1) 0%, transparent 70%);
           pointer-events: none;
         }
         .cp-left-glow2 {
           position: absolute; bottom: -60px; right: -60px;
           width: 260px; height: 260px; border-radius: 50%;
-          background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%);
+          background: radial-gradient(circle, rgba(0,194,206,0.1) 0%, transparent 70%);
           pointer-events: none;
         }
 
         .cp-badge {
           display: inline-flex; align-items: center; gap: 8px;
           font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em;
-          text-transform: uppercase; color: #F15C31; margin-bottom: 32px;
+          text-transform: uppercase; color: #00C2CE; margin-bottom: 32px;
         }
-        .cp-badge-dot { width: 5px; height: 5px; background: #F15C31; border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+        .cp-badge-dot { width: 5px; height: 5px; background: #00C2CE; border-radius: 50%; animation: blink 2s ease-in-out infinite; }
         @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
 
         .cp-big-text {
           font-size: clamp(3.2rem, 4.5vw, 5rem); font-weight: 700;
-          letter-spacing: -0.04em; line-height: 0.92; color: #fff; margin-bottom: 24px;
+          letter-spacing: -0.04em; line-height: 0.92; color: #FFFFFF; margin-bottom: 24px;
         }
-        .cp-big-text .ember { color: #F15C31; }
+        .cp-big-text .ember {
+          background: linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
 
-        .cp-tagline { font-size: 0.9rem; line-height: 1.75; color: rgba(255,255,255,0.4); max-width: 320px; margin-bottom: 48px; }
+        .cp-tagline { font-size: 0.9rem; line-height: 1.75; color: rgba(255,255,255,0.75); max-width: 320px; margin-bottom: 48px; }
         .cp-info-stack { display: flex; flex-direction: column; gap: 24px; margin-bottom: 36px; }
 
-        .cp-social-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 12px; font-family: var(--font-space-grotesk), sans-serif; }
+        .cp-social-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 12px; font-family: var(--font-space-grotesk), sans-serif; }
         .cp-social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 40px; }
-        .cp-social-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); text-decoration: none; transition: all 0.22s ease; }
-        .cp-social-item:hover { background: rgba(241,92,49,0.06); border-color: rgba(241,92,49,0.25); }
-        .cp-social-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(241,92,49,0.12); display: flex; align-items: center; justify-content: center; color: #F15C31; flex-shrink: 0; transition: color 0.2s; }
-        .cp-social-item:hover .cp-social-icon { color: #D44E25; }
-        .cp-social-name { font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.6); font-family: var(--font-space-grotesk), sans-serif; transition: color 0.2s; }
-        .cp-social-item:hover .cp-social-name { color: rgba(255,255,255,0.9); }
-        .cp-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 8px 0 24px; }
+        .cp-social-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); text-decoration: none; transition: all 0.22s ease; }
+        .cp-social-item:hover { background: rgba(0,194,206,0.12); border-color: rgba(0,194,206,0.4); }
+        .cp-social-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(0,194,206,0.1); display: flex; align-items: center; justify-content: center; color: #00C2CE; flex-shrink: 0; transition: color 0.2s; }
+        .cp-social-item:hover .cp-social-icon { color: #FFFFFF; }
+        .cp-social-name { font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.75); font-family: var(--font-space-grotesk), sans-serif; transition: color 0.2s; }
+        .cp-social-item:hover .cp-social-name { color: #FFFFFF; }
+        .cp-divider { height: 1px; background: rgba(255,255,255,0.12); margin: 8px 0 24px; }
 
         .cp-right {
-          background: #FFFFFF;
+          background: #ffebeb;
           display: flex; align-items: flex-start; justify-content: center;
           padding: 150px 60px 80px !important;
           position: relative; overflow: clip;
@@ -210,17 +216,19 @@ export default function ContactPage() {
         .cp-border-shell { overflow: visible; }
 
         .cp-formwrap {
-          padding: 48px 44px; background: #fff; border-radius: 20px;
-          border: none !important; box-shadow: none !important;
+          padding: 48px 44px; background: #FFFFFF; border-radius: 24px;
+          border: 1px solid rgba(0,0,0,0.06) !important;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important;
         }
 
         .cp-form-header { margin-bottom: 40px; }
-        .cp-form-tag { display: inline-block; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #F15C31; background: rgba(241,92,49,0.08); border: 1px solid rgba(241,92,49,0.2); padding: 4px 10px; border-radius: 999px; margin-bottom: 16px; font-family: var(--font-inter), sans-serif; }
+        .cp-form-tag { display: inline-block; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: #0066EE; background: rgba(0,102,238,0.08); border: 1px solid rgba(0,102,238,0.2); padding: 4px 10px; border-radius: 999px; margin-bottom: 16px; font-family: var(--font-inter), sans-serif; }
         .cp-form-title { font-size: clamp(1.6rem, 2.5vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; color: #0B0F19; line-height: 1.15; margin-bottom: 10px; font-family: var(--font-inter), sans-serif; }
         .cp-form-sub { font-size: 0.9375rem; color: #64748B; line-height: 1.6; font-family: var(--font-inter), sans-serif; }
         .cp-tworow { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
 
-        .cp-submit { width: 100%; padding: 15px 28px; background: #132B50; color: #fff; border: none; border-radius: 10px; font-family: var(--font-inter), sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; position: relative; overflow: hidden; }
+        .cp-submit { width: 100%; padding: 15px 28px; background: linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%); box-shadow: 0 4px 16px rgba(0,112,198,0.35); color: #fff; border: none; border-radius: 10px; font-family: var(--font-inter), sans-serif; font-size: 0.9375rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; position: relative; overflow: hidden; transition: filter 0.2s; }
+        .cp-submit:hover { filter: brightness(1.08); }
         .cp-submit::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.05)); pointer-events: none; }
         .cp-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .cp-privacy { margin-top: 14px; font-size: 0.75rem; color: #94A3B8; text-align: center; font-family: var(--font-inter), sans-serif; }
@@ -268,6 +276,18 @@ export default function ContactPage() {
 
         {/* ══ LEFT ══════════════════════════════════════════════════════════ */}
         <div className="cp-left">
+          {/* Abstract hero image with dark shadow overlay */}
+          <Image
+            src="/Images/abstract-contact.webp"
+            alt="Contact background"
+            fill
+            priority
+            sizes="480px"
+            style={{ objectFit: 'cover', objectPosition: 'center', pointerEvents: 'none' }}
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(10, 16, 29, 0.78)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0A101D 0%, transparent 40%, rgba(10, 16, 29, 0.85) 100%)', pointerEvents: 'none' }} />
+
           <div className="cp-left-glow" />
           <div className="cp-left-glow2" />
 
@@ -285,7 +305,7 @@ export default function ContactPage() {
               Drop us a message and we&apos;ll respond within one business day with a concrete plan, not a pitch.
             </motion.p>
 
-            <div className="cp-divider" />
+            <div className="cp-divider" />                   
 
             <div className="cp-info-stack">
               <InfoItem delay={0.28} label="Email" value="hello@iconex.it" href="mailto:hello@iconex.it"
@@ -333,7 +353,7 @@ export default function ContactPage() {
         {/* ══ RIGHT ═════════════════════════════════════════════════════════ */}
         <div className="cp-right">
           <motion.div className="cp-right-inner" custom={0.2} variants={fadeUp} initial="hidden" animate="show">
-            <ElectricBorder color="#F15C31" speed={0.8} chaos={0.10} borderRadius={20}>
+            <ElectricBorder color="#0070C6" speed={0.8} chaos={0.10} borderRadius={20}>
               <div className="cp-formwrap">
                 <AnimatePresence mode="wait">
                   {status === "sent" ? (
@@ -389,6 +409,9 @@ export default function ContactPage() {
         </div>
 
       </div>
+
+      {/* Spacer to push footer down on contact page only */}
+      <div style={{ height: "120px", background: "#ffebeb" }} />
     </>
   );
 }

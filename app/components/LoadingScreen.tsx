@@ -46,7 +46,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
         position: "fixed",
         top: 0, left: 0,
         width: "100vw", height: "100vh",
-        backgroundColor: "#0B0F19",
+        backgroundColor: "#ffebeb",
         zIndex: 9999,
         display: "flex",
         flexDirection: "column",
@@ -60,9 +60,9 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
       {/* Glow orb */}
       <div style={{
         position: "absolute",
-        width: 420, height: 420,
+        width: 520, height: 520,
         borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(255,107,74,0.13) 0%, transparent 70%)",
+        background: "radial-gradient(circle, rgba(0,102,238,0.08) 0%, transparent 70%)",
         pointerEvents: "none",
       }} />
 
@@ -78,10 +78,10 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
         }}
       >
         <img 
-          src="/iconex-logo.png" 
+          src="/iconexit-logo.png" 
           alt="ICONEX IT Logo" 
           style={{
-          height: "clamp(20rem, 24vw, 24rem)",
+            height: "clamp(20rem, 24vw, 24rem)",
             userSelect: "none",
           }} 
         />
@@ -110,8 +110,8 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             fontSize: "0.7rem",
             letterSpacing: "0.13em",
             textTransform: "uppercase",
-            color: "#4B5563",
-            fontWeight: 500,
+            color: "#64748B",
+            fontWeight: 600,
             fontFamily: "var(--font-space-grotesk), sans-serif",
           }}>
             Initialising system
@@ -124,8 +124,10 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             fontWeight: 700,
             letterSpacing: "-0.04em",
             lineHeight: 1,
-            color: "#FF6B4A",
-            transition: "color 0.3s ease",
+            background: "linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            transition: "all 0.3s ease",
           }}>
             {String(Math.floor(progress)).padStart(2, "0")}
             <span style={{ fontSize: "0.5em", marginLeft: 2 }}>%</span>
@@ -136,18 +138,18 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
         <div style={{
           width: "100%",
           height: 8,
-          background: "rgba(255,255,255,0.06)",
+          background: "#F1F5F9",
           borderRadius: 999,
           overflow: "hidden",
-          border: "1px solid rgba(255,255,255,0.06)",
+          border: "1px solid #E2E8F0",
         }}>
           <div style={{
             height: "100%",
             width: `${progress}%`,
-            background: "#FF6B4A",
-            boxShadow: `0 0 14px rgba(255,107,74,0.55)`,
+            background: "linear-gradient(90deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)",
+            boxShadow: `0 0 16px rgba(0, 112, 198, 0.45)`,
             borderRadius: 999,
-            transition: "width 0.03s linear, background 0.3s ease, box-shadow 0.3s ease",
+            transition: "width 0.03s linear",
             position: "relative",
             overflow: "hidden",
           }}>
@@ -156,7 +158,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
               top: 0, bottom: 0,
               width: "60px",
               right: 0,
-              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.25))",
+              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4))",
               borderRadius: 999,
             }} />
           </div>
@@ -173,9 +175,9 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             fontSize: "0.6rem",
             letterSpacing: "0.1em",
             textTransform: "uppercase",
-            color: "#FF6B4A",
+            color: "#0066EE",
             fontFamily: "var(--font-jetbrains-mono), monospace",
-            fontWeight: 500,
+            fontWeight: 600,
             transition: "color 0.3s ease",
           }}>
             {progress < 33
@@ -189,7 +191,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           <span style={{
             fontSize: "0.6rem",
             letterSpacing: "0.08em",
-            color: "#374151",
+            color: "#94A3B8",
             fontFamily: "var(--font-jetbrains-mono), monospace",
           }}>
             iconex.it / v2.0
