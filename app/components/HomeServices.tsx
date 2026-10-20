@@ -60,6 +60,8 @@ export default function HomeServices() {
   const stickyRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const headerContentRef = useRef<HTMLDivElement>(null);
+  const stageContentRef = useRef<HTMLDivElement>(null);
 
   // Update card transforms based on scroll progress (0 to 1)
   const applyCardTransforms = (progress: number) => {
@@ -112,6 +114,46 @@ export default function HomeServices() {
     let triggerInstance: ScrollTrigger | null = null;
 
     const ctx = gsap.context(() => {
+      // 1. Entrance animation for header content when user reaches section
+      if (headerContentRef.current) {
+        gsap.fromTo(
+          headerContentRef.current,
+          { opacity: 0, y: 35 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.85,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 75%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      // 2. Entrance animation for carousel stage when user reaches section
+      if (stageContentRef.current) {
+        gsap.fromTo(
+          stageContentRef.current,
+          { opacity: 0, y: 45 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            delay: 0.12,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top 75%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      // 3. Pinned carousel ScrollTrigger
       triggerInstance = ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
@@ -174,53 +216,65 @@ export default function HomeServices() {
           background: #ffebeb;
         }
 
-        /* ── Header block — moved more to the left side ── */
+        /* ── Header block — centered ── */
         .exp-header {
           position: relative;
           z-index: 10;
-          max-width: 1200px;
+          max-width: 900px;
           width: 100%;
-          margin-left: 5%;
-          padding: 0 40px;
+          margin: 0 auto;
+          padding: 0 24px;
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          text-align: left;
+          align-items: center;
+          text-align: center;
         }
         .exp-eyebrow {
           display: inline-flex;
           align-items: center;
+          justify-content: center;
           gap: 8px;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--font-mono, monospace), monospace;
           font-size: 0.75rem;
-          font-weight: 700;
-          letter-spacing: 0.16em;
+          font-weight: 600;
+          letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #0070C6;
-          margin-bottom: 8px;
+          color: #0052D4;
+          margin-bottom: 10px;
         }
         .exp-eyebrow-dot {
-          width: 6px;
-          height: 6px;
-          background: #0070C6;
+          width: 8px;
+          height: 8px;
+          background: linear-gradient(135deg, #0052D4 0%, #00C2CE 100%);
           border-radius: 50%;
-          box-shadow: 0 0 8px #00C2CE;
+          box-shadow: 0 0 8px rgba(0, 194, 206, 0.6);
         }
         .exp-title {
           font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+          font-size: clamp(1.85rem, 3.4vw, 2.85rem);
           font-weight: 800;
           line-height: 1.15;
           letter-spacing: -0.03em;
           color: #0F172A;
           margin: 0;
-          text-align: left;
+          text-align: center;
         }
         .exp-title em {
           font-style: normal;
+          font-weight: 800;
           background: linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
+        }
+        .exp-subtitle {
+          font-family: 'Inter', sans-serif;
+          font-size: clamp(0.95rem, 1.15vw, 1.05rem);
+          font-weight: 600;
+          color: #1E293B;
+          margin: 10px auto 0;
+          line-height: 1.6;
+          max-width: 650px;
+          text-align: center;
         }
 
         /* ── Carousel Stage ── */
@@ -306,14 +360,21 @@ export default function HomeServices() {
           margin: 0;
         }
 
+        @media (max-width: 1024px) {
+          .exp-header {
+            transform: translateY(-20px);
+          }
+        }
+
         @media (max-width: 768px) {
           .exp-sticky-viewport {
             padding: 24px 0 20px;
             gap: 16px;
           }
           .exp-header {
-            margin-left: 0;
-            padding: 0 24px;
+            margin: 0 auto;
+            padding: 0 20px;
+            transform: translateY(-28px);
           }
           .exp-card {
             width: clamp(255px, 76vw, 295px);
@@ -333,19 +394,33 @@ export default function HomeServices() {
       <div ref={containerRef} className="exp-scroll-container">
         <div ref={stickyRef} className="exp-sticky-viewport">
 
-          {/* ── Section Header (Moved more left side) ── */}
+          {/* ── Section Header (Centered) ── */}
           <div className="exp-header">
-            <div className="exp-eyebrow">
-              <span className="exp-eyebrow-dot" />
-              Our Expertise
+            <div
+              ref={headerContentRef}
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              <div className="exp-eyebrow">
+                <span className="exp-eyebrow-dot" />
+                Our Expertise
+              </div>
+              <h2 className="exp-title">
+                Comprehensive tech services<br />built for <em>unlimited scale.</em>
+              </h2>
+              <p className="exp-subtitle">
+                From high availability cloud foundations to bespoke software platforms, explore our full spectrum of digital engineering services.
+              </p>
             </div>
-            <h2 className="exp-title">
-              Comprehensive tech services<br />built for <em>unlimited scale.</em>
-            </h2>
           </div>
 
           {/* ── Centered Card Carousel Track (Only cards) ── */}
-          <div className="exp-carousel-stage">
+          <div ref={stageContentRef} className="exp-carousel-stage">
             <div ref={trackRef} className="exp-cards-track">
               {services.map((item, idx) => (
                 <div

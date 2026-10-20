@@ -243,17 +243,23 @@ export default function ContactPage() {
         @keyframes spin { to { transform: rotate(360deg); } }
         .spin { animation: spin 0.8s linear infinite; }
 
+        .cp-footer-spacer {
+          height: 120px;
+          background: #ffebeb;
+        }
+
         @media (max-width: 960px) {
           .cp-wrap { grid-template-columns: 1fr; }
           .cp-left { min-height: auto; padding: 150px 32px 48px !important; }
-          .cp-right { padding: 130px 32px 72px !important; overflow: hidden; }
+          .cp-right { padding: 90px 32px 32px !important; overflow: hidden; }
           .cp-big-text { font-size: clamp(2.8rem, 8vw, 4rem); }
+          .cp-footer-spacer { display: none !important; height: 0 !important; }
         }
         @media (max-width: 600px) {
           .cp-left { padding: 120px 20px 40px !important; }
           .cp-big-text { font-size: clamp(2.4rem, 10vw, 3.2rem); margin-bottom: 16px; }
           .cp-tagline { font-size: 0.85rem; margin-bottom: 32px; }
-          .cp-right { padding: 90px 16px 56px !important; }
+          .cp-right { padding: 70px 16px 24px !important; }
           .cp-right-inner { max-width: 100%; }
           .cp-formwrap { padding: 28px 20px; }
           .cp-tworow { grid-template-columns: 1fr; }
@@ -261,6 +267,7 @@ export default function ContactPage() {
           .cp-form-title { font-size: 1.4rem; }
           .cp-info-stack { gap: 18px; margin-bottom: 28px; }
           .cp-badge { margin-bottom: 20px; }
+          .cp-footer-spacer { display: none !important; height: 0 !important; }
         }
         @media (max-width: 380px) {
           .cp-social-grid { grid-template-columns: 1fr; }
@@ -410,8 +417,8 @@ export default function ContactPage() {
 
       </div>
 
-      {/* Spacer to push footer down on contact page only */}
-      <div style={{ height: "120px", background: "#ffebeb" }} />
+      {/* Spacer to push footer down on contact page only (desktop only) */}
+      <div className="cp-footer-spacer" />
     </>
   );
 }

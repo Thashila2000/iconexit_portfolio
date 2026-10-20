@@ -50,7 +50,7 @@ function AnimatedStat({ value, label }: { value: string; label: string }) {
       <span className="text-5xl font-bold tracking-tight text-slate-900 md:text-6xl tabular-nums">
         {inView ? `${display}${suffix}` : `0${suffix}`}
       </span>
-      <span className="font-mono text-xs uppercase tracking-wider text-slate-400">
+      <span className="font-mono text-xs uppercase tracking-wider text-slate-600 font-semibold">
         {label}
       </span>
     </motion.div>
@@ -218,41 +218,111 @@ export default function AboutPage() {
       </section>
 
       {/* ── 4. VALUES ── */}
-      <section className="bg-[#ffebeb] py-28">
-        <div className="mx-auto max-w-6xl px-6">
+      <section className="relative overflow-hidden bg-[#ffebeb] py-28 sm:py-32">
+        {/* ── Left Soft Blue/Cyan Organic Shape (matching Mission & Vision) ── */}
+        <motion.div
+          animate={{
+            x: [0, 22, -14, 0],
+            y: [0, -18, 12, 0],
+            scale: [1, 1.08, 0.96, 1],
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-16 -left-16 w-72 h-72 sm:w-96 sm:h-96 rounded-full pointer-events-none opacity-60"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(0, 194, 206, 0.32) 0%, rgba(0, 112, 198, 0.14) 50%, transparent 75%)",
+            filter: "blur(36px)",
+          }}
+        />
+
+        {/* ── Right Pink/Magenta Organic Blob Shape (matching Mission & Vision) ── */}
+        <motion.div
+          animate={{
+            x: [0, -24, 18, 0],
+            y: [0, 22, -16, 0],
+            scale: [1, 1.06, 0.95, 1],
+            rotate: [0, 4, -3, 0],
+          }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -bottom-16 -right-12 w-80 h-96 sm:w-[480px] sm:h-[500px] pointer-events-none opacity-80"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(255, 140, 210, 0.55) 0%, rgba(244, 114, 182, 0.48) 50%, rgba(251, 113, 133, 0.28) 100%)",
+            borderRadius: "62% 38% 70% 30% / 45% 58% 42% 55%",
+            filter: "blur(42px)",
+          }}
+        />
+
+        {/* ── Crisp Vector Organic Accent Blob ── */}
+        <motion.svg
+          animate={{
+            rotate: [0, 6, -5, 0],
+            scale: [1, 1.05, 0.98, 1],
+            y: [0, -14, 8, 0],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -bottom-10 -right-8 w-64 h-80 sm:w-96 sm:h-[420px] pointer-events-none opacity-40 hidden sm:block"
+          viewBox="0 0 200 200"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill="#F472B6"
+            d="M48.2,-64.3C61.3,-55.8,70.2,-41.2,74.5,-25.6C78.9,-10,78.8,6.5,73.6,21.1C68.4,35.6,58.2,48.1,45.4,57.4C32.6,66.6,17.3,72.6,1.4,70.7C-14.5,68.8,-28.9,59,-42.6,49C-56.3,39,-69.1,28.8,-74.6,14.7C-80.1,0.5,-78.2,-17.6,-70,-31.6C-61.9,-45.6,-47.4,-55.6,-33.1,-63.5C-18.7,-71.3,-4.5,-77.1,9.4,-75.7C23.3,-74.3,35.1,-72.8,48.2,-64.3Z"
+            transform="translate(140 100)"
+          />
+        </motion.svg>
+
+        <div className="relative z-10 mx-auto max-w-6xl px-6">
           <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
-            <motion.p variants={fadeUp} className="mb-3 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-400">
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 mb-4 font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#0070C6]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0070C6] shadow-[0_0_8px_#00C2CE]" />
               What guides us
-            </motion.p>
-            <motion.h2 variants={fadeUp} className="mb-20 text-4xl font-semibold tracking-tight text-slate-900 md:text-5xl">
+            </motion.div>
+            <motion.h2 variants={fadeUp} className="mb-14 text-4xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
               Three things we <br />will not compromise on.
             </motion.h2>
           </motion.div>
 
-          <div className="divide-y divide-slate-100">
+          <div className="flex flex-col gap-6">
             {VALUES.map((v, i) => (
               <motion.div
                 key={v.num}
                 variants={fadeUp} initial="hidden" whileInView="show"
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ delay: i * 0.1 }}
-                className="group grid grid-cols-1 gap-6 py-10 transition-colors duration-300 hover:bg-slate-50 sm:-mx-6 sm:grid-cols-[6rem_1fr] sm:gap-10 sm:rounded-2xl sm:px-6"
+                className="group grid grid-cols-1 gap-6 p-7 sm:p-9 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:bg-white/95 hover:shadow-[0_12px_36px_rgba(0,102,238,0.08)] hover:border-[#0066EE]/30 transition-all duration-300 sm:grid-cols-[6rem_1fr] sm:gap-10"
               >
                 <motion.span
                   initial="inactive"
                   whileInView="active"
                   viewport={{ once: false, amount: 'some', margin: '-25% 0px -25% 0px' }}
                   variants={{
-                    inactive: { color: '#E2E8F0', transition: { duration: 0.3 } },
+                    inactive: { color: '#CBD5E1', transition: { duration: 0.3 } },
                     active:   { color: '#0066EE', transition: { duration: 0.3, ease: 'easeOut' } },
                   }}
-                  className="font-mono text-4xl font-medium"
+                  className="font-mono text-4xl sm:text-5xl font-bold transition-colors duration-300 group-hover:text-[#00C2CE]"
                 >
                   {v.num}
                 </motion.span>
                 <div>
-                  <h3 className="mb-3 text-xl font-semibold text-slate-900">{v.title}</h3>
-                  <p className="max-w-prose leading-relaxed text-slate-500">{v.body}</p>
+                  <h3 className="mb-3 text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+                    {v.title}
+                  </h3>
+                  <p className="max-w-prose text-base sm:text-[1.0625rem] font-medium leading-relaxed text-slate-700">
+                    {v.body}
+                  </p>
                 </div>
               </motion.div>
             ))}

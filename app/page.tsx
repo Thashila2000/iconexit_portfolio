@@ -1,5 +1,8 @@
 import HeroSection from '@/app/components/HeroSection';
 import HomeServices from '@/app/components/HomeServices';
+import MissionVisionSection from '@/app/components/MissionVisionSection';
+import Portfolio9 from '@/components/ui/block-portfolio-9';
+import TestimonialsSection from '@/app/components/TestimonialsSection';
 
 export default function HomePage() {
   return (
@@ -12,6 +15,32 @@ export default function HomePage() {
       {/* Services section: slides up, overlaps and fully lays on the hero section */}
       <div className="relative z-[10] w-full bg-[#ffebeb] shadow-[0_-24px_60px_rgba(0,0,0,0.22)]">
         <HomeServices />
+      </div>
+
+      {/* Mission & Vision Section: Google Labs styled statement section */}
+      <div className="relative z-[10] w-full bg-[#ffebeb]">
+        <MissionVisionSection />
+      </div>
+
+      {/* Business Solutions Section */}
+      <div className="relative z-[10] w-full bg-[#ffebeb] border-t border-slate-200/60">
+        <Portfolio9
+          badge="Business Solutions"
+          title={
+            <>
+              Tailored business solutions<br className="hidden sm:inline" />
+              engineered for <em>digital growth.</em>
+            </>
+          }
+          subtitle="From high-availability cloud foundations to bespoke AI and software platforms, we engineer systems that empower modern business operations."
+          buttonText="Explore Portfolio"
+          buttonHref="/work"
+        />
+      </div>
+
+      {/* Testimonials Marquee Section */}
+      <div className="relative z-[10] w-full bg-[#ffebeb] border-t border-slate-200/60">
+        <TestimonialsSection />
       </div>
     </div>
   );

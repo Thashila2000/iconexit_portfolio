@@ -1,7 +1,7 @@
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google';
 import Navbar from '@/app/components/navbar';
 import { LoadingProvider } from '@/app/components/LoadingContext';
-import IconexFooter from '@/components/ui/demo';
+import IconexFooter from '@/components/ui/footer';
 import './globals.css';
 
 const display = Space_Grotesk({
