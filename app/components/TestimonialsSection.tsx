@@ -56,26 +56,34 @@ const fadeUp = {
 
 export default function TestimonialsSection() {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, amount: 0.15 });
 
   return (
     <section
       ref={ref}
-      className="relative w-full overflow-hidden bg-[#ffebeb] py-20 md:py-28"
+      className="relative w-full overflow-hidden bg-[#ffebeb] py-20 md:py-28 [contain:paint]"
       aria-label="Client testimonials"
     >
       {/* Subtle top border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-200/80 to-transparent" />
 
-      {/* Ambient background blobs */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* Ambient background blobs — GPU isolated */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden [contain:paint]">
         <div
-          className="absolute -top-24 left-1/4 h-72 w-72 rounded-full opacity-20"
-          style={{ background: "radial-gradient(circle, #0052D4 0%, transparent 70%)", filter: "blur(60px)" }}
+          className="absolute -top-24 left-1/4 h-72 w-72 rounded-full opacity-20 transform-gpu"
+          style={{
+            background: "radial-gradient(circle, #0052D4 0%, transparent 70%)",
+            filter: "blur(32px)",
+            transform: "translate3d(0, 0, 0)",
+          }}
         />
         <div
-          className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full opacity-15"
-          style={{ background: "radial-gradient(circle, #00C2CE 0%, transparent 70%)", filter: "blur(50px)" }}
+          className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full opacity-15 transform-gpu"
+          style={{
+            background: "radial-gradient(circle, #00C2CE 0%, transparent 70%)",
+            filter: "blur(28px)",
+            transform: "translate3d(0, 0, 0)",
+          }}
         />
       </div>
 

@@ -1,12 +1,20 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
 export default function MissionVisionSection() {
   const [activeTab, setActiveTab] = useState<"mission" | "vision">("mission");
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const missionWords = [
     { text: "Build", isGradient: false },
@@ -58,30 +66,30 @@ export default function MissionVisionSection() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.03,
-        delayChildren: 0.15,
+        staggerChildren: 0.025,
+        delayChildren: 0.1,
       },
     },
     exit: {
       opacity: 0,
-      y: -14,
-      filter: "blur(6px)",
-      transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] as const },
+      y: -12,
+      ...(isMobile ? {} : { filter: "blur(6px)" }),
+      transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] as const },
     },
   };
 
   const wordVariants = {
     hidden: {
       opacity: 0,
-      y: 28,
-      filter: "blur(6px)",
+      y: 22,
+      ...(isMobile ? {} : { filter: "blur(6px)" }),
     },
     visible: {
       opacity: 1,
       y: 0,
-      filter: "blur(0px)",
+      ...(isMobile ? {} : { filter: "blur(0px)" }),
       transition: {
-        duration: 0.52,
+        duration: 0.45,
         ease: [0.22, 1, 0.36, 1] as const,
       },
     },
@@ -97,12 +105,54 @@ export default function MissionVisionSection() {
           background-color: #ffebeb;
           overflow: hidden;
           padding: 130px 24px;
+          contain: paint;
         }
 
         @media (max-width: 768px) {
           .mv-section {
             padding: 85px 20px;
           }
+        }
+
+        /* ── GPU-accelerated off-main-thread ambient blob float keyframes ── */
+        @keyframes mvBlobFloat1 {
+          0%, 100% {
+            transform: translate3d(0, 0, 0) scale(1);
+          }
+          33% {
+            transform: translate3d(20px, -16px, 0) scale(1.06);
+          }
+          66% {
+            transform: translate3d(-12px, 10px, 0) scale(0.96);
+          }
+        }
+
+        @keyframes mvBlobFloat2 {
+          0%, 100% {
+            transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+          }
+          33% {
+            transform: translate3d(-20px, 18px, 0) rotate(3deg) scale(1.05);
+          }
+          66% {
+            transform: translate3d(14px, -14px, 0) rotate(-2deg) scale(0.96);
+          }
+        }
+
+        .mv-blob-1 {
+          animation: mvBlobFloat1 14s ease-in-out infinite;
+          will-change: transform;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+        }
+
+        .mv-blob-2 {
+          animation: mvBlobFloat2 16s ease-in-out infinite;
+          will-change: transform;
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
         }
 
         /* ── Big Center Typography matching Google Labs style ── */
@@ -136,12 +186,13 @@ export default function MissionVisionSection() {
           display: inline-flex;
           align-items: center;
           padding: 4px;
-          background: rgba(255, 255, 255, 0.7);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
+          background: rgba(255, 255, 255, 0.82);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
           border: 1px solid rgba(15, 23, 42, 0.07);
           border-radius: 9999px;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+          transform: translateZ(0);
         }
 
         .mv-tab-btn {
@@ -164,64 +215,32 @@ export default function MissionVisionSection() {
       `}</style>
 
       <section ref={sectionRef} className="mv-section">
-        {/* ── Left Soft Blue/Cyan Organic Shape ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={
-            isInView
-              ? {
-                  opacity: 0.6,
-                  x: [0, 22, -14, 0],
-                  y: [0, -18, 12, 0],
-                  scale: [1, 1.08, 0.96, 1],
-                }
-              : { opacity: 0 }
-          }
-          transition={{
-            opacity: { duration: 1.2 },
-            x: { duration: 14, repeat: Infinity, ease: "easeInOut" },
-            y: { duration: 14, repeat: Infinity, ease: "easeInOut" },
-            scale: { duration: 14, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="absolute -top-16 -left-16 w-72 h-72 sm:w-96 sm:h-96 rounded-full pointer-events-none"
+        {/* ── Left Soft Blue/Cyan Organic Shape (Compositor-driven CSS animation) ── */}
+        <div
+          className={`absolute -top-16 -left-16 w-72 h-72 sm:w-96 sm:h-96 rounded-full pointer-events-none transition-opacity duration-1000 ${
+            isInView ? "opacity-60 mv-blob-1" : "opacity-0"
+          }`}
           style={{
             background:
               "radial-gradient(circle, rgba(0, 194, 206, 0.32) 0%, rgba(0, 112, 198, 0.14) 50%, transparent 75%)",
-            filter: "blur(36px)",
+            filter: isMobile ? "blur(24px)" : "blur(36px)",
           }}
         />
 
-        {/* ── Right Pink/Magenta Organic Blob Shape ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={
-            isInView
-              ? {
-                  opacity: 0.8,
-                  x: [0, -24, 18, 0],
-                  y: [0, 22, -16, 0],
-                  scale: [1, 1.06, 0.95, 1],
-                  rotate: [0, 4, -3, 0],
-                }
-              : { opacity: 0 }
-          }
-          transition={{
-            opacity: { duration: 1.2 },
-            x: { duration: 16, repeat: Infinity, ease: "easeInOut" },
-            y: { duration: 16, repeat: Infinity, ease: "easeInOut" },
-            scale: { duration: 16, repeat: Infinity, ease: "easeInOut" },
-            rotate: { duration: 16, repeat: Infinity, ease: "easeInOut" },
-          }}
-          className="absolute -bottom-16 -right-12 w-80 h-96 sm:w-[480px] sm:h-[500px] pointer-events-none"
+        {/* ── Right Pink/Magenta Organic Blob Shape (Compositor-driven CSS animation) ── */}
+        <div
+          className={`absolute -bottom-16 -right-12 w-80 h-96 sm:w-[480px] sm:h-[500px] pointer-events-none transition-opacity duration-1000 ${
+            isInView ? "opacity-80 mv-blob-2" : "opacity-0"
+          }`}
           style={{
             background:
               "linear-gradient(135deg, rgba(255, 140, 210, 0.55) 0%, rgba(244, 114, 182, 0.48) 50%, rgba(251, 113, 133, 0.28) 100%)",
             borderRadius: "62% 38% 70% 30% / 45% 58% 42% 55%",
-            filter: "blur(42px)",
+            filter: isMobile ? "blur(28px)" : "blur(42px)",
           }}
         />
 
-        {/* ── Crisp Vector Organic Accent Blob ── */}
+        {/* ── Crisp Vector Organic Accent Blob (Desktop only) ── */}
         <motion.svg
           initial={{ opacity: 0 }}
           animate={
@@ -240,7 +259,7 @@ export default function MissionVisionSection() {
             scale: { duration: 18, repeat: Infinity, ease: "easeInOut" },
             y: { duration: 18, repeat: Infinity, ease: "easeInOut" },
           }}
-          className="absolute -bottom-10 -right-8 w-64 h-80 sm:w-96 sm:h-[420px] pointer-events-none hidden sm:block"
+          className="absolute -bottom-10 -right-8 w-64 h-80 sm:w-96 sm:h-[420px] pointer-events-none hidden sm:block will-change-transform"
           viewBox="0 0 200 200"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -252,9 +271,9 @@ export default function MissionVisionSection() {
         </motion.svg>
 
         <motion.div
-          initial={{ opacity: 0, y: 36 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 36 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, y: 28 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 flex flex-col items-center"
         >
           {/* ── Magnetic Sliding Pill Switcher ── */}
@@ -294,7 +313,7 @@ export default function MissionVisionSection() {
             </button>
           </div>
 
-          {/* ── Kinetic Typography Word-by-Word Reveal (Only triggers when section is in view) ── */}
+          {/* ── Kinetic Typography Word-by-Word Reveal ── */}
           <div className="min-h-[190px] sm:min-h-[230px] flex items-center justify-center w-full">
             <AnimatePresence mode="wait">
               {activeTab === "mission" ? (
@@ -310,7 +329,7 @@ export default function MissionVisionSection() {
                     <motion.span
                       key={`${word.text}-${i}`}
                       variants={wordVariants}
-                      className={word.isGradient ? "mv-gradient-text" : "inline-block"}
+                      className={`${word.isGradient ? "mv-gradient-text" : "inline-block"} transform-gpu`}
                     >
                       {word.text}
                     </motion.span>
@@ -329,7 +348,7 @@ export default function MissionVisionSection() {
                     <motion.span
                       key={`${word.text}-${i}`}
                       variants={wordVariants}
-                      className={word.isGradient ? "mv-gradient-text" : "inline-block"}
+                      className={`${word.isGradient ? "mv-gradient-text" : "inline-block"} transform-gpu`}
                     >
                       {word.text}
                     </motion.span>

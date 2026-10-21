@@ -33,9 +33,16 @@ const MarqueeStyles = React.memo(() => (
         }
         .animate-marquee-left {
            animation: marquee-left var(--duration) linear infinite;
+           will-change: transform;
         }
         .animate-marquee-right {
            animation: marquee-right var(--duration) linear infinite;
+           will-change: transform;
+        }
+        @media (hover: hover) {
+          .group:hover .marquee-pause-hover {
+            animation-play-state: paused;
+          }
         }
         `}
   </style>
@@ -58,15 +65,18 @@ const MarqueeRow = React.memo(
   }) => {
     return (
       <div
-        className={cn("group flex overflow-hidden p-2 [--gap:1rem]", className)}
+        className={cn(
+          "group flex overflow-hidden p-2 [--gap:1rem] [contain:paint]",
+          className
+        )}
       >
         <div
           className={cn(
-            "flex shrink-0 justify-start [gap:var(--gap)] min-w-full pr-[var(--gap)] will-change-transform [backface-visibility:hidden]",
+            "flex shrink-0 justify-start [gap:var(--gap)] min-w-full pr-[var(--gap)] will-change-transform [backface-visibility:hidden] transform-gpu",
             direction === "left"
               ? "animate-marquee-left"
               : "animate-marquee-right",
-            pauseOnHover && "group-hover:[animation-play-state:paused]",
+            pauseOnHover && "marquee-pause-hover",
           )}
           style={{ "--duration": `${speed}s` } as React.CSSProperties}
         >
@@ -75,11 +85,11 @@ const MarqueeRow = React.memo(
         <div
           aria-hidden="true"
           className={cn(
-            "flex shrink-0 justify-start [gap:var(--gap)] min-w-full pr-[var(--gap)] will-change-transform [backface-visibility:hidden]",
+            "flex shrink-0 justify-start [gap:var(--gap)] min-w-full pr-[var(--gap)] will-change-transform [backface-visibility:hidden] transform-gpu",
             direction === "left"
               ? "animate-marquee-left"
               : "animate-marquee-right",
-            pauseOnHover && "group-hover:[animation-play-state:paused]",
+            pauseOnHover && "marquee-pause-hover",
           )}
           style={{ "--duration": `${speed}s` } as React.CSSProperties}
         >
@@ -101,15 +111,23 @@ const TestimonialCard = React.memo(
   }) => {
     if (variant === "flush") {
       return (
-        <div className="relative group flex h-auto w-[350px] shrink-0 flex-col justify-between overflow-hidden rounded-none border-r border-border bg-black/5 p-6 transition-all hover:bg-black/10 transform-gpu [backface-visibility:hidden]">
-          <div className="absolute inset-0 bg-gradient-to-br from-black/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        <div className="relative group flex h-auto w-[290px] sm:w-[350px] shrink-0 flex-col justify-between overflow-hidden rounded-none border-r border-border bg-black/5 p-5 sm:p-6 transition-all hover:bg-black/10 transform-gpu [backface-visibility:hidden]">
+          <div className="absolute inset-0 bg-gradient-to-br from-black/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none" />
           <div className="relative z-10 flex flex-col gap-4">
             <p className="text-sm leading-relaxed text-slate-800 font-medium line-clamp-4">
               &quot;{item.text}&quot;
             </p>
             <div className="flex items-center gap-3 pt-2">
               <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-border">
-                <img src={item.avatar} alt={item.name} className="h-full w-full object-cover" loading="eager" />
+                <img
+                  src={item.avatar}
+                  alt={item.name}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  width={40}
+                  height={40}
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-sm font-semibold text-slate-900">{item.name}</span>
@@ -124,15 +142,23 @@ const TestimonialCard = React.memo(
     }
 
     return (
-      <div className="relative group flex h-auto w-[350px] shrink-0 flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white/70 backdrop-blur-sm p-6 transition-all hover:bg-white/90 hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1 transform-gpu [backface-visibility:hidden]">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 rounded-2xl" />
+      <div className="relative group flex h-auto w-[290px] sm:w-[350px] shrink-0 flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 sm:bg-white/70 backdrop-blur-none sm:backdrop-blur-sm p-5 sm:p-6 transition-all hover:bg-white/95 hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1 transform-gpu [backface-visibility:hidden]">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 rounded-2xl pointer-events-none" />
         <div className="relative z-10 flex flex-col gap-4">
           <p className="text-sm leading-relaxed text-slate-800 font-medium line-clamp-4">
             &quot;{item.text}&quot;
           </p>
           <div className="flex items-center gap-3 pt-2">
             <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200">
-              <img src={item.avatar} alt={item.name} className="h-full w-full object-cover" loading="eager" />
+              <img
+                src={item.avatar}
+                alt={item.name}
+                className="h-full w-full object-cover"
+                loading="lazy"
+                decoding="async"
+                width={40}
+                height={40}
+              />
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-slate-900">{item.name}</span>
