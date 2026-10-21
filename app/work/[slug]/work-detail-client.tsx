@@ -16,7 +16,6 @@ import {
   Layers,
   Zap,
   TrendingUp,
-  Quote,
   ShieldCheck,
   Server,
   BarChart3,
@@ -491,25 +490,11 @@ export default function WorkDetailClient({
           font-weight: 450;
         }
 
-        /* ── Section: Impact Metrics & Quote ── */
-        .wd-impact-box {
-          background: #0a101d;
-          border-radius: 28px;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          padding: 44px 36px;
-          box-shadow: 0 20px 50px rgba(10, 16, 29, 0.3);
-          color: #ffffff;
-        }
-        @media (max-width: 640px) {
-          .wd-impact-box {
-            padding: 30px 20px;
-          }
-        }
+        /* ── Section: Impact Metrics ── */
         .wd-metrics-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
           gap: 20px;
-          margin-bottom: 40px;
         }
         @media (max-width: 900px) {
           .wd-metrics-grid {
@@ -518,14 +503,15 @@ export default function WorkDetailClient({
         }
         @media (max-width: 500px) {
           .wd-metrics-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
           }
         }
         .wd-metric-card {
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(255, 255, 255, 0.09);
+          background: #0a101d;
+          border: 1px solid rgba(255, 255, 255, 0.10);
           border-radius: 20px;
-          padding: 24px 20px;
+          padding: 28px 22px;
+          box-shadow: 0 8px 28px rgba(10, 16, 29, 0.22);
         }
         .wd-metric-val {
           font-size: clamp(2rem, 3.2vw, 2.75rem);
@@ -548,33 +534,6 @@ export default function WorkDetailClient({
           font-size: 0.78rem;
           line-height: 1.5;
           color: #94a3b8;
-        }
-
-        .wd-quote-card {
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          border-radius: 20px;
-          padding: 28px 32px;
-          position: relative;
-        }
-        .wd-quote-text {
-          font-family: "Inter", sans-serif;
-          font-size: 1.08rem;
-          line-height: 1.65;
-          color: #e2e8f0;
-          font-style: italic;
-          margin-bottom: 16px;
-        }
-        .wd-quote-author {
-          font-size: 0.95rem;
-          font-weight: 700;
-          color: #ffffff;
-        }
-        .wd-quote-role {
-          font-size: 0.82rem;
-          color: #00c2ce;
-          font-family: var(--font-mono, monospace), monospace;
-          margin-top: 2px;
         }
 
         /* ── Bottom Section: View Website CTA ── */
@@ -967,46 +926,21 @@ export default function WorkDetailClient({
             <p className="wd-section-lead">{project.impact.description}</p>
           </motion.div>
 
-          {/* Impact Stats Grid & Quote Box */}
-          <div className="wd-impact-box">
-            <div className="wd-metrics-grid">
-              {project.impact.metrics.map((metric, idx) => (
-                <motion.div
-                  key={metric.label}
-                  className="wd-metric-card"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: idx * 0.08 }}
-                >
-                  <div className="wd-metric-val">{metric.value}</div>
-                  <div className="wd-metric-lbl">{metric.label}</div>
-                  <div className="wd-metric-dtl">{metric.detail}</div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Client Quote Card */}
-            <motion.div
-              className="wd-quote-card"
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <Quote className="w-8 h-8 text-cyan-400 mb-2 opacity-60" />
-              <p className="wd-quote-text">
-                &ldquo;{project.impact.quote.text}&rdquo;
-              </p>
-              <div>
-                <div className="wd-quote-author">
-                  {project.impact.quote.author}
-                </div>
-                <div className="wd-quote-role">
-                  {project.impact.quote.role}
-                </div>
-              </div>
-            </motion.div>
+          <div className="wd-metrics-grid">
+            {project.impact.metrics.map((metric, idx) => (
+              <motion.div
+                key={metric.label}
+                className="wd-metric-card"
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.08 }}
+              >
+                <div className="wd-metric-val">{metric.value}</div>
+                <div className="wd-metric-lbl">{metric.label}</div>
+                <div className="wd-metric-dtl">{metric.detail}</div>
+              </motion.div>
+            ))}
           </div>
         </section>
 

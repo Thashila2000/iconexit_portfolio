@@ -3,6 +3,7 @@ import HomeServices from '@/app/components/HomeServices';
 import MissionVisionSection from '@/app/components/MissionVisionSection';
 import Portfolio9 from '@/components/ui/block-portfolio-9';
 import TestimonialsSection from '@/app/components/TestimonialsSection';
+import HowWeWorkTimeline from '@/components/ui/timeline';
 
 export default function HomePage() {
   return (
@@ -38,10 +39,24 @@ export default function HomePage() {
         />
       </div>
 
+      {/* How We Work — Process timeline */}
+      <div className="relative z-[10] w-full">
+        <HowWeWorkTimeline
+          title="How We Work"
+          subtitle="Four deliberate phases that take your product from a rough idea to a live, scalable platform without surprises."
+          backgroundColor="#ffebeb"
+          textColor="#0F172A"
+          mutedTextColor="#1E293B"
+          activeColor="#0066EE"
+          imageUrl="/Images/our_process.png"
+        />
+      </div>
+
       {/* Testimonials Marquee Section */}
       <div className="relative z-[10] w-full bg-[#ffebeb] border-t border-slate-200/60">
         <TestimonialsSection />
       </div>
+
     </div>
   );
 }
