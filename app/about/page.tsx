@@ -218,7 +218,7 @@ export default function AboutPage() {
       </section>
 
       {/* ── 4. VALUES ── */}
-      <section className="relative overflow-hidden bg-[#ffebeb] py-28 sm:py-32">
+      <section className="relative overflow-hidden bg-[#ffebeb] py-28 sm:py-32 [contain:paint]">
         {/* ── Left Soft Blue/Cyan Organic Shape (matching Mission & Vision) ── */}
         <motion.div
           animate={{
@@ -231,11 +231,12 @@ export default function AboutPage() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute -top-16 -left-16 w-72 h-72 sm:w-96 sm:h-96 rounded-full pointer-events-none opacity-60"
+          className="absolute -top-16 -left-16 w-72 h-72 sm:w-96 sm:h-96 rounded-full pointer-events-none opacity-70 transform-gpu will-change-transform"
           style={{
             background:
-              "radial-gradient(circle, rgba(0, 194, 206, 0.32) 0%, rgba(0, 112, 198, 0.14) 50%, transparent 75%)",
-            filter: "blur(36px)",
+              "radial-gradient(circle, rgba(0, 194, 206, 0.35) 0%, rgba(0, 112, 198, 0.18) 38%, rgba(0, 112, 198, 0.05) 60%, transparent 75%)",
+            WebkitBackfaceVisibility: "hidden",
+            backfaceVisibility: "hidden",
           }}
         />
 
@@ -252,12 +253,13 @@ export default function AboutPage() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute -bottom-16 -right-12 w-80 h-96 sm:w-[480px] sm:h-[500px] pointer-events-none opacity-80"
+          className="absolute -bottom-16 -right-12 w-80 h-96 sm:w-[480px] sm:h-[500px] pointer-events-none opacity-80 transform-gpu will-change-transform"
           style={{
             background:
-              "linear-gradient(135deg, rgba(255, 140, 210, 0.55) 0%, rgba(244, 114, 182, 0.48) 50%, rgba(251, 113, 133, 0.28) 100%)",
+              "radial-gradient(ellipse at 60% 50%, rgba(255, 140, 210, 0.55) 0%, rgba(244, 114, 182, 0.38) 45%, rgba(251, 113, 133, 0.12) 65%, transparent 75%)",
             borderRadius: "62% 38% 70% 30% / 45% 58% 42% 55%",
-            filter: "blur(42px)",
+            WebkitBackfaceVisibility: "hidden",
+            backfaceVisibility: "hidden",
           }}
         />
 
@@ -273,7 +275,7 @@ export default function AboutPage() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute -bottom-10 -right-8 w-64 h-80 sm:w-96 sm:h-[420px] pointer-events-none opacity-40 hidden sm:block"
+          className="absolute -bottom-10 -right-8 w-64 h-80 sm:w-96 sm:h-[420px] pointer-events-none opacity-40 hidden sm:block transform-gpu will-change-transform"
           viewBox="0 0 200 200"
           xmlns="http://www.w3.org/2000/svg"
         >
@@ -299,20 +301,22 @@ export default function AboutPage() {
             {VALUES.map((v, i) => (
               <motion.div
                 key={v.num}
-                variants={fadeUp} initial="hidden" whileInView="show"
-                viewport={{ once: true, margin: '-60px' }}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: '-40px' }}
                 transition={{ delay: i * 0.1 }}
-                className="group grid grid-cols-1 gap-6 p-7 sm:p-9 rounded-2xl bg-white/70 backdrop-blur-md border border-white/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:bg-white/95 hover:shadow-[0_12px_36px_rgba(0,102,238,0.08)] hover:border-[#0066EE]/30 transition-all duration-300 sm:grid-cols-[6rem_1fr] sm:gap-10"
+                className="group grid grid-cols-1 gap-6 p-7 sm:p-9 rounded-2xl bg-white/90 sm:bg-white/70 backdrop-blur-none sm:backdrop-blur-md border border-white/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:bg-white/95 hover:shadow-[0_12px_36px_rgba(0,102,238,0.08)] hover:border-[#0066EE]/30 transition-[background-color,border-color,box-shadow] duration-300 sm:grid-cols-[6rem_1fr] sm:gap-10 [contain:content]"
               >
                 <motion.span
                   initial="inactive"
                   whileInView="active"
-                  viewport={{ once: false, amount: 'some', margin: '-25% 0px -25% 0px' }}
+                  viewport={{ once: false, amount: 0.35, margin: '-15% 0px -15% 0px' }}
                   variants={{
-                    inactive: { color: '#CBD5E1', transition: { duration: 0.3 } },
-                    active:   { color: '#0066EE', transition: { duration: 0.3, ease: 'easeOut' } },
+                    inactive: { color: '#CBD5E1', transition: { duration: 0.35 } },
+                    active:   { color: '#0066EE', transition: { duration: 0.35, ease: 'easeOut' } },
                   }}
-                  className="font-mono text-4xl sm:text-5xl font-bold transition-colors duration-300 group-hover:text-[#00C2CE]"
+                  className="font-mono text-4xl sm:text-5xl font-bold group-hover:text-[#00C2CE]"
                 >
                   {v.num}
                 </motion.span>

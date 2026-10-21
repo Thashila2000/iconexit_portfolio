@@ -1,9 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  useInView,
+} from "framer-motion";
 import {
   ArrowRight,
   TrendingUp,
@@ -33,10 +38,17 @@ const fadeUp = {
   }),
 };
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.05 } },
-};
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () =>
+      setIsMobile(window.matchMedia("(hover: none), (max-width: 768px)").matches);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
 
 interface Project {
   slug: string;
@@ -96,6 +108,253 @@ const PROJECTS: Project[] = [
     bgGlow: "radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.35) 0%, rgba(10, 16, 29, 0) 70%)",
   },
 ];
+
+function WorkCard({ project, index }: { project: Project; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-40px" });
+  const isMobile = useIsMobile();
+  const [hovered, setHovered] = useState(false);
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useTransform(y, [-60, 60], [4, -4]);
+  const rotateY = useTransform(x, [-60, 60], [-4, 4]);
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (isMobile) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    x.set(e.clientX - rect.left - rect.width / 2);
+    y.set(e.clientY - rect.top - rect.height / 2);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+    setHovered(false);
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{ perspective: isMobile ? undefined : 1100 }}
+      custom={index * 0.08}
+      variants={fadeUp}
+      initial="hidden"
+      animate={isInView ? "show" : "hidden"}
+      className="h-full"
+    >
+      <motion.div
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        style={
+          isMobile
+            ? {}
+            : {
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+              }
+        }
+        whileHover={isMobile ? { y: -5 } : { scale: 1.015 }}
+        transition={{ type: "spring", stiffness: 350, damping: 22 }}
+        className={`gl-card ${hovered ? "is-hovered" : ""}`}
+      >
+        {/* Ambient Radial Aura & Glow */}
+        <div
+          aria-hidden="true"
+          className="gl-ambient-glow"
+          style={{
+            background: project.bgGlow,
+            opacity: hovered ? 1 : 0.45,
+          }}
+        />
+
+        {/* Top Pill Badges */}
+        <div className="gl-badge-row">
+          <span className="gl-pill">{project.badge1}</span>
+          <span className="gl-pill">{project.badge2}</span>
+        </div>
+
+        {/* Middle Mockup / Preview Screen Stage */}
+        <div className="gl-stage">
+          {project.type === "erp" && (
+            <div className="flex flex-col justify-between h-full w-full">
+              {/* Top mockup bar */}
+              <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-[0.68rem] font-mono text-slate-300 font-medium">ERP Cluster · Live</span>
+                </div>
+                <span className="text-[0.62rem] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full border border-blue-400/20 font-mono">
+                  99.98% SLA
+                </span>
+              </div>
+
+              {/* Mockup Main Display */}
+              <div className="my-auto py-1">
+                <div className="text-[0.65rem] text-slate-400 font-medium">Welcome back, Operations</div>
+                <div className="text-base font-bold text-white tracking-tight flex items-center gap-1.5">
+                  Operations Pulse
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                </div>
+
+                {/* Search / command bar mockup */}
+                <div className="mt-1.5 bg-white/10 border border-white/15 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
+                  <span className="text-[0.68rem] text-slate-300 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                    Search inventory, financials, HR...
+                  </span>
+                  <span className="text-[0.6rem] bg-white/10 text-slate-300 px-1 py-0.5 rounded font-mono">⌘K</span>
+                </div>
+              </div>
+
+              {/* Bottom KPIs */}
+              <div className="grid grid-cols-3 gap-1.5 pt-1.5 border-t border-white/10">
+                <div className="bg-white/5 p-1.5 rounded-md border border-white/5">
+                  <div className="text-[0.58rem] text-slate-400">Revenue</div>
+                  <div className="text-[0.72rem] font-bold text-white">$1.28M</div>
+                </div>
+                <div className="bg-white/5 p-1.5 rounded-md border border-white/5">
+                  <div className="text-[0.58rem] text-slate-400">Inventory</div>
+                  <div className="text-[0.72rem] font-bold text-emerald-400">99.4%</div>
+                </div>
+                <div className="bg-white/5 p-1.5 rounded-md border border-white/5">
+                  <div className="text-[0.58rem] text-slate-400">HR Seats</div>
+                  <div className="text-[0.72rem] font-bold text-cyan-400">240 Act.</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {project.type === "hospitality" && (
+            <div className="relative h-full w-full flex flex-col justify-between">
+              {/* Background Visual Mockup */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden opacity-30">
+                <Image
+                  src="/Images/solution2.jpg"
+                  alt="Hospitality software view"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#090E17] via-[#090E17]/60 to-transparent" />
+              </div>
+
+              {/* Top floating bar */}
+              <div className="relative z-10 flex items-center justify-between pb-1.5 border-b border-white/15">
+                <div className="flex items-center gap-1.5">
+                  <BedDouble className="w-3.5 h-3.5 text-cyan-400" />
+                  <span className="text-[0.68rem] font-bold text-white">Grand Horizon PMS</span>
+                </div>
+                <span className="text-[0.62rem] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-400/20 font-mono">
+                  94% Occupancy
+                </span>
+              </div>
+
+              {/* Center card */}
+              <div className="relative z-10 my-auto p-2 bg-black/75 rounded-xl border border-white/15">
+                <div className="text-[0.62rem] text-cyan-300 font-mono uppercase tracking-wider mb-0.5">
+                  Dynamic Pricing Active
+                </div>
+                <div className="text-xs font-bold text-white flex items-center justify-between">
+                  <span>Suite 408 &bull; Ocean View</span>
+                  <span className="text-emerald-400 text-[0.72rem]">$280/night</span>
+                </div>
+                <p className="text-[0.64rem] text-slate-300 mt-0.5 line-clamp-1">
+                  Instant guest check-in portal with digital mobile key.
+                </p>
+              </div>
+
+              {/* Bottom status bar */}
+              <div className="relative z-10 flex items-center justify-between text-[0.62rem] text-slate-300 pt-1">
+                <span className="flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                  Housekeeping: 100%
+                </span>
+                <span className="font-mono text-slate-400">142/150 Rooms</span>
+              </div>
+            </div>
+          )}
+
+          {project.type === "booking" && (
+            <div className="flex flex-col justify-between h-full w-full">
+              {/* Top Audio / Interactive player preview style */}
+              <div className="p-2 bg-white/10 border border-white/10 rounded-xl">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/30">
+                      <Calendar className="w-3 h-3" />
+                    </div>
+                    <div>
+                      <div className="text-[0.72rem] font-bold text-white">Daily Roster Overview</div>
+                      <div className="text-[0.58rem] text-slate-400">18 Appointments Booked</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center text-slate-400">
+                    <ThumbsUp className="w-3 h-3" />
+                  </div>
+                </div>
+
+                {/* Interactive timeline slider */}
+                <div className="space-y-0.5">
+                  <div className="flex justify-between text-[0.58rem] text-slate-400 font-mono">
+                    <span>09:00 AM</span>
+                    <span className="text-cyan-400 font-semibold">02:30 PM Active</span>
+                    <span>07:00 PM</span>
+                  </div>
+                  <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
+                    <div className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full w-[68%]" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Card: SMS & Payment notification */}
+              <div className="p-2 bg-black/70 border border-white/10 rounded-xl flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                    <MessageSquare className="w-2.5 h-2.5" />
+                  </div>
+                  <div>
+                    <div className="text-[0.68rem] font-semibold text-white">SMS Reminder Delivered</div>
+                    <div className="text-[0.58rem] text-slate-400">Client confirmed appointment</div>
+                  </div>
+                </div>
+                <span className="text-[0.62rem] font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded border border-emerald-400/20">
+                  +$140.00
+                </span>
+              </div>
+
+              {/* Bottom live indicator */}
+              <div className="flex items-center justify-between text-[0.62rem] text-slate-400 pt-0.5">
+                <span className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  Stripe Payments Integrated
+                </span>
+                <span className="font-mono text-slate-400">Multi-Tenant</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Bottom Content Area */}
+        <div className="gl-content">
+          <h3 className="gl-title">{project.title}</h3>
+          <p className="gl-desc">{project.description}</p>
+
+          {/* View Case Study Button */}
+          <Link
+            href={`/work/${project.slug}`}
+            className="gl-btn-solid"
+          >
+            <span>View Case Study</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 export default function WorkPage() {
   return (
@@ -254,13 +513,23 @@ export default function WorkPage() {
           flex-direction: column;
           padding: 18px 18px 20px;
           min-height: 490px;
-          transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+          height: 100%;
+          will-change: transform;
+          cursor: default;
           box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.35);
+          transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                      box-shadow 0.4s ease;
         }
-        .gl-card:hover {
-          transform: translateY(-6px);
-          border-color: rgba(255, 255, 255, 0.28);
-          box-shadow: 0 24px 50px -15px rgba(0, 112, 198, 0.28);
+        .gl-card.is-hovered {
+          border-color: rgba(0, 194, 206, 0.5);
+          box-shadow: 0 30px 60px -20px rgba(0, 112, 198, 0.35);
+        }
+        .gl-ambient-glow {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
+          transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         /* Top Pill Badges */
@@ -282,13 +551,12 @@ export default function WorkPage() {
           font-weight: 600;
           letter-spacing: 0.02em;
           color: rgba(255, 255, 255, 0.88);
-          background: rgba(255, 255, 255, 0.09);
-          backdrop-filter: blur(10px);
+          background: rgba(255, 255, 255, 0.12);
           border: 1px solid rgba(255, 255, 255, 0.14);
           transition: background 0.2s, color 0.2s;
         }
         .gl-pill:hover {
-          background: rgba(255, 255, 255, 0.16);
+          background: rgba(255, 255, 255, 0.2);
           color: #FFFFFF;
         }
 
@@ -300,7 +568,7 @@ export default function WorkPage() {
           height: 195px;
           border-radius: 18px;
           overflow: hidden;
-          background: rgba(14, 22, 36, 0.65);
+          background: rgba(14, 22, 36, 0.85);
           border: 1px solid rgba(255, 255, 255, 0.08);
           padding: 12px;
           display: flex;
@@ -517,215 +785,11 @@ export default function WorkPage() {
             </motion.p>
           </div>
 
-          <motion.div
-            className="wk-grid"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-60px" }}
-          >
+          <div className="wk-grid">
             {PROJECTS.map((project, index) => (
-              <motion.div
-                key={project.title}
-                className="gl-card"
-                variants={fadeUp}
-                custom={index * 0.12}
-                style={{ background: `#090E17 ${project.bgGlow}` }}
-              >
-                {/* Ambient Radial Aura */}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 opacity-60"
-                  style={{ background: project.bgGlow }}
-                />
-
-                {/* Top Pill Badges */}
-                <div className="gl-badge-row">
-                  <span className="gl-pill">
-                    {project.badge1}
-                  </span>
-                  <span className="gl-pill">
-                    {project.badge2}
-                  </span>
-                </div>
-
-                {/* Middle Mockup / Preview Screen Stage */}
-                <div className="gl-stage">
-                  {project.type === "erp" && (
-                    <div className="flex flex-col justify-between h-full w-full">
-                      {/* Top mockup bar */}
-                      <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
-                        <div className="flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                          <span className="text-[0.68rem] font-mono text-slate-300 font-medium">ERP Cluster · Live</span>
-                        </div>
-                        <span className="text-[0.62rem] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full border border-blue-400/20 font-mono">
-                          99.98% SLA
-                        </span>
-                      </div>
-
-                      {/* Mockup Main Display */}
-                      <div className="my-auto py-1">
-                        <div className="text-[0.65rem] text-slate-400 font-medium">Welcome back, Operations</div>
-                        <div className="text-base font-bold text-white tracking-tight flex items-center gap-1.5">
-                          Operations Pulse
-                          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                        </div>
-
-                        {/* Search / command bar mockup */}
-                        <div className="mt-1.5 bg-white/10 border border-white/15 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
-                          <span className="text-[0.68rem] text-slate-300 flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                            Search inventory, financials, HR...
-                          </span>
-                          <span className="text-[0.6rem] bg-white/10 text-slate-300 px-1 py-0.5 rounded font-mono">⌘K</span>
-                        </div>
-                      </div>
-
-                      {/* Bottom KPIs */}
-                      <div className="grid grid-cols-3 gap-1.5 pt-1.5 border-t border-white/10">
-                        <div className="bg-white/5 p-1.5 rounded-md border border-white/5">
-                          <div className="text-[0.58rem] text-slate-400">Revenue</div>
-                          <div className="text-[0.72rem] font-bold text-white">$1.28M</div>
-                        </div>
-                        <div className="bg-white/5 p-1.5 rounded-md border border-white/5">
-                          <div className="text-[0.58rem] text-slate-400">Inventory</div>
-                          <div className="text-[0.72rem] font-bold text-emerald-400">99.4%</div>
-                        </div>
-                        <div className="bg-white/5 p-1.5 rounded-md border border-white/5">
-                          <div className="text-[0.58rem] text-slate-400">HR Seats</div>
-                          <div className="text-[0.72rem] font-bold text-cyan-400">240 Act.</div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {project.type === "hospitality" && (
-                    <div className="relative h-full w-full flex flex-col justify-between">
-                      {/* Background Visual Mockup */}
-                      <div className="absolute inset-0 rounded-xl overflow-hidden opacity-30">
-                        <Image
-                          src="/Images/solution2.jpg"
-                          alt="Hospitality software view"
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#090E17] via-[#090E17]/60 to-transparent" />
-                      </div>
-
-                      {/* Top floating bar */}
-                      <div className="relative z-10 flex items-center justify-between pb-1.5 border-b border-white/15">
-                        <div className="flex items-center gap-1.5">
-                          <BedDouble className="w-3.5 h-3.5 text-cyan-400" />
-                          <span className="text-[0.68rem] font-bold text-white">Grand Horizon PMS</span>
-                        </div>
-                        <span className="text-[0.62rem] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-400/20 font-mono">
-                          94% Occupancy
-                        </span>
-                      </div>
-
-                      {/* Center card */}
-                      <div className="relative z-10 my-auto p-2 bg-black/60 backdrop-blur-md rounded-xl border border-white/15">
-                        <div className="text-[0.62rem] text-cyan-300 font-mono uppercase tracking-wider mb-0.5">
-                          Dynamic Pricing Active
-                        </div>
-                        <div className="text-xs font-bold text-white flex items-center justify-between">
-                          <span>Suite 408 &bull; Ocean View</span>
-                          <span className="text-emerald-400 text-[0.72rem]">$280/night</span>
-                        </div>
-                        <p className="text-[0.64rem] text-slate-300 mt-0.5 line-clamp-1">
-                          Instant guest check-in portal with digital mobile key.
-                        </p>
-                      </div>
-
-                      {/* Bottom status bar */}
-                      <div className="relative z-10 flex items-center justify-between text-[0.62rem] text-slate-300 pt-1">
-                        <span className="flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                          Housekeeping: 100%
-                        </span>
-                        <span className="font-mono text-slate-400">142/150 Rooms</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {project.type === "booking" && (
-                    <div className="flex flex-col justify-between h-full w-full">
-                      {/* Top Audio / Interactive player preview style */}
-                      <div className="p-2 bg-white/5 border border-white/10 rounded-xl backdrop-blur-md">
-                        <div className="flex items-center justify-between mb-1.5">
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/30">
-                              <Calendar className="w-3 h-3" />
-                            </div>
-                            <div>
-                              <div className="text-[0.72rem] font-bold text-white">Daily Roster Overview</div>
-                              <div className="text-[0.58rem] text-slate-400">18 Appointments Booked</div>
-                            </div>
-                          </div>
-                          <div className="flex items-center text-slate-400">
-                            <ThumbsUp className="w-3 h-3" />
-                          </div>
-                        </div>
-
-                        {/* Interactive timeline slider */}
-                        <div className="space-y-0.5">
-                          <div className="flex justify-between text-[0.58rem] text-slate-400 font-mono">
-                            <span>09:00 AM</span>
-                            <span className="text-cyan-400 font-semibold">02:30 PM Active</span>
-                            <span>07:00 PM</span>
-                          </div>
-                          <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
-                            <div className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full w-[68%]" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Floating Card: SMS & Payment notification */}
-                      <div className="p-2 bg-black/50 border border-white/10 rounded-xl backdrop-blur-md flex items-center justify-between">
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-5 h-5 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                            <MessageSquare className="w-2.5 h-2.5" />
-                          </div>
-                          <div>
-                            <div className="text-[0.68rem] font-semibold text-white">SMS Reminder Delivered</div>
-                            <div className="text-[0.58rem] text-slate-400">Client confirmed appointment</div>
-                          </div>
-                        </div>
-                        <span className="text-[0.62rem] font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded border border-emerald-400/20">
-                          +$140.00
-                        </span>
-                      </div>
-
-                      {/* Bottom live indicator */}
-                      <div className="flex items-center justify-between text-[0.62rem] text-slate-400 pt-0.5">
-                        <span className="flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                          Stripe Payments Integrated
-                        </span>
-                        <span className="font-mono text-slate-400">Multi-Tenant</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Bottom Content Area */}
-                <div className="gl-content">
-                  <h3 className="gl-title">{project.title}</h3>
-                  <p className="gl-desc">{project.description}</p>
-
-                  {/* View Case Study Button */}
-                  <Link
-                    href={`/work/${project.slug}`}
-                    className="gl-btn-solid"
-                  >
-                    <span>View Case Study</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </motion.div>
+              <WorkCard key={project.slug} project={project} index={index} />
             ))}
-          </motion.div>
+          </div>
         </section>
 
         {/* ── CTA ── */}
