@@ -154,79 +154,90 @@ export default function HowWeWorkTimeline({
 
         if (!section || !slider || !track || !fill) return;
 
-        const distance = () => Math.max(0, slider.scrollWidth - window.innerWidth);
+        const getDistance = () => Math.max(0, slider.scrollWidth - window.innerWidth);
 
-        // 1. Pinned horizontal movement
-        const move = gsap.to(slider, {
-          x: () => -distance(),
-          ease: "none",
+        // Single master timeline: silky-smooth, instant-response, no 800ms lag delay
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: () => `+=${distance()}`,
+            end: () => `+=${getDistance()}`,
             pin: true,
-            scrub: 0.8,
-            anticipatePin: 1,
+            scrub: 0.25, // Fast responsive scrub eliminating the heavy sluggish delay
             invalidateOnRefresh: true,
           },
         });
 
+        // 1. Pinned horizontal movement
+        tl.to(
+          slider,
+          {
+            x: () => -getDistance(),
+            ease: "none",
+            duration: 1,
+          },
+          0
+        );
+
         // 2. Animated journey line fill across viewport
-        gsap.fromTo(
+        tl.fromTo(
           fill,
           { scaleX: 0 },
           {
             scaleX: 1,
             ease: "none",
-            scrollTrigger: {
-              trigger: track,
-              containerAnimation: move,
-              start: "left 90%",
-              end: "right 95%",
-              scrub: true,
-            },
-          }
+            duration: 1,
+          },
+          0
         );
 
-        // 3. Step reveals
+        // 3. Step reveals synchronized smoothly on the unified timeline
         const items = gsap.utils.toArray<HTMLElement>("[data-step]", track);
+
         items.forEach((li) => {
           const stem = li.querySelector("[data-stem]");
           const dot = li.querySelector("[data-dot]");
           const card = li.querySelector("[data-card]");
 
+          const dist = getDistance();
+          const liOffset = li.getBoundingClientRect().left - slider.getBoundingClientRect().left;
+
+          // Progress point along the timeline where this step enters view from the right
+          const startProgress =
+            dist > 0
+              ? Math.max(0.01, Math.min(0.85, (liOffset - window.innerWidth * 0.88) / dist))
+              : 0;
+          const dur =
+            dist > 0
+              ? Math.max(0.08, Math.min(0.18, (window.innerWidth * 0.22) / dist))
+              : 0.15;
+
           if (stem && dot) {
-            gsap
-              .timeline({
-                scrollTrigger: {
-                  trigger: li,
-                  containerAnimation: move,
-                  start: "left 90%",
-                  end: "left 70%",
-                  scrub: true,
-                },
-              })
-              .fromTo(stem, { scaleY: 0 }, { scaleY: 1, ease: "none" })
-              .fromTo(dot, { scale: 0 }, { scale: 1, ease: "back.out(2)" });
+            tl.fromTo(
+              stem,
+              { scaleY: 0 },
+              { scaleY: 1, ease: "none", duration: dur * 0.65 },
+              startProgress
+            );
+            tl.fromTo(
+              dot,
+              { scale: 0 },
+              { scale: 1, ease: "back.out(2)", duration: dur * 0.55 },
+              startProgress + dur * 0.2
+            );
           }
 
           if (card) {
-            gsap.fromTo(
+            tl.fromTo(
               card,
               { opacity: 0, y: 25 },
               {
                 opacity: 1,
                 y: 0,
-                duration: 0.5,
+                duration: dur,
                 ease: "power2.out",
-                scrollTrigger: {
-                  trigger: li,
-                  containerAnimation: move,
-                  start: "left 85%",
-                  end: "left 65%",
-                  scrub: true,
-                },
-              }
+              },
+              startProgress
             );
           }
         });
@@ -272,7 +283,7 @@ export default function HowWeWorkTimeline({
       id="how-we-work"
       aria-labelledby="how-we-work-title"
       style={vars}
-      className="relative w-full overflow-hidden"
+      className="relative z-20 w-full overflow-hidden"
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
@@ -284,10 +295,10 @@ export default function HowWeWorkTimeline({
       >
         <div
           ref={sliderRef}
-          className="flex h-full w-max items-stretch gap-[6vw] px-[5vw] will-change-transform"
+          className="flex h-full w-max items-stretch gap-[6vw] px-[5vw] transform-gpu"
         >
           {/* Intro Panel */}
-          <div className="flex w-[88vw] max-w-[1200px] shrink-0 snap-start items-center">
+          <div className="flex w-[88vw] max-w-[1200px] shrink-0 items-center">
             <motion.div
               ref={introRef}
               initial="hidden"
@@ -323,10 +334,10 @@ export default function HowWeWorkTimeline({
                   {renderTitle()}
                 </motion.h2>
 
-                {/* Subtitle */}
+                {/* Subtitle matching block portfolio description font */}
                 <motion.p
                   variants={fadeUp}
-                  className="mt-5 text-base leading-relaxed lg:text-lg font-medium text-slate-800"
+                  className="mt-5 text-[clamp(1.02rem,1.2vw,1.15rem)] leading-[1.65] font-semibold text-[#1E293B]"
                   style={{ fontFamily: "'Inter', sans-serif" }}
                 >
                   {subtitle}
@@ -420,7 +431,7 @@ export default function HowWeWorkTimeline({
                 <li
                   key={step.id}
                   data-step
-                  className={`grid h-full shrink-0 grid-rows-[1fr_0px_1fr] snap-start ${
+                  className={`grid h-full shrink-0 grid-rows-[1fr_0px_1fr] ${
                     isLast ? "w-[min(80vw,24rem)]" : "w-[min(44vw,18rem)]"
                   }`}
                 >
@@ -504,7 +515,7 @@ export default function HowWeWorkTimeline({
 
             {/* Subtitle */}
             <p
-              className="mt-3 text-sm sm:text-base leading-relaxed font-medium text-slate-800"
+              className="mt-3.5 text-[clamp(0.95rem,1.15vw,1.05rem)] leading-[1.6] font-semibold text-[#1E293B]"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               {subtitle}

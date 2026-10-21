@@ -194,7 +194,7 @@ export interface Portfolio9Props {
 
 export default function Portfolio9({
   title,
-  subtitle,
+  subtitle = "From high-availability cloud foundations to bespoke AI and software platforms, we engineer systems that empower modern business operations.",
   badge = "Business Solutions",
   buttonText = "Explore Portfolio",
   buttonHref = "/work",
@@ -292,7 +292,8 @@ export default function Portfolio9({
               <h2 className="bp-title">
                 {title || (
                   <>
-                    Comprehensive tech services<br />built for <em>unlimited scale.</em>
+                    Tailored business solutions<br />
+                    engineered for <em>digital growth.</em>
                   </>
                 )}
               </h2>

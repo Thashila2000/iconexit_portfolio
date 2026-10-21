@@ -29,7 +29,7 @@ export default function HomePage() {
           badge="Business Solutions"
           title={
             <>
-              Tailored business solutions<br className="hidden sm:inline" />
+              Tailored business solutions<br />
               engineered for <em>digital growth.</em>
             </>
           }
