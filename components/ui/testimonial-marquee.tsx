@@ -24,12 +24,12 @@ const MarqueeStyles = React.memo(() => (
   <style>
     {`
         @keyframes marquee-left {
-          from { transform: translate3d(0, 0, 0); }
-          to { transform: translate3d(-100%, 0, 0); }
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(-100%, 0, 0); }
         }
         @keyframes marquee-right {
-          from { transform: translate3d(-100%, 0, 0); }
-          to { transform: translate3d(0, 0, 0); }
+          0% { transform: translate3d(-100%, 0, 0); }
+          100% { transform: translate3d(0, 0, 0); }
         }
         .animate-marquee-left {
            animation: marquee-left var(--duration) linear infinite;
@@ -41,6 +41,12 @@ const MarqueeStyles = React.memo(() => (
         }
         @media (hover: hover) {
           .group:hover .marquee-pause-hover {
+            animation-play-state: paused;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .animate-marquee-left,
+          .animate-marquee-right {
             animation-play-state: paused;
           }
         }
@@ -66,32 +72,40 @@ const MarqueeRow = React.memo(
     return (
       <div
         className={cn(
-          "group flex overflow-hidden p-2 [--gap:1rem] [contain:paint]",
+          "group flex overflow-hidden py-2 [--gap:1rem]",
           className
         )}
       >
         <div
           className={cn(
-            "flex shrink-0 justify-start [gap:var(--gap)] min-w-full pr-[var(--gap)] will-change-transform [backface-visibility:hidden] transform-gpu",
+            "flex shrink-0 justify-start [gap:var(--gap)] min-w-full pr-[var(--gap)] will-change-transform transform-gpu",
             direction === "left"
               ? "animate-marquee-left"
               : "animate-marquee-right",
             pauseOnHover && "marquee-pause-hover",
           )}
-          style={{ "--duration": `${speed}s` } as React.CSSProperties}
+          style={{
+            "--duration": `${speed}s`,
+            WebkitBackfaceVisibility: "hidden",
+            backfaceVisibility: "hidden",
+          } as React.CSSProperties}
         >
           {children}
         </div>
         <div
           aria-hidden="true"
           className={cn(
-            "flex shrink-0 justify-start [gap:var(--gap)] min-w-full pr-[var(--gap)] will-change-transform [backface-visibility:hidden] transform-gpu",
+            "flex shrink-0 justify-start [gap:var(--gap)] min-w-full pr-[var(--gap)] will-change-transform transform-gpu",
             direction === "left"
               ? "animate-marquee-left"
               : "animate-marquee-right",
             pauseOnHover && "marquee-pause-hover",
           )}
-          style={{ "--duration": `${speed}s` } as React.CSSProperties}
+          style={{
+            "--duration": `${speed}s`,
+            WebkitBackfaceVisibility: "hidden",
+            backfaceVisibility: "hidden",
+          } as React.CSSProperties}
         >
           {children}
         </div>
@@ -111,8 +125,7 @@ const TestimonialCard = React.memo(
   }) => {
     if (variant === "flush") {
       return (
-        <div className="relative group flex h-auto w-[290px] sm:w-[350px] shrink-0 flex-col justify-between overflow-hidden rounded-none border-r border-border bg-black/5 p-5 sm:p-6 transition-all hover:bg-black/10 transform-gpu [backface-visibility:hidden]">
-          <div className="absolute inset-0 bg-gradient-to-br from-black/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none" />
+        <div className="relative group flex h-auto w-[280px] sm:w-[350px] shrink-0 flex-col justify-between overflow-hidden rounded-none border-r border-border bg-black/5 p-5 sm:p-6 transition-colors md:hover:bg-black/10 [contain:content]">
           <div className="relative z-10 flex flex-col gap-4">
             <p className="text-sm leading-relaxed text-slate-800 font-medium line-clamp-4">
               &quot;{item.text}&quot;
@@ -123,7 +136,7 @@ const TestimonialCard = React.memo(
                   src={item.avatar}
                   alt={item.name}
                   className="h-full w-full object-cover"
-                  loading="lazy"
+                  loading="eager"
                   decoding="async"
                   width={40}
                   height={40}
@@ -142,8 +155,7 @@ const TestimonialCard = React.memo(
     }
 
     return (
-      <div className="relative group flex h-auto w-[290px] sm:w-[350px] shrink-0 flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 sm:bg-white/70 backdrop-blur-none sm:backdrop-blur-sm p-5 sm:p-6 transition-all hover:bg-white/95 hover:shadow-xl hover:shadow-slate-200/60 hover:-translate-y-1 transform-gpu [backface-visibility:hidden]">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100 rounded-2xl pointer-events-none" />
+      <div className="relative flex h-auto w-[280px] sm:w-[340px] shrink-0 flex-col justify-between overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 p-5 sm:p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] md:hover:shadow-lg md:hover:-translate-y-0.5 transition-[transform,box-shadow] duration-200 [contain:content]">
         <div className="relative z-10 flex flex-col gap-4">
           <p className="text-sm leading-relaxed text-slate-800 font-medium line-clamp-4">
             &quot;{item.text}&quot;
@@ -154,7 +166,7 @@ const TestimonialCard = React.memo(
                 src={item.avatar}
                 alt={item.name}
                 className="h-full w-full object-cover"
-                loading="lazy"
+                loading="eager"
                 decoding="async"
                 width={40}
                 height={40}
@@ -184,8 +196,9 @@ export function TestimonialMarquee({
   const cnContainer = cn(containerClassName, className);
 
   const itemsToDisplay = React.useMemo(() => {
+    if (!items || items.length === 0) return [];
     let result = [...items];
-    while (result.length < 10) {
+    while (result.length < 8) {
       result = [...result, ...items];
     }
     return result;
@@ -195,17 +208,28 @@ export function TestimonialMarquee({
     <React.Fragment>
       <MarqueeStyles />
       {variant === "dual" ? (
-        <div className={cn("flex flex-col gap-4 py-8 overflow-hidden", containerClassName)}>
-          <MarqueeRow speed={speed} direction="left">
-            {itemsToDisplay.slice(0, Math.ceil(itemsToDisplay.length / 2)).map((item, i) => (
-              <TestimonialCard key={`row1-${i}`} item={item} />
-            ))}
-          </MarqueeRow>
-          <MarqueeRow speed={speed} direction="right">
-            {itemsToDisplay.slice(Math.ceil(itemsToDisplay.length / 2)).map((item, i) => (
-              <TestimonialCard key={`row2-${i}`} item={item} />
-            ))}
-          </MarqueeRow>
+        <div className={cn("overflow-hidden py-4 sm:py-8", containerClassName)}>
+          {/* Mobile: single unified row for silky-smooth animation and zero clutter */}
+          <div className="md:hidden">
+            <MarqueeRow speed={speed} direction="left">
+              {itemsToDisplay.map((item, i) => (
+                <TestimonialCard key={`m-row-${i}`} item={item} />
+              ))}
+            </MarqueeRow>
+          </div>
+          {/* Tablet/Desktop: dual counter-rotating rows */}
+          <div className="hidden md:flex md:flex-col md:gap-4">
+            <MarqueeRow speed={speed} direction="left">
+              {itemsToDisplay.slice(0, Math.ceil(itemsToDisplay.length / 2)).map((item, i) => (
+                <TestimonialCard key={`row1-${i}`} item={item} />
+              ))}
+            </MarqueeRow>
+            <MarqueeRow speed={speed} direction="right">
+              {itemsToDisplay.slice(Math.ceil(itemsToDisplay.length / 2)).map((item, i) => (
+                <TestimonialCard key={`row2-${i}`} item={item} />
+              ))}
+            </MarqueeRow>
+          </div>
         </div>
       ) : variant === "stacked" ? (
         <div className={cn("flex flex-col gap-2 py-8 overflow-hidden h-[600px] justify-center rotate-[-2deg] scale-110", containerClassName)}>
@@ -252,7 +276,7 @@ export function TestimonialMarquee({
           <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-background to-transparent z-10" />
         </div>
       ) : (
-        <div className={cn("py-8 overflow-hidden", cnContainer)}>
+        <div className={cn("py-4 sm:py-8 overflow-hidden", cnContainer)}>
           <MarqueeRow speed={speed} direction="left">
             {itemsToDisplay.map((item, i) => (
               <TestimonialCard key={`default-${i}`} item={item} />
@@ -265,3 +289,4 @@ export function TestimonialMarquee({
 }
 
 export default TestimonialMarquee;
+
