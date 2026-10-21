@@ -92,16 +92,11 @@ export default function HomeServices() {
       const opacity = Math.max(0.68, 1 - absDiff * 0.28);
       const zIndex = Math.round(20 - absDiff * 2);
 
-      const isFocused = absDiff < 0.45;
-
       gsap.set(card, {
         scale,
         rotation,
         opacity,
         zIndex,
-        boxShadow: isFocused
-          ? "0 24px 60px rgba(0, 82, 212, 0.18), 0 4px 18px rgba(0, 0, 0, 0.05), 0 0 0 1.5px rgba(0, 112, 198, 0.35)"
-          : "0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 0 1px #E2E8F0",
         transformOrigin: "center center",
       });
     });
@@ -153,18 +148,22 @@ export default function HomeServices() {
         );
       }
 
-      // 3. Pinned carousel ScrollTrigger
+      const isMobileDevice = window.innerWidth < 768;
+
+      // 3. Pinned carousel ScrollTrigger (no intrusive snapping on mobile touch devices)
       triggerInstance = ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.6,
-        snap: {
-          snapTo: 1 / (services.length - 1),
-          duration: { min: 0.2, max: 0.45 },
-          delay: 0.08,
-          ease: "power2.out",
-        },
+        scrub: isMobileDevice ? 0.3 : 0.6,
+        snap: isMobileDevice
+          ? undefined
+          : {
+              snapTo: 1 / (services.length - 1),
+              duration: { min: 0.2, max: 0.45 },
+              delay: 0.08,
+              ease: "power2.out",
+            },
         onUpdate: (self) => {
           applyCardTransforms(self.progress);
         },
@@ -304,7 +303,8 @@ export default function HomeServices() {
           border: 1px solid #E2E8F0;
           padding: 16px;
           box-sizing: border-box;
-          will-change: transform, opacity, box-shadow;
+          will-change: transform, opacity;
+          box-shadow: 0 16px 36px rgba(0, 82, 212, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
           transition: border-color 0.3s;
           display: flex;
           flex-direction: column;

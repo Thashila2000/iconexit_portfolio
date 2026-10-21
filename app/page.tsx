@@ -13,7 +13,7 @@ export default function HomePage() {
       </div>
 
       {/* Services section: slides up, overlaps and fully lays on the hero section */}
-      <div className="relative z-[10] w-full bg-[#ffebeb] shadow-[0_-24px_60px_rgba(0,0,0,0.22)]">
+      <div className="relative z-[10] w-full bg-[#ffebeb] shadow-[0_-12px_30px_rgba(0,0,0,0.12)] sm:shadow-[0_-24px_60px_rgba(0,0,0,0.22)] transform-gpu">
         <HomeServices />
       </div>
 

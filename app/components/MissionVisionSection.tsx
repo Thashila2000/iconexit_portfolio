@@ -67,29 +67,26 @@ export default function MissionVisionSection() {
       opacity: 1,
       transition: {
         staggerChildren: 0.025,
-        delayChildren: 0.1,
+        delayChildren: 0.08,
       },
     },
     exit: {
       opacity: 0,
-      y: -12,
-      ...(isMobile ? {} : { filter: "blur(6px)" }),
-      transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] as const },
+      y: -10,
+      transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] as const },
     },
   };
 
   const wordVariants = {
     hidden: {
       opacity: 0,
-      y: 22,
-      ...(isMobile ? {} : { filter: "blur(6px)" }),
+      y: 20,
     },
     visible: {
       opacity: 1,
       y: 0,
-      ...(isMobile ? {} : { filter: "blur(0px)" }),
       transition: {
-        duration: 0.45,
+        duration: 0.42,
         ease: [0.22, 1, 0.36, 1] as const,
       },
     },
@@ -222,8 +219,8 @@ export default function MissionVisionSection() {
           }`}
           style={{
             background:
-              "radial-gradient(circle, rgba(0, 194, 206, 0.32) 0%, rgba(0, 112, 198, 0.14) 50%, transparent 75%)",
-            filter: isMobile ? "blur(24px)" : "blur(36px)",
+              "radial-gradient(circle, rgba(0, 194, 206, 0.28) 0%, rgba(0, 112, 198, 0.12) 45%, transparent 70%)",
+            transform: "translate3d(0, 0, 0)",
           }}
         />
 
@@ -234,9 +231,9 @@ export default function MissionVisionSection() {
           }`}
           style={{
             background:
-              "linear-gradient(135deg, rgba(255, 140, 210, 0.55) 0%, rgba(244, 114, 182, 0.48) 50%, rgba(251, 113, 133, 0.28) 100%)",
+              "radial-gradient(circle at 60% 60%, rgba(255, 140, 210, 0.45) 0%, rgba(244, 114, 182, 0.3) 35%, rgba(251, 113, 133, 0.15) 52%, transparent 72%)",
             borderRadius: "62% 38% 70% 30% / 45% 58% 42% 55%",
-            filter: isMobile ? "blur(28px)" : "blur(42px)",
+            transform: "translate3d(0, 0, 0)",
           }}
         />
 

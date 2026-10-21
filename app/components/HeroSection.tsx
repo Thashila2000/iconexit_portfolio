@@ -18,22 +18,46 @@ function useIsMobile() {
 export default function HeroSection() {
   const ready = useReady();
   const isMobile = useIsMobile();
+  const containerRef = useRef<HTMLDivElement>(null);
   const pcVideoRef = useRef<HTMLVideoElement>(null);
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
 
-  // Controlled playback — wait until loading screen is done
+  // Controlled playback — wait until loading screen is done & pause when scrolled out of view
   useEffect(() => {
     const activeRef = isMobile ? mobileVideoRef : pcVideoRef;
     const video = activeRef.current;
     if (!video) return;
 
-    if (ready) {
-      video.muted = true;
-      video.play().catch((err) => console.warn("Autoplay blocked:", err));
-    } else {
+    if (!ready) {
       video.pause();
       video.currentTime = 0;
+      return;
     }
+
+    video.muted = true;
+    video.play().catch((err) => console.warn("Autoplay blocked:", err));
+
+    // Pause video when scrolled out of view to free up GPU and CPU on mobile
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
   }, [ready, isMobile]);
 
   const heroAnim = (delay: number) => ({
@@ -162,7 +186,7 @@ export default function HeroSection() {
         }
       `}</style>
 
-      <div className="hero-container">
+      <div ref={containerRef} className="hero-container">
 
         {/* ── PC video (hidden on mobile) ── */}
         <div className="hero-video-wrap hero-video-pc">
