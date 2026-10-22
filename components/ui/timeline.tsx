@@ -6,7 +6,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -83,19 +83,10 @@ function usePrefersReducedMotion() {
   );
 }
 
-/* ────────────────────────── Fade Up Animation Variant ────────────────────────── */
-
-// Identical fadeUp animation variant matching block portfolio section
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  show: (d: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, delay: d, ease: [0.22, 1, 0.36, 1] as const },
-  }),
-};
-
 /* ─────────────────────────────── Component ──────────────────────────────── */
+
+const BRAND_GRADIENT =
+  "linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)";
 
 export type TimelineProps = {
   title?: string;
@@ -124,12 +115,10 @@ export default function HowWeWorkTimeline({
   const sliderRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
-  const introRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
 
-  const isIntroInView = useInView(introRef, { once: true, margin: "-40px" });
   const reducedMotion = usePrefersReducedMotion();
 
-  /* One pinned horizontal scroll, used on every screen size. */
   useGSAP(
     () => {
       if (reducedMotion) return;
@@ -138,13 +127,33 @@ export default function HowWeWorkTimeline({
       const slider = sliderRef.current;
       const track = trackRef.current;
       const fill = fillRef.current;
-      if (!section || !slider || !track || !fill) return;
+      const head = headRef.current;
+      if (!section || !slider || !track || !fill || !head) return;
+
+      /* 0 ─ Intro entrance: plays ONCE, only when the section scrolls into view.
+             (Elements are hidden by CSS until this fires, so nothing animates
+             off-screen while the user is still above the section.) */
+      gsap.fromTo(
+        "[data-intro]",
+        { opacity: 0, y: 28 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          stagger: 0.12,
+          scrollTrigger: {
+            trigger: section,
+            start: "top 65%",
+            once: true,
+          },
+        }
+      );
 
       const getDistance = () =>
         Math.max(0, slider.scrollWidth - window.innerWidth);
 
-      // 1. The pan. `scrub: true` ties it 1:1 to the scroll position, so there
-      //    is no smoothing delay between finger/wheel and the content.
+      /* 1 ─ The pinned pan, 1:1 with scroll (no smoothing lag). */
       const move = gsap.to(slider, {
         x: () => -getDistance(),
         ease: "none",
@@ -159,26 +168,23 @@ export default function HowWeWorkTimeline({
         },
       });
 
-      // 2. Journey line fill (scaleX only: compositor-friendly).
-      gsap.fromTo(
-        fill,
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          ease: "none",
+      /* 2 ─ Journey line: fill + glowing head travel together (transforms only). */
+      gsap
+        .timeline({
+          defaults: { ease: "none" },
           scrollTrigger: {
             trigger: track,
             containerAnimation: move,
             start: "left 92%",
             end: "right 100%",
             scrub: true,
+            invalidateOnRefresh: true,
           },
-        }
-      );
+        })
+        .fromTo(fill, { scaleX: 0 }, { scaleX: 1 }, 0)
+        .fromTo(head, { x: 0 }, { x: () => track.offsetWidth }, 0);
 
-      // 3. Step reveals. Each is tied to the step's real on-screen position
-      //    (containerAnimation), so it stays correct on resize/rotation
-      //    without recalculating anything by hand.
+      /* 3 ─ Step reveals, tied to each step's real on-screen position. */
       const items = gsap.utils.toArray<HTMLElement>("[data-step]", track);
 
       items.forEach((li) => {
@@ -223,6 +229,9 @@ export default function HowWeWorkTimeline({
     backgroundColor,
   } as CSSProperties;
 
+  // Hidden until the scroll trigger plays them (skipped for reduced motion).
+  const introHidden = reducedMotion ? "" : "tl-intro-hidden";
+
   const renderTitle = () => {
     if (title === "How We Work") {
       return (
@@ -230,8 +239,7 @@ export default function HowWeWorkTimeline({
           How We{" "}
           <span
             style={{
-              background:
-                "linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)",
+              background: BRAND_GRADIENT,
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -251,7 +259,7 @@ export default function HowWeWorkTimeline({
       id="how-we-work"
       aria-labelledby="how-we-work-title"
       style={vars}
-      className={`relative z-20 h-screen min-h-[32rem] w-full bg-[#ffebeb] ${
+      className={`relative z-20 h-screen min-h-[32rem] w-full ${
         reducedMotion
           ? "overflow-x-auto overflow-y-hidden snap-x snap-proximity"
           : "overflow-hidden"
@@ -259,23 +267,21 @@ export default function HowWeWorkTimeline({
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+        .tl-intro-hidden { opacity: 0; transform: translate3d(0, 28px, 0); }
       `}</style>
 
       <div
         ref={sliderRef}
-        className="flex h-full w-max items-stretch gap-[6vw] px-[5vw] transform-gpu will-change-transform"
+        className="flex h-full w-max items-stretch gap-[6vw] px-[5vw] pt-[78px] sm:pt-[84px] lg:pt-20 pb-4 transform-gpu will-change-transform"
       >
-        {/* ── Intro panel (one screen wide, so step 01 enters from the right edge) ── */}
-        <div ref={introRef} className="flex w-[90vw] shrink-0 snap-start items-center">
-          <div className="mx-auto grid w-full max-w-[1200px] items-center gap-5 md:grid-cols-[1.1fr_1fr] md:gap-10 lg:gap-14">
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate={isIntroInView ? "show" : "hidden"}
-              custom={0}
-              className="max-w-xl"
-            >
-              <div className="mb-3 inline-flex items-center gap-2 md:mb-4">
+        {/* ── Intro panel (moved upward on mobile/tab with safe clearance below navbar) ── */}
+        <div className="flex w-[90vw] shrink-0 snap-start items-start pt-2 sm:pt-4 lg:items-center lg:pt-0">
+          <div className="mx-auto grid w-full max-w-[1200px] items-center gap-5 sm:gap-6 md:grid-cols-[1.1fr_1fr] md:gap-8 lg:gap-14">
+            <div className="max-w-xl">
+              <div
+                data-intro
+                className={`${introHidden} mb-2.5 inline-flex items-center gap-2`}
+              >
                 <span
                   className="h-2 w-2 rounded-full"
                   style={{
@@ -285,51 +291,73 @@ export default function HowWeWorkTimeline({
                   }}
                 />
                 <span
-                  className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] md:text-xs"
+                  className="font-mono text-xs font-semibold uppercase tracking-[0.18em]"
                   style={{ color: "#0052D4" }}
                 >
                   Our Process
                 </span>
               </div>
 
+              {/* Exact heading font size, weight, line-height, and spacing matching block portfolio */}
               <h2
                 id="how-we-work-title"
-                className="text-[2rem] font-extrabold leading-[1.08] tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl xl:text-6xl"
+                data-intro
+                className={`${introHidden} font-extrabold text-[#0F172A]`}
                 style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: "clamp(1.85rem, 3.4vw, 2.85rem)",
+                  fontWeight: 800,
+                  lineHeight: 1.15,
+                  letterSpacing: "-0.03em",
                 }}
               >
                 {renderTitle()}
               </h2>
 
+              {/* Exact description font size, weight, line-height, and color matching block portfolio */}
               <p
-                className="mt-3 text-[0.95rem] font-semibold leading-[1.6] text-[#1E293B] md:mt-5 md:text-[clamp(1.02rem,1.2vw,1.15rem)] md:leading-[1.65]"
+                data-intro
+                className={`${introHidden} font-semibold text-[#1E293B]`}
                 style={{
                   fontFamily: "'Inter', sans-serif",
+                  fontSize: "clamp(0.95rem, 1.15vw, 1.05rem)",
+                  fontWeight: 600,
+                  lineHeight: 1.6,
+                  marginTop: "10px",
                 }}
               >
                 {subtitle}
               </p>
-            </motion.div>
 
-            {/* next/image: responsive sizes + modern formats + priority load */}
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate={isIntroInView ? "show" : "hidden"}
-              custom={0.15}
-              className="relative aspect-[16/10] max-h-[32svh] w-full overflow-hidden rounded-2xl border border-slate-200/60 shadow-xl md:max-h-[58svh]"
+              {/* Tells people the section moves sideways as they scroll down */}
+              <div
+                data-intro
+                className={`${introHidden} mt-5 inline-flex items-center gap-2 text-sm font-semibold md:mt-7`}
+                style={{ color: "var(--tl-accent)", fontFamily: "'Inter', sans-serif" }}
+              >
+                <span>Keep scrolling to follow the process</span>
+                <ArrowRight className="size-4" aria-hidden />
+              </div>
+            </div>
+
+            {/* Image framed with a brand-gradient edge */}
+            <div
+              data-intro
+              className={`${introHidden} rounded-[1.4rem] sm:rounded-[1.6rem] p-[3px] shadow-xl max-w-md sm:max-w-lg md:max-w-none w-full`}
+              style={{ background: BRAND_GRADIENT }}
             >
-              <Image
-                src={imageUrl}
-                alt={imageAlt}
-                fill
-                priority
-                draggable={false}
-                sizes="(min-width: 768px) 45vw, 90vw"
-                className="object-cover"
-              />
-            </motion.div>
+              <div className="relative aspect-[16/10] max-h-[22svh] sm:max-h-[28svh] md:max-h-[42svh] lg:max-h-[54svh] w-full overflow-hidden rounded-[1.2rem] sm:rounded-[1.4rem] bg-white">
+                <Image
+                  src={imageUrl}
+                  alt={imageAlt}
+                  fill
+                  priority
+                  draggable={false}
+                  sizes="(min-width: 768px) 45vw, 90vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
           </div>
         </div>
 
@@ -338,7 +366,7 @@ export default function HowWeWorkTimeline({
           {/* Journey line */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2"
+            className="pointer-events-none absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2"
           >
             <div
               className="absolute inset-0 rounded-full opacity-20"
@@ -354,6 +382,22 @@ export default function HowWeWorkTimeline({
             />
           </div>
 
+          {/* Glowing head that leads the line (outer div moves, inner span centers) */}
+          <div
+            ref={headRef}
+            aria-hidden
+            className="pointer-events-none absolute left-0 top-1/2 h-0 w-0 will-change-transform"
+          >
+            <span
+              className="absolute size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-white"
+              style={{
+                background: "#00C2CE",
+                boxShadow:
+                  "0 0 0 5px rgba(0,194,206,0.25), 0 0 18px rgba(0,194,206,0.7)",
+              }}
+            />
+          </div>
+
           {steps.map((step, i) => {
             const isTop = i % 2 === 0;
             const isLast = i === steps.length - 1;
@@ -362,20 +406,37 @@ export default function HowWeWorkTimeline({
               <div
                 data-card
                 className={`w-[min(78vw,24rem)] pl-5 will-change-[transform,opacity] sm:pl-6 ${
-                  isTop ? "pb-12 md:pb-14" : "pt-12 md:pt-14"
+                  isTop ? "pb-6 md:pb-8" : "pt-6 md:pt-8"
                 }`}
               >
+                {/* Large gradient numeral - sized & spaced so it never crops under navbar */}
                 <p
-                  className="mb-1 text-[clamp(1.5rem,2.4vw,2.25rem)] font-extrabold leading-none tabular-nums"
-                  style={{ color: "var(--tl-accent)" }}
+                  className="mb-1 text-[clamp(2.15rem,3.4vw,3.15rem)] font-extrabold leading-none tracking-tight tabular-nums"
+                  style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    background: BRAND_GRADIENT,
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                  }}
                 >
                   {step.number}
                 </p>
-                <p className="mb-2 text-[0.7rem] font-bold uppercase tracking-wider text-slate-900 sm:text-[0.8rem]">
+
+                {/* Focus area as a pill */}
+                <p
+                  className="mb-2 inline-block rounded-full border bg-white/60 px-3 py-0.5 text-[0.72rem] font-semibold text-slate-800 sm:text-[0.76rem]"
+                  style={{
+                    borderColor:
+                      "color-mix(in srgb, var(--tl-accent) 28%, transparent)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
                   {step.focus}
                 </p>
+
                 <h3
-                  className="mb-2 text-[clamp(1.15rem,1.8vw,1.8rem)] font-extrabold leading-tight tracking-tight text-slate-900 sm:mb-3"
+                  className="mb-1.5 text-[clamp(1.15rem,1.6vw,1.55rem)] font-extrabold leading-tight tracking-tight text-slate-900 sm:mb-2"
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
                     fontWeight: 800,
@@ -384,7 +445,7 @@ export default function HowWeWorkTimeline({
                   {step.title}
                 </h3>
                 <p
-                  className="max-w-[24rem] text-[0.82rem] font-medium leading-relaxed text-slate-900 sm:text-[0.925rem]"
+                  className="max-w-[23rem] text-[0.8rem] font-medium leading-relaxed text-slate-800 sm:text-[0.875rem]"
                   style={{ fontFamily: "'Inter', sans-serif" }}
                 >
                   {step.content}
@@ -396,10 +457,14 @@ export default function HowWeWorkTimeline({
               <div
                 data-stem
                 aria-hidden
-                className={`absolute left-0 h-10 w-px will-change-transform md:h-12 ${
+                className={`absolute left-0 h-6 w-[2px] will-change-transform md:h-8 ${
                   isTop ? "bottom-0 origin-bottom" : "top-0 origin-top"
                 }`}
-                style={{ backgroundColor: "var(--tl-accent)" }}
+                style={{
+                  background: isTop
+                    ? "linear-gradient(0deg, #0052D4, #00C2CE)"
+                    : "linear-gradient(180deg, #0052D4, #00C2CE)",
+                }}
               />
             );
 
@@ -420,14 +485,16 @@ export default function HowWeWorkTimeline({
                   )}
                 </div>
 
+                {/* Node: white core, gradient ring, soft halo */}
                 <div className="relative">
                   <span
                     data-dot
                     aria-hidden
-                    className="absolute left-0 top-0 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full will-change-transform"
+                    className="absolute left-0 top-0 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full will-change-transform"
                     style={{
-                      backgroundColor: "var(--tl-accent)",
-                      boxShadow: `0 0 0 4px ${backgroundColor}`,
+                      background: "#FFFFFF",
+                      border: "4px solid var(--tl-accent)",
+                      boxShadow: `0 0 0 4px ${backgroundColor}, 0 4px 14px rgba(0,102,238,0.35)`,
                     }}
                   />
                 </div>
