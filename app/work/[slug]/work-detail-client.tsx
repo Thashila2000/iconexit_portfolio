@@ -9,19 +9,9 @@ import {
   ArrowRight,
   ExternalLink,
   Globe,
-  Sparkles,
   CheckCircle2,
   AlertCircle,
-  Cpu,
-  Layers,
-  Zap,
-  TrendingUp,
-  ShieldCheck,
   Server,
-  BarChart3,
-  Calendar,
-  Building2,
-  Tag,
 } from "lucide-react";
 import type { DetailedProject } from "@/app/work/work-data";
 
@@ -251,27 +241,14 @@ export default function WorkDetailClient({
         }
 
         .wd-image-container {
-          position: relative;
           width: 100%;
-          height: 520px;
-          overflow: hidden;
           background: #070b12;
+          line-height: 0;
         }
-        @media (max-width: 768px) {
-          .wd-image-container {
-            height: 320px;
-          }
-        }
-        .wd-image-overlay {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            to bottom,
-            rgba(9, 14, 23, 0.05) 0%,
-            rgba(9, 14, 23, 0.45) 85%,
-            rgba(9, 14, 23, 0.85) 100%
-          );
-          pointer-events: none;
+        .wd-image-container img {
+          width: 100%;
+          height: auto;
+          display: block;
         }
         .wd-image-float-badge {
           position: absolute;
@@ -663,20 +640,12 @@ export default function WorkDetailClient({
       `}</style>
 
       <main className="wd-root">
-        {/* ── Breadcrumb & Navigation Bar ── */}
+        {/* ── Top Tag Bar ── */}
         <div className="wd-top-bar">
-          <Link href="/work" className="wd-back-btn">
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Selected Work</span>
-          </Link>
-
           <div className="flex items-center gap-3">
             <span className="wd-badge-pill">
               <span className="wd-badge-dot" />
               {project.tag}
-            </span>
-            <span className="text-xs font-mono text-slate-500 hidden sm:inline-block">
-              {project.year} Case Study
             </span>
           </div>
         </div>
@@ -695,40 +664,7 @@ export default function WorkDetailClient({
               {project.subtitle}
             </motion.p>
 
-            {/* Quick Meta Specs Grid */}
-            <motion.div className="wd-specs-grid" variants={fadeUp} custom={0.16}>
-              <div className="wd-spec-card">
-                <div className="wd-spec-label">
-                  <Building2 className="w-3.5 h-3.5 text-blue-500" />
-                  Client
-                </div>
-                <div className="wd-spec-val">{project.client}</div>
-              </div>
 
-              <div className="wd-spec-card">
-                <div className="wd-spec-label">
-                  <Tag className="w-3.5 h-3.5 text-cyan-500" />
-                  Industry
-                </div>
-                <div className="wd-spec-val">{project.industry}</div>
-              </div>
-
-              <div className="wd-spec-card">
-                <div className="wd-spec-label">
-                  <Calendar className="w-3.5 h-3.5 text-emerald-500" />
-                  Timeline
-                </div>
-                <div className="wd-spec-val">{project.timeline}</div>
-              </div>
-
-              <div className="wd-spec-card">
-                <div className="wd-spec-label">
-                  <TrendingUp className="w-3.5 h-3.5 text-amber-500" />
-                  Outcome
-                </div>
-                <div className="wd-spec-val">{project.outcome}</div>
-              </div>
-            </motion.div>
           </motion.div>
         </header>
 
@@ -769,17 +705,12 @@ export default function WorkDetailClient({
               <Image
                 src={project.heroImage}
                 alt={`${project.title} - Showcase`}
-                fill
+                width={1200}
+                height={800}
                 priority
-                sizes="(max-width: 1200px) 100vw, 1200px"
-                className="object-cover object-center"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
+                style={{ width: "100%", height: "auto", display: "block" }}
               />
-              <div className="wd-image-overlay" />
-
-              <div className="wd-image-float-badge">
-                <Sparkles className="w-4 h-4 text-cyan-300" />
-                <span>{project.outcome}</span>
-              </div>
             </div>
           </motion.div>
         </section>

@@ -11,22 +11,6 @@ import {
 } from "framer-motion";
 import {
   ArrowRight,
-  TrendingUp,
-  Database,
-  Calendar,
-  CheckCircle2,
-  BedDouble,
-  Sparkles,
-  Users,
-  CreditCard,
-  MessageSquare,
-  Building2,
-  Play,
-  Share2,
-  Sliders,
-  Clock,
-  ThumbsUp,
-  Radio,
 } from "lucide-react";
 
 const fadeUp = {
@@ -62,6 +46,7 @@ interface Project {
   type: "erp" | "hospitality" | "booking";
   buttonVariant: "outline" | "solid";
   bgGlow: string;
+  image: string;
 }
 
 const PROJECTS: Project[] = [
@@ -78,6 +63,7 @@ const PROJECTS: Project[] = [
     type: "erp",
     buttonVariant: "solid",
     bgGlow: "radial-gradient(circle at 80% 20%, rgba(0, 112, 198, 0.45) 0%, rgba(10, 16, 29, 0) 70%)",
+    image: "/Images/solution1.png",
   },
   {
     slug: "hotel-management",
@@ -92,6 +78,7 @@ const PROJECTS: Project[] = [
     type: "hospitality",
     buttonVariant: "solid",
     bgGlow: "radial-gradient(circle at 20% 20%, rgba(0, 194, 206, 0.35) 0%, rgba(10, 16, 29, 0) 70%)",
+    image: "/Images/solution2.png",
   },
   {
     slug: "salon-booking",
@@ -106,6 +93,7 @@ const PROJECTS: Project[] = [
     type: "booking",
     buttonVariant: "solid",
     bgGlow: "radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.35) 0%, rgba(10, 16, 29, 0) 70%)",
+    image: "/Images/solution3.png",
   },
 ];
 
@@ -176,165 +164,18 @@ function WorkCard({ project, index }: { project: Project; index: number }) {
           <span className="gl-pill">{project.badge2}</span>
         </div>
 
-        {/* Middle Mockup / Preview Screen Stage */}
+        {/* Middle Card Image Stage */}
         <div className="gl-stage">
-          {project.type === "erp" && (
-            <div className="flex flex-col justify-between h-full w-full">
-              {/* Top mockup bar */}
-              <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[0.68rem] font-mono text-slate-300 font-medium">ERP Cluster · Live</span>
-                </div>
-                <span className="text-[0.62rem] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full border border-blue-400/20 font-mono">
-                  99.98% SLA
-                </span>
-              </div>
-
-              {/* Mockup Main Display */}
-              <div className="my-auto py-1">
-                <div className="text-[0.65rem] text-slate-400 font-medium">Welcome back, Operations</div>
-                <div className="text-base font-bold text-white tracking-tight flex items-center gap-1.5">
-                  Operations Pulse
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                </div>
-
-                {/* Search / command bar mockup */}
-                <div className="mt-1.5 bg-white/10 border border-white/15 rounded-lg px-2.5 py-1.5 flex items-center justify-between">
-                  <span className="text-[0.68rem] text-slate-300 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                    Search inventory, financials, HR...
-                  </span>
-                  <span className="text-[0.6rem] bg-white/10 text-slate-300 px-1 py-0.5 rounded font-mono">⌘K</span>
-                </div>
-              </div>
-
-              {/* Bottom KPIs */}
-              <div className="grid grid-cols-3 gap-1.5 pt-1.5 border-t border-white/10">
-                <div className="bg-white/5 p-1.5 rounded-md border border-white/5">
-                  <div className="text-[0.58rem] text-slate-400">Revenue</div>
-                  <div className="text-[0.72rem] font-bold text-white">$1.28M</div>
-                </div>
-                <div className="bg-white/5 p-1.5 rounded-md border border-white/5">
-                  <div className="text-[0.58rem] text-slate-400">Inventory</div>
-                  <div className="text-[0.72rem] font-bold text-emerald-400">99.4%</div>
-                </div>
-                <div className="bg-white/5 p-1.5 rounded-md border border-white/5">
-                  <div className="text-[0.58rem] text-slate-400">HR Seats</div>
-                  <div className="text-[0.72rem] font-bold text-cyan-400">240 Act.</div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {project.type === "hospitality" && (
-            <div className="relative h-full w-full flex flex-col justify-between">
-              {/* Background Visual Mockup */}
-              <div className="absolute inset-0 rounded-xl overflow-hidden opacity-30">
-                <Image
-                  src="/Images/solution2.jpg"
-                  alt="Hospitality software view"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#090E17] via-[#090E17]/60 to-transparent" />
-              </div>
-
-              {/* Top floating bar */}
-              <div className="relative z-10 flex items-center justify-between pb-1.5 border-b border-white/15">
-                <div className="flex items-center gap-1.5">
-                  <BedDouble className="w-3.5 h-3.5 text-cyan-400" />
-                  <span className="text-[0.68rem] font-bold text-white">Grand Horizon PMS</span>
-                </div>
-                <span className="text-[0.62rem] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-400/20 font-mono">
-                  94% Occupancy
-                </span>
-              </div>
-
-              {/* Center card */}
-              <div className="relative z-10 my-auto p-2 bg-black/75 rounded-xl border border-white/15">
-                <div className="text-[0.62rem] text-cyan-300 font-mono uppercase tracking-wider mb-0.5">
-                  Dynamic Pricing Active
-                </div>
-                <div className="text-xs font-bold text-white flex items-center justify-between">
-                  <span>Suite 408 &bull; Ocean View</span>
-                  <span className="text-emerald-400 text-[0.72rem]">$280/night</span>
-                </div>
-                <p className="text-[0.64rem] text-slate-300 mt-0.5 line-clamp-1">
-                  Instant guest check-in portal with digital mobile key.
-                </p>
-              </div>
-
-              {/* Bottom status bar */}
-              <div className="relative z-10 flex items-center justify-between text-[0.62rem] text-slate-300 pt-1">
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                  Housekeeping: 100%
-                </span>
-                <span className="font-mono text-slate-400">142/150 Rooms</span>
-              </div>
-            </div>
-          )}
-
-          {project.type === "booking" && (
-            <div className="flex flex-col justify-between h-full w-full">
-              {/* Top Audio / Interactive player preview style */}
-              <div className="p-2 bg-white/10 border border-white/10 rounded-xl">
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/30">
-                      <Calendar className="w-3 h-3" />
-                    </div>
-                    <div>
-                      <div className="text-[0.72rem] font-bold text-white">Daily Roster Overview</div>
-                      <div className="text-[0.58rem] text-slate-400">18 Appointments Booked</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center text-slate-400">
-                    <ThumbsUp className="w-3 h-3" />
-                  </div>
-                </div>
-
-                {/* Interactive timeline slider */}
-                <div className="space-y-0.5">
-                  <div className="flex justify-between text-[0.58rem] text-slate-400 font-mono">
-                    <span>09:00 AM</span>
-                    <span className="text-cyan-400 font-semibold">02:30 PM Active</span>
-                    <span>07:00 PM</span>
-                  </div>
-                  <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
-                    <div className="bg-gradient-to-r from-blue-500 to-cyan-400 h-full w-[68%]" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Card: SMS & Payment notification */}
-              <div className="p-2 bg-black/70 border border-white/10 rounded-xl flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-5 h-5 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                    <MessageSquare className="w-2.5 h-2.5" />
-                  </div>
-                  <div>
-                    <div className="text-[0.68rem] font-semibold text-white">SMS Reminder Delivered</div>
-                    <div className="text-[0.58rem] text-slate-400">Client confirmed appointment</div>
-                  </div>
-                </div>
-                <span className="text-[0.62rem] font-bold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded border border-emerald-400/20">
-                  +$140.00
-                </span>
-              </div>
-
-              {/* Bottom live indicator */}
-              <div className="flex items-center justify-between text-[0.62rem] text-slate-400 pt-0.5">
-                <span className="flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                  Stripe Payments Integrated
-                </span>
-                <span className="font-mono text-slate-400">Multi-Tenant</span>
-              </div>
-            </div>
-          )}
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 360px"
+            className={`object-cover object-top transition-transform duration-700 ease-out ${
+              hovered ? "scale-105" : "scale-100"
+            }`}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#090E17]/70 via-transparent to-black/10 pointer-events-none" />
         </div>
 
         {/* Bottom Content Area */}
@@ -565,15 +406,11 @@ export default function WorkPage() {
           position: relative;
           z-index: 5;
           width: 100%;
-          height: 195px;
+          height: 205px;
           border-radius: 18px;
           overflow: hidden;
           background: rgba(14, 22, 36, 0.85);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          padding: 12px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
+          border: 1px solid rgba(255, 255, 255, 0.1);
           margin-bottom: 18px;
         }
 

@@ -21,43 +21,43 @@ export interface ProjectItem {
 
 const defaultProjects: ProjectItem[] = [
   {
-    title: "Enterprise Cloud Platforms",
+    title: "SaaS Enterprise ERP",
     description:
-      "Resilient multi cloud infrastructure and automated FinOps engineered for zero downtime scale.",
+      "All-in-one business management platform unifying inventory, finance, procurement, and operations with real-time analytics.",
     bgColor: "bg-[#005bb5]",
-    image: "/Images/solution1.jpg",
+    image: "/Images/solution1.png",
     isWide: true,
-    tag: "CLOUD & INFRASTRUCTURE",
+    tag: "ENTERPRISE SOFTWARE",
     href: "/services",
   },
   {
-    title: "AI & Decision Intelligence",
+    title: "Hotel Management SaaS",
     description:
-      "Real time analytics pipelines and secure machine learning models turning telemetry into revenue.",
+      "Cloud property management platform automating room bookings, guest check-ins, dynamic pricing, and housekeeping workflows.",
     bgColor: "bg-[#008f9c]",
-    image: "/Images/solution2.jpg",
+    image: "/Images/solution2.png",
     isWide: false,
-    tag: "DATA ANALYTICS",
+    tag: "HOSPITALITY TECH",
     href: "/services",
   },
   {
-    title: "Zero Trust Cybersecurity",
+    title: "Salon Booking System",
     description:
-      "Ironclad threat defense, 24/7 endpoint telemetry, and audit ready governance frameworks.",
+      "Multi-tenant scheduling platform featuring automated client appointments, staff rostering, POS integration, and SMS reminders.",
     bgColor: "bg-[#3730a3]",
-    image: "/Images/solution3.jpg",
+    image: "/Images/solution3.png",
     isWide: false,
-    tag: "SECURITY OPERATIONS",
+    tag: "BOOKING & SCHEDULING",
     href: "/services",
   },
   {
-    title: "Bespoke Digital Systems",
+    title: "Bespoke SaaS Platforms",
     description:
-      "Full stack custom software platforms with scalable architectures designed for rapid expansion.",
+      "Custom full-stack web & mobile application engineering with scalable cloud architecture built to turn complex business ideas into software.",
     bgColor: "bg-[#5b21b6]",
     image: "/Images/solution4.jpg",
     isWide: true,
-    tag: "SOFTWARE ENGINEERING",
+    tag: "CUSTOM ENGINEERING",
     href: "/services",
   },
 ];
@@ -142,7 +142,7 @@ function PortfolioCard({
         }
         whileHover={isMobile ? { y: -5 } : { scale: 1.015 }}
         transition={{ type: "spring", stiffness: 350, damping: 22 }}
-        className={`group relative flex flex-col justify-between overflow-hidden rounded-[2rem] ${project.bgColor} h-[380px] shadow-lg transition-shadow duration-300 hover:shadow-2xl sm:h-[450px] lg:h-[480px]`}
+        className={`group relative flex flex-col justify-between overflow-hidden rounded-[2rem] ${project.bgColor} shadow-lg transition-shadow duration-300 hover:shadow-2xl`}
       >
         {/* Soft interactive highlight glow on hover */}
         <div
@@ -151,7 +151,7 @@ function PortfolioCard({
         />
 
         {/* Text Content */}
-        <div className="absolute top-8 right-8 left-8 z-20 flex flex-col gap-2 sm:top-10 sm:right-10 sm:left-10">
+        <div className="px-8 pt-8 pb-4 z-20 flex flex-col gap-2 sm:px-10 sm:pt-10">
           {project.tag && (
             <span className="text-[11px] font-bold tracking-widest text-white/80 uppercase">
               {project.tag}
@@ -165,15 +165,19 @@ function PortfolioCard({
           </p>
         </div>
 
-        {/* Local Mockup Image */}
-        <div className="relative mt-auto flex w-full justify-center overflow-hidden px-4 sm:px-8">
-          <div className="relative w-full max-w-xl h-44 sm:h-56 overflow-hidden rounded-t-2xl shadow-2xl">
+        {/* Local Mockup Image — fully visible, no crop */}
+        <div className="w-full px-4 pb-0 sm:px-8">
+          <div className="w-full rounded-t-2xl overflow-hidden shadow-2xl">
             <Image
               src={project.image}
               alt={project.title}
-              fill
+              width={800}
+              height={560}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-              className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.04]"
+              style={{ width: "100%", height: "auto", display: "block" }}
+              className={`transition-transform duration-500 ${
+                hovered ? "scale-[1.03]" : "scale-100"
+              }`}
             />
           </div>
         </div>
