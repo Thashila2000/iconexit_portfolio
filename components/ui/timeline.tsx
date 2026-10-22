@@ -6,6 +6,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import Image from "next/image";
+import { motion, useInView } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -82,6 +83,18 @@ function usePrefersReducedMotion() {
   );
 }
 
+/* ────────────────────────── Fade Up Animation Variant ────────────────────────── */
+
+// Identical fadeUp animation variant matching block portfolio section
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  show: (d: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.65, delay: d, ease: [0.22, 1, 0.36, 1] as const },
+  }),
+};
+
 /* ─────────────────────────────── Component ──────────────────────────────── */
 
 export type TimelineProps = {
@@ -111,7 +124,9 @@ export default function HowWeWorkTimeline({
   const sliderRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
 
+  const isIntroInView = useInView(introRef, { once: true, margin: "-40px" });
   const reducedMotion = usePrefersReducedMotion();
 
   /* One pinned horizontal scroll, used on every screen size. */
@@ -236,7 +251,7 @@ export default function HowWeWorkTimeline({
       id="how-we-work"
       aria-labelledby="how-we-work-title"
       style={vars}
-      className={`relative z-20 h-[100svh] min-h-[32rem] w-full ${
+      className={`relative z-20 h-screen min-h-[32rem] w-full bg-[#ffebeb] ${
         reducedMotion
           ? "overflow-x-auto overflow-y-hidden snap-x snap-proximity"
           : "overflow-hidden"
@@ -244,19 +259,6 @@ export default function HowWeWorkTimeline({
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
-
-        /* Intro entrance: plain CSS (no JS runtime) so it can't compete with scroll work. */
-        @keyframes tl-rise {
-          from { opacity: 0; transform: translate3d(0, 22px, 0); }
-          to   { opacity: 1; transform: none; }
-        }
-        .tl-rise {
-          animation: tl-rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-          animation-delay: var(--d, 0s);
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .tl-rise { animation: none; }
-        }
       `}</style>
 
       <div
@@ -264,13 +266,16 @@ export default function HowWeWorkTimeline({
         className="flex h-full w-max items-stretch gap-[6vw] px-[5vw] transform-gpu will-change-transform"
       >
         {/* ── Intro panel (one screen wide, so step 01 enters from the right edge) ── */}
-        <div className="flex w-[90vw] shrink-0 snap-start items-center">
+        <div ref={introRef} className="flex w-[90vw] shrink-0 snap-start items-center">
           <div className="mx-auto grid w-full max-w-[1200px] items-center gap-5 md:grid-cols-[1.1fr_1fr] md:gap-10 lg:gap-14">
-            <div className="max-w-xl">
-              <div
-                className="tl-rise mb-3 inline-flex items-center gap-2 md:mb-4"
-                style={{ "--d": "0s" } as CSSProperties}
-              >
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              animate={isIntroInView ? "show" : "hidden"}
+              custom={0}
+              className="max-w-xl"
+            >
+              <div className="mb-3 inline-flex items-center gap-2 md:mb-4">
                 <span
                   className="h-2 w-2 rounded-full"
                   style={{
@@ -289,34 +294,31 @@ export default function HowWeWorkTimeline({
 
               <h2
                 id="how-we-work-title"
-                className="tl-rise text-[2rem] font-extrabold leading-[1.08] tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl xl:text-6xl"
-                style={
-                  {
-                    fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    "--d": "0.1s",
-                  } as CSSProperties
-                }
+                className="text-[2rem] font-extrabold leading-[1.08] tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl xl:text-6xl"
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
               >
                 {renderTitle()}
               </h2>
 
               <p
-                className="tl-rise mt-3 text-[0.95rem] font-semibold leading-[1.6] text-[#1E293B] md:mt-5 md:text-[clamp(1.02rem,1.2vw,1.15rem)] md:leading-[1.65]"
-                style={
-                  {
-                    fontFamily: "'Inter', sans-serif",
-                    "--d": "0.2s",
-                  } as CSSProperties
-                }
+                className="mt-3 text-[0.95rem] font-semibold leading-[1.6] text-[#1E293B] md:mt-5 md:text-[clamp(1.02rem,1.2vw,1.15rem)] md:leading-[1.65]"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                }}
               >
                 {subtitle}
               </p>
-            </div>
+            </motion.div>
 
             {/* next/image: responsive sizes + modern formats + priority load */}
-            <div
-              className="tl-rise relative aspect-[16/10] max-h-[32svh] w-full overflow-hidden rounded-2xl border border-slate-200/60 shadow-xl md:max-h-[58svh]"
-              style={{ "--d": "0.3s" } as CSSProperties}
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              animate={isIntroInView ? "show" : "hidden"}
+              custom={0.15}
+              className="relative aspect-[16/10] max-h-[32svh] w-full overflow-hidden rounded-2xl border border-slate-200/60 shadow-xl md:max-h-[58svh]"
             >
               <Image
                 src={imageUrl}
@@ -327,7 +329,7 @@ export default function HowWeWorkTimeline({
                 sizes="(min-width: 768px) 45vw, 90vw"
                 className="object-cover"
               />
-            </div>
+            </motion.div>
           </div>
         </div>
 

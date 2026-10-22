@@ -8,14 +8,17 @@ import HowWeWorkTimeline from '@/components/ui/timeline';
 export default function HomePage() {
   return (
     <div className="relative min-h-screen w-full bg-[#ffebeb] selection:bg-ember-500/30 selection:text-slate-900 antialiased">
-      {/* Sticky Hero section: pinned in place as the user scrolls */}
-      <div className="sticky top-0 z-[1] h-screen w-full overflow-hidden">
-        <HeroSection />
-      </div>
+      {/* Hero + Services wrapper: confines sticky hero strictly to the initial overlap */}
+      <div className="relative w-full">
+        {/* Sticky Hero section: pinned in place as the user scrolls */}
+        <div className="sticky top-0 z-[1] h-screen w-full overflow-hidden">
+          <HeroSection />
+        </div>
 
-      {/* Services section: slides up, overlaps and fully lays on the hero section */}
-      <div className="relative z-[10] w-full bg-[#ffebeb] shadow-[0_-12px_30px_rgba(0,0,0,0.12)] sm:shadow-[0_-24px_60px_rgba(0,0,0,0.22)] transform-gpu">
-        <HomeServices />
+        {/* Services section: slides up, overlaps and fully lays on the hero section */}
+        <div className="relative z-[10] w-full bg-[#ffebeb] shadow-[0_-12px_30px_rgba(0,0,0,0.12)] sm:shadow-[0_-24px_60px_rgba(0,0,0,0.22)] transform-gpu">
+          <HomeServices />
+        </div>
       </div>
 
       {/* Mission & Vision Section: Google Labs styled statement section */}
@@ -40,7 +43,7 @@ export default function HomePage() {
       </div>
 
       {/* How We Work — Process timeline */}
-      <div className="relative z-[10] w-full">
+      <div className="relative z-[10] w-full bg-[#ffebeb]">
         <HowWeWorkTimeline
           title="How We Work"
           subtitle="Four deliberate phases that take your product from a rough idea to a live, scalable platform without surprises."
