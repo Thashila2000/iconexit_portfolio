@@ -6,13 +6,15 @@ import {
   useSyncExternalStore,
 } from "react";
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
+  // Mobile browsers resize the viewport as the URL bar shows/hides while
+  // scrolling. Without this, every resize triggers a full refresh (= jank).
+  ScrollTrigger.config({ ignoreMobileResize: true });
 }
 
 /* ────────────────────────────── Types & data ────────────────────────────── */
@@ -80,27 +82,6 @@ function usePrefersReducedMotion() {
   );
 }
 
-/* ──────────────────────── Animation Variants ──────────────────────── */
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 22 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
-
-const imageFade = {
-  hidden: { opacity: 0, scale: 0.96, y: 16 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] as const },
-  },
-};
-
 /* ─────────────────────────────── Component ──────────────────────────────── */
 
 export type TimelineProps = {
@@ -113,7 +94,6 @@ export type TimelineProps = {
   backgroundColor?: string;
   imageUrl?: string;
   imageAlt?: string;
-  duration?: number;
 };
 
 export default function HowWeWorkTimeline({
@@ -128,124 +108,96 @@ export default function HowWeWorkTimeline({
   imageAlt = "Team collaborating on a project",
 }: TimelineProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const desktopContainerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
 
-  const introRef = useRef<HTMLDivElement>(null);
-  const isIntroInView = useInView(introRef, { once: true, amount: 0.2 });
-
   const reducedMotion = usePrefersReducedMotion();
 
-  // Desktop GSAP horizontal pinned scroll
+  /* One pinned horizontal scroll, used on every screen size. */
   useGSAP(
     () => {
       if (reducedMotion) return;
 
-      const mm = gsap.matchMedia();
+      const section = sectionRef.current;
+      const slider = sliderRef.current;
+      const track = trackRef.current;
+      const fill = fillRef.current;
+      if (!section || !slider || !track || !fill) return;
 
-      // Only enable pinned horizontal scroll on desktop (>= 768px)
-      mm.add("(min-width: 768px)", () => {
-        const section = sectionRef.current;
-        const slider = sliderRef.current;
-        const track = trackRef.current;
-        const fill = fillRef.current;
+      const getDistance = () =>
+        Math.max(0, slider.scrollWidth - window.innerWidth);
 
-        if (!section || !slider || !track || !fill) return;
-
-        const getDistance = () => Math.max(0, slider.scrollWidth - window.innerWidth);
-
-        // Single master timeline: silky-smooth, instant-response, no 800ms lag delay
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: () => `+=${getDistance()}`,
-            pin: true,
-            scrub: 0.25, // Fast responsive scrub eliminating the heavy sluggish delay
-            invalidateOnRefresh: true,
-          },
-        });
-
-        // 1. Pinned horizontal movement
-        tl.to(
-          slider,
-          {
-            x: () => -getDistance(),
-            ease: "none",
-            duration: 1,
-          },
-          0
-        );
-
-        // 2. Animated journey line fill across viewport
-        tl.fromTo(
-          fill,
-          { scaleX: 0 },
-          {
-            scaleX: 1,
-            ease: "none",
-            duration: 1,
-          },
-          0
-        );
-
-        // 3. Step reveals synchronized smoothly on the unified timeline
-        const items = gsap.utils.toArray<HTMLElement>("[data-step]", track);
-
-        items.forEach((li) => {
-          const stem = li.querySelector("[data-stem]");
-          const dot = li.querySelector("[data-dot]");
-          const card = li.querySelector("[data-card]");
-
-          const dist = getDistance();
-          const liOffset = li.getBoundingClientRect().left - slider.getBoundingClientRect().left;
-
-          // Progress point along the timeline where this step enters view from the right
-          const startProgress =
-            dist > 0
-              ? Math.max(0.01, Math.min(0.85, (liOffset - window.innerWidth * 0.88) / dist))
-              : 0;
-          const dur =
-            dist > 0
-              ? Math.max(0.08, Math.min(0.18, (window.innerWidth * 0.22) / dist))
-              : 0.15;
-
-          if (stem && dot) {
-            tl.fromTo(
-              stem,
-              { scaleY: 0 },
-              { scaleY: 1, ease: "none", duration: dur * 0.65 },
-              startProgress
-            );
-            tl.fromTo(
-              dot,
-              { scale: 0 },
-              { scale: 1, ease: "back.out(2)", duration: dur * 0.55 },
-              startProgress + dur * 0.2
-            );
-          }
-
-          if (card) {
-            tl.fromTo(
-              card,
-              { opacity: 0, y: 25 },
-              {
-                opacity: 1,
-                y: 0,
-                duration: dur,
-                ease: "power2.out",
-              },
-              startProgress
-            );
-          }
-        });
+      // 1. The pan. `scrub: true` ties it 1:1 to the scroll position, so there
+      //    is no smoothing delay between finger/wheel and the content.
+      const move = gsap.to(slider, {
+        x: () => -getDistance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${getDistance()}`,
+          pin: true,
+          scrub: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
       });
 
-      return () => mm.revert();
+      // 2. Journey line fill (scaleX only: compositor-friendly).
+      gsap.fromTo(
+        fill,
+        { scaleX: 0 },
+        {
+          scaleX: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: track,
+            containerAnimation: move,
+            start: "left 92%",
+            end: "right 100%",
+            scrub: true,
+          },
+        }
+      );
+
+      // 3. Step reveals. Each is tied to the step's real on-screen position
+      //    (containerAnimation), so it stays correct on resize/rotation
+      //    without recalculating anything by hand.
+      const items = gsap.utils.toArray<HTMLElement>("[data-step]", track);
+
+      items.forEach((li) => {
+        const stem = li.querySelector("[data-stem]");
+        const dot = li.querySelector("[data-dot]");
+        const card = li.querySelector("[data-card]");
+
+        gsap
+          .timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: li,
+              containerAnimation: move,
+              start: "left 92%",
+              end: "left 68%",
+              scrub: true,
+            },
+          })
+          .fromTo(stem, { scaleY: 0 }, { scaleY: 1, duration: 0.5 }, 0)
+          .fromTo(
+            dot,
+            { scale: 0 },
+            { scale: 1, duration: 0.4, ease: "back.out(2)" },
+            0.15
+          )
+          .fromTo(
+            card,
+            { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
+            0.1
+          );
+      });
     },
-    { dependencies: [reducedMotion, steps], scope: sectionRef }
+    { dependencies: [reducedMotion, steps], scope: sectionRef, revertOnUpdate: true }
   );
 
   const vars = {
@@ -263,7 +215,8 @@ export default function HowWeWorkTimeline({
           How We{" "}
           <span
             style={{
-              background: "linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)",
+              background:
+                "linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -283,327 +236,215 @@ export default function HowWeWorkTimeline({
       id="how-we-work"
       aria-labelledby="how-we-work-title"
       style={vars}
-      className="relative z-20 w-full overflow-hidden"
+      className={`relative z-20 h-[100svh] min-h-[32rem] w-full ${
+        reducedMotion
+          ? "overflow-x-auto overflow-y-hidden snap-x snap-proximity"
+          : "overflow-hidden"
+      }`}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+        /* Intro entrance: plain CSS (no JS runtime) so it can't compete with scroll work. */
+        @keyframes tl-rise {
+          from { opacity: 0; transform: translate3d(0, 22px, 0); }
+          to   { opacity: 1; transform: none; }
+        }
+        .tl-rise {
+          animation: tl-rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+          animation-delay: var(--d, 0s);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .tl-rise { animation: none; }
+        }
       `}</style>
-      {/* ────────────────────────── DESKTOP VIEW (Pinned horizontal scroll) ────────────────────────── */}
+
       <div
-        ref={desktopContainerRef}
-        className="hidden md:block h-[100svh] min-h-[38rem] w-full overflow-hidden"
+        ref={sliderRef}
+        className="flex h-full w-max items-stretch gap-[6vw] px-[5vw] transform-gpu will-change-transform"
       >
-        <div
-          ref={sliderRef}
-          className="flex h-full w-max items-stretch gap-[6vw] px-[5vw] transform-gpu"
-        >
-          {/* Intro Panel */}
-          <div className="flex w-[88vw] max-w-[1200px] shrink-0 items-center">
-            <motion.div
-              ref={introRef}
-              initial="hidden"
-              animate={isIntroInView ? "visible" : "hidden"}
-              variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-              className="grid w-full items-center gap-8 md:grid-cols-[1.1fr_1fr] lg:gap-14"
-            >
-              <div className="max-w-xl">
-                {/* Eyebrow */}
-                <motion.div variants={fadeUp} className="mb-4 inline-flex items-center gap-2">
-                  <span
-                    className="h-2 w-2 rounded-full"
-                    style={{
-                      background: "linear-gradient(135deg, #0052D4 0%, #00C2CE 100%)",
-                      boxShadow: "0 0 8px rgba(0, 194, 206, 0.6)",
-                    }}
-                  />
-                  <span
-                    className="font-mono text-xs font-semibold uppercase tracking-[0.18em]"
-                    style={{ color: "#0052D4" }}
-                  >
-                    Our Process
-                  </span>
-                </motion.div>
-
-                {/* Title with black and gradient */}
-                <motion.h2
-                  variants={fadeUp}
-                  id="how-we-work-title"
-                  className="text-4xl font-extrabold leading-[1.08] tracking-tight text-[#0F172A] lg:text-5xl xl:text-6xl"
-                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        {/* ── Intro panel (one screen wide, so step 01 enters from the right edge) ── */}
+        <div className="flex w-[90vw] shrink-0 snap-start items-center">
+          <div className="mx-auto grid w-full max-w-[1200px] items-center gap-5 md:grid-cols-[1.1fr_1fr] md:gap-10 lg:gap-14">
+            <div className="max-w-xl">
+              <div
+                className="tl-rise mb-3 inline-flex items-center gap-2 md:mb-4"
+                style={{ "--d": "0s" } as CSSProperties}
+              >
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #0052D4 0%, #00C2CE 100%)",
+                    boxShadow: "0 0 8px rgba(0, 194, 206, 0.6)",
+                  }}
+                />
+                <span
+                  className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] md:text-xs"
+                  style={{ color: "#0052D4" }}
                 >
-                  {renderTitle()}
-                </motion.h2>
-
-                {/* Subtitle matching block portfolio description font */}
-                <motion.p
-                  variants={fadeUp}
-                  className="mt-5 text-[clamp(1.02rem,1.2vw,1.15rem)] leading-[1.65] font-semibold text-[#1E293B]"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
-                  {subtitle}
-                </motion.p>
+                  Our Process
+                </span>
               </div>
 
-              {/* Intro Image */}
-              <motion.div variants={imageFade} className="relative overflow-hidden rounded-2xl shadow-xl border border-slate-200/60">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={imageUrl}
-                  alt={imageAlt}
-                  draggable={false}
-                  decoding="async"
-                  onLoad={() => ScrollTrigger.refresh()}
-                  className="aspect-[16/10] max-h-[58svh] w-full object-cover"
-                />
-              </motion.div>
-            </motion.div>
-          </div>
-
-          {/* Steps Horizontal Track */}
-          <ol ref={trackRef} className="relative flex h-full list-none p-0">
-            {/* Center Journey Line */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2"
-            >
-              <div
-                className="absolute inset-0 rounded-full opacity-20"
-                style={{ backgroundColor: "var(--tl-accent)" }}
-              />
-              <div
-                ref={fillRef}
-                className="absolute inset-0 origin-left rounded-full"
-                style={{
-                  background: "linear-gradient(90deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)",
-                }}
-              />
-            </div>
-
-            {steps.map((step, i) => {
-              const isTop = i % 2 === 0;
-              const isLast = i === steps.length - 1;
-
-              const cardContent = (
-                <div
-                  data-card
-                  className={`w-[min(80vw,24rem)] pl-6 ${
-                    isTop ? "pb-14" : "pt-14"
-                  }`}
-                >
-                  <p
-                    className="mb-1 text-[clamp(1.75rem,2.4vw,2.25rem)] font-extrabold leading-none tabular-nums"
-                    style={{ color: "var(--tl-accent)" }}
-                  >
-                    {step.number}
-                  </p>
-                  <p
-                    className="mb-2 text-[0.8rem] font-bold tracking-wider uppercase text-slate-900"
-                  >
-                    {step.focus}
-                  </p>
-                  <h3
-                    className="mb-3 text-[clamp(1.3rem,1.8vw,1.8rem)] font-extrabold leading-tight tracking-tight text-slate-900"
-                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800 }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p
-                    className="max-w-[24rem] text-[0.925rem] leading-relaxed font-medium text-slate-900"
-                    style={{ fontFamily: "'Inter', sans-serif" }}
-                  >
-                    {step.content}
-                  </p>
-                </div>
-              );
-
-              const stem = (
-                <div
-                  data-stem
-                  aria-hidden
-                  className={`absolute left-0 h-12 w-px ${
-                    isTop ? "bottom-0 origin-bottom" : "top-0 origin-top"
-                  }`}
-                  style={{ backgroundColor: "var(--tl-accent)" }}
-                />
-              );
-
-              return (
-                <li
-                  key={step.id}
-                  data-step
-                  className={`grid h-full shrink-0 grid-rows-[1fr_0px_1fr] ${
-                    isLast ? "w-[min(80vw,24rem)]" : "w-[min(44vw,18rem)]"
-                  }`}
-                >
-                  {/* Top Cell */}
-                  <div className="relative flex items-end">
-                    {isTop && (
-                      <>
-                        {stem}
-                        {cardContent}
-                      </>
-                    )}
-                  </div>
-
-                  {/* Dot Cell */}
-                  <div className="relative">
-                    <span
-                      data-dot
-                      aria-hidden
-                      className="absolute left-0 top-0 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
-                      style={{
-                        backgroundColor: "var(--tl-accent)",
-                        boxShadow: `0 0 0 4px ${backgroundColor}`,
-                      }}
-                    />
-                  </div>
-
-                  {/* Bottom Cell */}
-                  <div className="relative flex items-start">
-                    {!isTop && (
-                      <>
-                        {stem}
-                        {cardContent}
-                      </>
-                    )}
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
-
-          {/* Trailing space */}
-          <div aria-hidden className="w-[6vw] shrink-0" />
-        </div>
-      </div>
-
-      {/* ────────────────────────── MOBILE VIEW (Smooth vertical native flow) ────────────────────────── */}
-      <div className="block md:hidden px-5 py-14 sm:py-20">
-        <div className="mx-auto max-w-xl">
-          {/* Mobile Intro */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="mb-12"
-          >
-            {/* Eyebrow */}
-            <div className="mb-3 inline-flex items-center gap-2">
-              <span
-                className="h-2 w-2 rounded-full"
-                style={{
-                  background: "linear-gradient(135deg, #0052D4 0%, #00C2CE 100%)",
-                  boxShadow: "0 0 8px rgba(0, 194, 206, 0.6)",
-                }}
-              />
-              <span
-                className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em]"
-                style={{ color: "#0052D4" }}
+              <h2
+                id="how-we-work-title"
+                className="tl-rise text-[2rem] font-extrabold leading-[1.08] tracking-tight text-[#0F172A] sm:text-4xl lg:text-5xl xl:text-6xl"
+                style={
+                  {
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    "--d": "0.1s",
+                  } as CSSProperties
+                }
               >
-                Our Process
-              </span>
+                {renderTitle()}
+              </h2>
+
+              <p
+                className="tl-rise mt-3 text-[0.95rem] font-semibold leading-[1.6] text-[#1E293B] md:mt-5 md:text-[clamp(1.02rem,1.2vw,1.15rem)] md:leading-[1.65]"
+                style={
+                  {
+                    fontFamily: "'Inter', sans-serif",
+                    "--d": "0.2s",
+                  } as CSSProperties
+                }
+              >
+                {subtitle}
+              </p>
             </div>
 
-            {/* Title */}
-            <h2
-              className="text-3xl font-extrabold tracking-tight text-[#0F172A] sm:text-4xl"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            {/* next/image: responsive sizes + modern formats + priority load */}
+            <div
+              className="tl-rise relative aspect-[16/10] max-h-[32svh] w-full overflow-hidden rounded-2xl border border-slate-200/60 shadow-xl md:max-h-[58svh]"
+              style={{ "--d": "0.3s" } as CSSProperties}
             >
-              {renderTitle()}
-            </h2>
-
-            {/* Subtitle */}
-            <p
-              className="mt-3.5 text-[clamp(0.95rem,1.15vw,1.05rem)] leading-[1.6] font-semibold text-[#1E293B]"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              {subtitle}
-            </p>
-
-            {/* Image */}
-            <div className="mt-6 overflow-hidden rounded-2xl shadow-md border border-slate-200/60">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={imageUrl}
                 alt={imageAlt}
+                fill
+                priority
                 draggable={false}
-                className="aspect-[16/10] w-full object-cover"
+                sizes="(min-width: 768px) 45vw, 90vw"
+                className="object-cover"
               />
-            </div>
-          </motion.div>
-
-          {/* Vertical Step Progression */}
-          <div className="relative pl-6 sm:pl-8">
-            {/* Continuous Vertical Spine */}
-            <div
-              className="absolute left-[7px] sm:left-[9px] top-3 bottom-6 w-0.5"
-              style={{
-                background: "linear-gradient(180deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)",
-                opacity: 0.35,
-              }}
-            />
-
-            <div className="flex flex-col gap-10">
-              {steps.map((step, index) => (
-                <motion.div
-                  key={step.id}
-                  initial={{ opacity: 0, y: 22 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{
-                    duration: 0.55,
-                    delay: index * 0.08,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="relative group"
-                >
-                  {/* Glowing Node Dot */}
-                  <div
-                    className="absolute -left-[27px] sm:-left-[31px] top-1.5 size-4 rounded-full flex items-center justify-center"
-                    style={{
-                      background: "linear-gradient(135deg, #0052D4 0%, #00C2CE 100%)",
-                      boxShadow: "0 0 10px rgba(0, 102, 238, 0.45)",
-                    }}
-                  >
-                    <div className="size-1.5 rounded-full bg-white" />
-                  </div>
-
-                  {/* Card Content */}
-                  <div className="rounded-2xl bg-white/70 backdrop-blur-sm p-5 border border-slate-200/80 shadow-sm transition-all duration-300 group-hover:bg-white/90 group-hover:shadow-md">
-                    <div className="flex items-center justify-between mb-2">
-                      <span
-                        className="text-xs font-bold uppercase tracking-wider text-slate-900"
-                      >
-                        {step.focus}
-                      </span>
-                      <span
-                        className="font-mono text-sm font-extrabold"
-                        style={{ color: "var(--tl-accent)" }}
-                      >
-                        {step.number}
-                      </span>
-                    </div>
-
-                    <h3
-                      className="text-lg font-extrabold text-slate-900 mb-2 leading-snug"
-                      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 800 }}
-                    >
-                      {step.title}
-                    </h3>
-
-                    <p
-                      className="text-xs sm:text-sm leading-relaxed font-medium text-slate-900"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    >
-                      {step.content}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
             </div>
           </div>
         </div>
+
+        {/* ── Steps track ── */}
+        <ol ref={trackRef} className="relative flex h-full list-none p-0">
+          {/* Journey line */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2"
+          >
+            <div
+              className="absolute inset-0 rounded-full opacity-20"
+              style={{ backgroundColor: "var(--tl-accent)" }}
+            />
+            <div
+              ref={fillRef}
+              className="absolute inset-0 origin-left rounded-full will-change-transform"
+              style={{
+                background:
+                  "linear-gradient(90deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)",
+              }}
+            />
+          </div>
+
+          {steps.map((step, i) => {
+            const isTop = i % 2 === 0;
+            const isLast = i === steps.length - 1;
+
+            const card = (
+              <div
+                data-card
+                className={`w-[min(78vw,24rem)] pl-5 will-change-[transform,opacity] sm:pl-6 ${
+                  isTop ? "pb-12 md:pb-14" : "pt-12 md:pt-14"
+                }`}
+              >
+                <p
+                  className="mb-1 text-[clamp(1.5rem,2.4vw,2.25rem)] font-extrabold leading-none tabular-nums"
+                  style={{ color: "var(--tl-accent)" }}
+                >
+                  {step.number}
+                </p>
+                <p className="mb-2 text-[0.7rem] font-bold uppercase tracking-wider text-slate-900 sm:text-[0.8rem]">
+                  {step.focus}
+                </p>
+                <h3
+                  className="mb-2 text-[clamp(1.15rem,1.8vw,1.8rem)] font-extrabold leading-tight tracking-tight text-slate-900 sm:mb-3"
+                  style={{
+                    fontFamily: "'Plus Jakarta Sans', sans-serif",
+                    fontWeight: 800,
+                  }}
+                >
+                  {step.title}
+                </h3>
+                <p
+                  className="max-w-[24rem] text-[0.82rem] font-medium leading-relaxed text-slate-900 sm:text-[0.925rem]"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  {step.content}
+                </p>
+              </div>
+            );
+
+            const stem = (
+              <div
+                data-stem
+                aria-hidden
+                className={`absolute left-0 h-10 w-px will-change-transform md:h-12 ${
+                  isTop ? "bottom-0 origin-bottom" : "top-0 origin-top"
+                }`}
+                style={{ backgroundColor: "var(--tl-accent)" }}
+              />
+            );
+
+            return (
+              <li
+                key={step.id}
+                data-step
+                className={`grid h-full shrink-0 snap-start grid-rows-[1fr_0px_1fr] ${
+                  isLast ? "w-[min(78vw,24rem)]" : "w-[min(44vw,18rem)]"
+                }`}
+              >
+                <div className="relative flex items-end">
+                  {isTop && (
+                    <>
+                      {stem}
+                      {card}
+                    </>
+                  )}
+                </div>
+
+                <div className="relative">
+                  <span
+                    data-dot
+                    aria-hidden
+                    className="absolute left-0 top-0 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full will-change-transform"
+                    style={{
+                      backgroundColor: "var(--tl-accent)",
+                      boxShadow: `0 0 0 4px ${backgroundColor}`,
+                    }}
+                  />
+                </div>
+
+                <div className="relative flex items-start">
+                  {!isTop && (
+                    <>
+                      {stem}
+                      {card}
+                    </>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+
+        {/* Trailing space so the last card clears the screen edge */}
+        <div aria-hidden className="w-[6vw] shrink-0" />
       </div>
     </section>
   );
