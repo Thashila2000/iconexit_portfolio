@@ -46,7 +46,7 @@ const footerLinks = [
     title: "Services",
     links: [
       { label: "Cloud & Infrastructure", href: "/services" },
-      { label: "Cybersecurity",          href: "/services" },
+      { label: "Mobile App Development", href: "/services" },
       { label: "Software Development",   href: "/services" },
       { label: "AI & Data Analytics",    href: "/services" },
       { label: "IT Consulting",          href: "/services" },

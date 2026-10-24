@@ -35,7 +35,7 @@ function LiveClock() {
     <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--font-jetbrains-mono), monospace", fontSize: "0.8rem" }}>
       <span style={{ width: 7, height: 7, borderRadius: "50%", display: "inline-block", flexShrink: 0, background: isOpen ? "#22C55E" : "#EF4444", boxShadow: isOpen ? "0 0 6px rgba(34,197,94,0.8)" : "0 0 6px rgba(239,68,68,0.8)" }} />
       <span style={{ color: isOpen ? "#4ADE80" : "#F87171", fontWeight: 600 }}>{isOpen ? "Open" : "Closed"}</span>
-      <span style={{ color: "rgba(255,255,255,0.35)" }}>·</span>
+      <span style={{ color: "rgba(255,255,255,0.35)" }}>Â·</span>
       <span style={{ color: "rgba(255,255,255,0.55)" }}>{time} LKT</span>
     </div>
   );
@@ -98,7 +98,7 @@ function Field({ label, name, type = "text", required = false, textarea = false 
   );
 }
 
-const SERVICES = ["Cloud", "Cybersecurity", "Development", "AI & Data", "Consulting", "Support"];
+const SERVICES = ["Cloud", "Mobile Apps", "Development", "AI & Data", "Consulting", "Support"];
 
 function ServiceChips() {
   const [selected, setSelected] = useState<string[]>([]);
@@ -140,8 +140,7 @@ export default function ContactPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        :root { --font-inter: 'Inter', sans-serif; }
+                :root { --font-inter: 'Inter', sans-serif; }
 
         *, *::before, *::after { box-sizing: border-box; }
         html, body { overflow-x: hidden; }
@@ -281,7 +280,7 @@ export default function ContactPage() {
 
       <div className="cp-wrap">
 
-        {/* ══ LEFT ══════════════════════════════════════════════════════════ */}
+        {/* â•â• LEFT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <div className="cp-left">
           {/* Abstract hero image with dark shadow overlay */}
           <Image
@@ -357,7 +356,7 @@ export default function ContactPage() {
           </motion.div>
         </div>
 
-        {/* ══ RIGHT ═════════════════════════════════════════════════════════ */}
+        {/* â•â• RIGHT â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <div className="cp-right">
           <motion.div className="cp-right-inner" custom={0.2} variants={fadeUp} initial="hidden" animate="show">
             <ElectricBorder color="#0070C6" speed={0.8} chaos={0.10} borderRadius={20}>

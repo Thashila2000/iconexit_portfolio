@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
@@ -95,8 +95,7 @@ export default function MissionVisionSection() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-
+        
         .mv-section {
           position: relative;
           background-color: #ffebeb;
@@ -111,7 +110,7 @@ export default function MissionVisionSection() {
           }
         }
 
-        /* ── GPU-accelerated off-main-thread ambient blob float keyframes ── */
+        /* â”€â”€ GPU-accelerated off-main-thread ambient blob float keyframes â”€â”€ */
         @keyframes mvBlobFloat1 {
           0%, 100% {
             transform: translate3d(0, 0, 0) scale(1);
@@ -152,7 +151,7 @@ export default function MissionVisionSection() {
           -webkit-backface-visibility: hidden;
         }
 
-        /* ── Big Center Typography matching Google Labs style ── */
+        /* â”€â”€ Big Center Typography matching Google Labs style â”€â”€ */
         .mv-headline {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-size: clamp(2rem, 4.4vw, 3.85rem);
@@ -178,7 +177,7 @@ export default function MissionVisionSection() {
           position: relative;
         }
 
-        /* ── Pill switcher bar ── */
+        /* â”€â”€ Pill switcher bar â”€â”€ */
         .mv-switcher-wrap {
           display: inline-flex;
           align-items: center;
@@ -212,7 +211,7 @@ export default function MissionVisionSection() {
       `}</style>
 
       <section ref={sectionRef} className="mv-section">
-        {/* ── Left Soft Blue/Cyan Organic Shape (Compositor-driven CSS animation) ── */}
+        {/* â”€â”€ Left Soft Blue/Cyan Organic Shape (Compositor-driven CSS animation) â”€â”€ */}
         <div
           className={`absolute -top-16 -left-16 w-72 h-72 sm:w-96 sm:h-96 rounded-full pointer-events-none transition-opacity duration-1000 ${
             isInView ? "opacity-60 mv-blob-1" : "opacity-0"
@@ -224,7 +223,7 @@ export default function MissionVisionSection() {
           }}
         />
 
-        {/* ── Right Pink/Magenta Organic Blob Shape (Compositor-driven CSS animation) ── */}
+        {/* â”€â”€ Right Pink/Magenta Organic Blob Shape (Compositor-driven CSS animation) â”€â”€ */}
         <div
           className={`absolute -bottom-16 -right-12 w-80 h-96 sm:w-[480px] sm:h-[500px] pointer-events-none transition-opacity duration-1000 ${
             isInView ? "opacity-80 mv-blob-2" : "opacity-0"
@@ -237,7 +236,7 @@ export default function MissionVisionSection() {
           }}
         />
 
-        {/* ── Crisp Vector Organic Accent Blob (Desktop only) ── */}
+        {/* â”€â”€ Crisp Vector Organic Accent Blob (Desktop only) â”€â”€ */}
         <motion.svg
           initial={{ opacity: 0 }}
           animate={
@@ -273,7 +272,7 @@ export default function MissionVisionSection() {
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 flex flex-col items-center"
         >
-          {/* ── Magnetic Sliding Pill Switcher ── */}
+          {/* â”€â”€ Magnetic Sliding Pill Switcher â”€â”€ */}
           <div className="mv-switcher-wrap mb-10 sm:mb-14">
             <button
               type="button"
@@ -310,7 +309,7 @@ export default function MissionVisionSection() {
             </button>
           </div>
 
-          {/* ── Kinetic Typography Word-by-Word Reveal ── */}
+          {/* â”€â”€ Kinetic Typography Word-by-Word Reveal â”€â”€ */}
           <div className="min-h-[190px] sm:min-h-[230px] flex items-center justify-center w-full">
             <AnimatePresence mode="wait">
               {activeTab === "mission" ? (
@@ -359,3 +358,4 @@ export default function MissionVisionSection() {
     </>
   );
 }
+

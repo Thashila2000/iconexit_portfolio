@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
@@ -165,7 +165,7 @@ function PortfolioCard({
           </p>
         </div>
 
-        {/* Local Mockup Image — fully visible, no crop */}
+        {/* Local Mockup Image â€” fully visible, no crop */}
         <div className="w-full px-4 pb-0 sm:px-8">
           <div className="w-full rounded-t-2xl overflow-hidden shadow-2xl">
             <Image
@@ -211,8 +211,7 @@ export default function Portfolio9({
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-
+        
         .bp-eyebrow {
           display: inline-flex;
           align-items: center;
@@ -277,7 +276,7 @@ export default function Portfolio9({
 
       <section className={`bg-[#ffebeb] py-20 sm:py-28 ${className}`}>
         <div className="container mx-auto px-6 sm:px-10 lg:px-12 max-w-7xl">
-          {/* Header Section — centered like Testimonials section */}
+          {/* Header Section â€” centered like Testimonials section */}
           <div
             ref={headerRef}
             className="mb-14 flex flex-col items-center text-center"
@@ -342,3 +341,4 @@ export default function Portfolio9({
     </>
   );
 }
+

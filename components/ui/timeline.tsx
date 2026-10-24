@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   type CSSProperties,
@@ -18,7 +18,7 @@ if (typeof window !== "undefined") {
   ScrollTrigger.config({ ignoreMobileResize: true });
 }
 
-/* ────────────────────────────── Types & data ────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Types & data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export type TimelineStep = {
   id: string;
@@ -63,7 +63,7 @@ export const DEFAULT_STEPS: TimelineStep[] = [
   },
 ];
 
-/* ───────────────────────────── Reduced motion ───────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Reduced motion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -83,7 +83,7 @@ function usePrefersReducedMotion() {
   );
 }
 
-/* ─────────────────────────────── Component ──────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const BRAND_GRADIENT =
   "linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)";
@@ -130,7 +130,7 @@ export default function HowWeWorkTimeline({
       const head = headRef.current;
       if (!section || !slider || !track || !fill || !head) return;
 
-      /* 0 ─ Intro entrance: plays ONCE, only when the section scrolls into view.
+      /* 0 â”€ Intro entrance: plays ONCE, only when the section scrolls into view.
              (Elements are hidden by CSS until this fires, so nothing animates
              off-screen while the user is still above the section.) */
       gsap.fromTo(
@@ -153,7 +153,7 @@ export default function HowWeWorkTimeline({
       const getDistance = () =>
         Math.max(0, slider.scrollWidth - window.innerWidth);
 
-      /* 1 ─ The pinned pan, 1:1 with scroll (no smoothing lag). */
+      /* 1 â”€ The pinned pan, 1:1 with scroll (no smoothing lag). */
       const move = gsap.to(slider, {
         x: () => -getDistance(),
         ease: "none",
@@ -168,7 +168,7 @@ export default function HowWeWorkTimeline({
         },
       });
 
-      /* 2 ─ Journey line: fill + glowing head travel together (transforms only). */
+      /* 2 â”€ Journey line: fill + glowing head travel together (transforms only). */
       gsap
         .timeline({
           defaults: { ease: "none" },
@@ -184,7 +184,7 @@ export default function HowWeWorkTimeline({
         .fromTo(fill, { scaleX: 0 }, { scaleX: 1 }, 0)
         .fromTo(head, { x: 0 }, { x: () => track.offsetWidth }, 0);
 
-      /* 3 ─ Step reveals, tied to each step's real on-screen position. */
+      /* 3 â”€ Step reveals, tied to each step's real on-screen position. */
       const items = gsap.utils.toArray<HTMLElement>("[data-step]", track);
 
       items.forEach((li) => {
@@ -266,15 +266,14 @@ export default function HowWeWorkTimeline({
       }`}
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap');
-        .tl-intro-hidden { opacity: 0; transform: translate3d(0, 28px, 0); }
+                .tl-intro-hidden { opacity: 0; transform: translate3d(0, 28px, 0); }
       `}</style>
 
       <div
         ref={sliderRef}
         className="flex h-full w-max items-stretch gap-[6vw] px-[5vw] pt-[78px] sm:pt-[84px] lg:pt-20 pb-4 transform-gpu will-change-transform"
       >
-        {/* ── Intro panel (moved upward on mobile/tab with safe clearance below navbar) ── */}
+        {/* â”€â”€ Intro panel (moved upward on mobile/tab with safe clearance below navbar) â”€â”€ */}
         <div className="flex w-[90vw] shrink-0 snap-start items-start pt-2 sm:pt-4 lg:items-center lg:pt-0">
           <div className="mx-auto grid w-full max-w-[1200px] items-center gap-5 sm:gap-6 md:grid-cols-[1.1fr_1fr] md:gap-8 lg:gap-14">
             <div className="max-w-xl">
@@ -335,8 +334,7 @@ export default function HowWeWorkTimeline({
                 className={`${introHidden} mt-5 inline-flex items-center gap-2 text-sm font-semibold md:mt-7`}
                 style={{ color: "var(--tl-accent)", fontFamily: "'Inter', sans-serif" }}
               >
-                <span>Keep scrolling to follow the process</span>
-                <ArrowRight className="size-4" aria-hidden />
+                
               </div>
             </div>
 
@@ -361,7 +359,7 @@ export default function HowWeWorkTimeline({
           </div>
         </div>
 
-        {/* ── Steps track ── */}
+        {/* â”€â”€ Steps track â”€â”€ */}
         <ol ref={trackRef} className="relative flex h-full list-none p-0">
           {/* Journey line */}
           <div
@@ -518,3 +516,4 @@ export default function HowWeWorkTimeline({
     </section>
   );
 }
+

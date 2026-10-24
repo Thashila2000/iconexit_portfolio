@@ -24,9 +24,9 @@ const services: ServiceCardData[] = [
     imagePath: "/Images/service1.jpg",
   },
   {
-    tag: "SECURITY",
-    title: "Cybersecurity",
-    description: "Military grade threat detection, advanced penetration testing, and ironclad compliance frameworks to safeguard your proprietary data and keep you audit ready.",
+    tag: "MOBILE APPS",
+    title: "Mobile App Development",
+    description: "High-performance native and cross-platform apps for iOS and Android built with Flutter, React Native, and Swift/Kotlin designed for high speed and seamless UX.",
     imagePath: "/Images/service2.png",
   },
   {
@@ -191,16 +191,15 @@ export default function HomeServices() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-
-        /* ── Scroll container with #ffebeb background ── */
+        
+        /* â”€â”€ Scroll container with #ffebeb background â”€â”€ */
         .exp-scroll-container {
           position: relative;
           height: 420vh;
           background: #ffebeb;
         }
 
-        /* ── Pinned sticky viewport ── */
+        /* â”€â”€ Pinned sticky viewport â”€â”€ */
         .exp-sticky-viewport {
           position: sticky;
           top: 0;
@@ -215,7 +214,7 @@ export default function HomeServices() {
           background: #ffebeb;
         }
 
-        /* ── Header block — centered ── */
+        /* â”€â”€ Header block â€” centered â”€â”€ */
         .exp-header {
           position: relative;
           z-index: 10;
@@ -276,7 +275,7 @@ export default function HomeServices() {
           text-align: center;
         }
 
-        /* ── Carousel Stage ── */
+        /* â”€â”€ Carousel Stage â”€â”€ */
         .exp-carousel-stage {
           position: relative;
           z-index: 10;
@@ -294,7 +293,7 @@ export default function HomeServices() {
           user-select: none;
         }
 
-        /* ── Individual Card ── */
+        /* â”€â”€ Individual Card â”€â”€ */
         .exp-card {
           flex-shrink: 0;
           width: clamp(275px, 24vw, 335px);
@@ -394,7 +393,7 @@ export default function HomeServices() {
       <div ref={containerRef} className="exp-scroll-container">
         <div ref={stickyRef} className="exp-sticky-viewport">
 
-          {/* ── Section Header (Centered) ── */}
+          {/* â”€â”€ Section Header (Centered) â”€â”€ */}
           <div className="exp-header">
             <div
               ref={headerContentRef}
@@ -419,7 +418,7 @@ export default function HomeServices() {
             </div>
           </div>
 
-          {/* ── Centered Card Carousel Track (Only cards) ── */}
+          {/* â”€â”€ Centered Card Carousel Track (Only cards) â”€â”€ */}
           <div ref={stageContentRef} className="exp-carousel-stage">
             <div ref={trackRef} className="exp-cards-track">
               {services.map((item, idx) => (
@@ -455,3 +454,4 @@ export default function HomeServices() {
     </>
   );
 }
+

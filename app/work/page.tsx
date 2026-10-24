@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
@@ -52,13 +52,13 @@ interface Project {
 const PROJECTS: Project[] = [
   {
     slug: "enterprise-erp",
-    tag: "SAAS · ERP",
+    tag: "SAAS Â· ERP",
     title: "Enterprise Resource Planning (ERP) Platform",
     description:
       "Engineered a scalable SaaS ERP solution tailored for small-to-medium businesses, unifying inventory, finance, and human resources into a single real-time dashboard.",
     year: "2024",
     outcome: "Unified business operations",
-    badge1: "SaaS Core →",
+    badge1: "SaaS Core â†’",
     badge2: "Real-time Sync",
     type: "erp",
     buttonVariant: "solid",
@@ -67,13 +67,13 @@ const PROJECTS: Project[] = [
   },
   {
     slug: "hotel-management",
-    tag: "SAAS · HOSPITALITY",
+    tag: "SAAS Â· HOSPITALITY",
     title: "Hotel Management SaaS Suite",
     description:
       "Developed a cloud-based property management system featuring automated room booking, dynamic pricing, real-time housekeeping tracking, and guest check-in portals.",
     year: "2024",
     outcome: "Streamlined guest operations",
-    badge1: "Hospitality Suite →",
+    badge1: "Hospitality Suite â†’",
     badge2: "Smart Booking",
     type: "hospitality",
     buttonVariant: "solid",
@@ -82,13 +82,13 @@ const PROJECTS: Project[] = [
   },
   {
     slug: "salon-booking",
-    tag: "SAAS · BOOKING",
+    tag: "SAAS Â· BOOKING",
     title: "Salon Booking & Management System",
     description:
       "Launched a feature-rich multi-tenant scheduling platform for salons, complete with staff rostering, automated SMS reminders, and integrated digital payments.",
     year: "2023",
     outcome: "Automated client scheduling",
-    badge1: "Booking Hub →",
+    badge1: "Booking Hub â†’",
     badge2: "SMS Automation",
     type: "booking",
     buttonVariant: "solid",
@@ -201,15 +201,14 @@ export default function WorkPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-
+        
         .wk-page {
           background: #ffebeb;
           font-family: 'Plus Jakarta Sans', sans-serif;
           overflow-x: hidden;
         }
 
-        /* ── Hero ── */
+        /* â”€â”€ Hero â”€â”€ */
         .wk-hero {
           position: relative;
           padding: 160px 60px 80px;
@@ -271,7 +270,7 @@ export default function WorkPage() {
           text-align: left;
         }
 
-        /* ── Grid Section ── */
+        /* â”€â”€ Grid Section â”€â”€ */
         .wk-grid-section {
           padding: 60px 24px 100px;
           background: #ffebeb;
@@ -343,7 +342,7 @@ export default function WorkPage() {
           gap: 20px;
         }
 
-        /* ── Google Labs Style Showcase Card (Compact Size) ── */
+        /* â”€â”€ Google Labs Style Showcase Card (Compact Size) â”€â”€ */
         .gl-card {
           position: relative;
           background: #090E17;
@@ -489,7 +488,7 @@ export default function WorkPage() {
           box-shadow: 0 6px 18px rgba(255, 255, 255, 0.25);
         }
 
-        /* ── CTA ── */
+        /* â”€â”€ CTA â”€â”€ */
         .wk-cta-section {
           padding: 100px 60px;
           background: linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%);
@@ -527,7 +526,7 @@ export default function WorkPage() {
           box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
 
-        /* ── Responsive ── */
+        /* â”€â”€ Responsive â”€â”€ */
         @media (max-width: 1120px) {
           .wk-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -557,7 +556,7 @@ export default function WorkPage() {
       `}</style>
 
       <div className="wk-page">
-        {/* ── Hero ── */}
+        {/* â”€â”€ Hero â”€â”€ */}
         <section className="wk-hero">
           <Image
             src="/Images/abstract img.jpg"
@@ -586,7 +585,7 @@ export default function WorkPage() {
           </div>
         </section>
 
-        {/* ── Project Showcase Grid ── */}
+        {/* â”€â”€ Project Showcase Grid â”€â”€ */}
         <section className="wk-grid-section">
           {/* Centered Section Header */}
           <div className="wk-grid-header">
@@ -629,7 +628,7 @@ export default function WorkPage() {
           </div>
         </section>
 
-        {/* ── CTA ── */}
+        {/* â”€â”€ CTA â”€â”€ */}
         <section className="wk-cta-section">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -651,4 +650,5 @@ export default function WorkPage() {
     </>
   );
 }
+
 
