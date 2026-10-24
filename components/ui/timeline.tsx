@@ -83,8 +83,6 @@ function usePrefersReducedMotion() {
   );
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-
 const BRAND_GRADIENT =
   "linear-gradient(135deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)";
 
@@ -116,6 +114,8 @@ export default function HowWeWorkTimeline({
   const trackRef = useRef<HTMLOListElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
+  const imageWrapRef = useRef<HTMLDivElement>(null);
+  const darkBgRef = useRef<HTMLDivElement>(null);
 
   const reducedMotion = usePrefersReducedMotion();
 
@@ -128,11 +128,10 @@ export default function HowWeWorkTimeline({
       const track = trackRef.current;
       const fill = fillRef.current;
       const head = headRef.current;
+      const darkBg = darkBgRef.current;
       if (!section || !slider || !track || !fill || !head) return;
 
-      /* 0 â”€ Intro entrance: plays ONCE, only when the section scrolls into view.
-             (Elements are hidden by CSS until this fires, so nothing animates
-             off-screen while the user is still above the section.) */
+      /* 0 ── Intro entrance: plays ONCE, only when the section scrolls into view. */
       gsap.fromTo(
         "[data-intro]",
         { opacity: 0, y: 28 },
@@ -153,7 +152,7 @@ export default function HowWeWorkTimeline({
       const getDistance = () =>
         Math.max(0, slider.scrollWidth - window.innerWidth);
 
-      /* 1 â”€ The pinned pan, 1:1 with scroll (no smoothing lag). */
+      /* 1 ── The pinned pan, 1:1 with scroll (no smoothing lag). */
       const move = gsap.to(slider, {
         x: () => -getDistance(),
         ease: "none",
@@ -168,7 +167,68 @@ export default function HowWeWorkTimeline({
         },
       });
 
-      /* 2 â”€ Journey line: fill + glowing head travel together (transforms only). */
+      /* 1.5 ── Dark blue gradient sweep from right side next to image moving left with timeline ── */
+      const getInitialDarkBgX = () => {
+        if (imageWrapRef.current) {
+          const rect = imageWrapRef.current.getBoundingClientRect();
+          return Math.max(window.innerWidth * 0.45, rect.right);
+        }
+        return window.innerWidth * 0.85;
+      };
+
+      if (darkBg) {
+        gsap.fromTo(
+          darkBg,
+          { x: () => getInitialDarkBgX() },
+          {
+            x: () => getInitialDarkBgX() - getDistance(),
+            ease: "none",
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: () => `+=${getDistance()}`,
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      }
+
+      /* Dynamic text color shift as dark blue gradient washes over intro panel */
+      gsap.to("#how-we-work-title", {
+        color: "#FFFFFF",
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${window.innerWidth * 0.75}`,
+          scrub: true,
+        },
+      });
+
+      gsap.to("#how-we-work-desc", {
+        color: "#CBD5E1",
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${window.innerWidth * 0.75}`,
+          scrub: true,
+        },
+      });
+
+      gsap.to("#how-we-work-badge", {
+        color: "#00C2CE",
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${window.innerWidth * 0.75}`,
+          scrub: true,
+        },
+      });
+
+      /* 2 ── Journey line: fill + glowing head travel together (transforms only). */
       gsap
         .timeline({
           defaults: { ease: "none" },
@@ -184,7 +244,7 @@ export default function HowWeWorkTimeline({
         .fromTo(fill, { scaleX: 0 }, { scaleX: 1 }, 0)
         .fromTo(head, { x: 0 }, { x: () => track.offsetWidth }, 0);
 
-      /* 3 â”€ Step reveals, tied to each step's real on-screen position. */
+      /* 3 ── Step reveals, tied to each step's real on-screen position. */
       const items = gsap.utils.toArray<HTMLElement>("[data-step]", track);
 
       items.forEach((li) => {
@@ -266,16 +326,54 @@ export default function HowWeWorkTimeline({
       }`}
     >
       <style>{`
-                .tl-intro-hidden { opacity: 0; transform: translate3d(0, 28px, 0); }
+        .tl-intro-hidden { opacity: 0; transform: translate3d(0, 28px, 0); }
       `}</style>
+
+      {/* ── Dark blue gradient background layer matching footer ── */}
+      <div
+        ref={darkBgRef}
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 left-0 z-0 will-change-transform"
+        style={{
+          width: "400vw",
+          background: "#0B0F19",
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 80px, black 240px)",
+          maskImage:
+            "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 80px, black 240px)",
+        }}
+      >
+        {/* Footer atmospheric radial gradient */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(130% 120% at 65% 25%, rgba(0, 194, 206, 0.28) 0%, rgba(0, 112, 198, 0.42) 35%, rgba(0, 82, 212, 0.52) 60%, rgba(11, 15, 25, 0.98) 100%)",
+          }}
+        />
+        {/* Atmospheric glow matching footer right teal glow */}
+        <div
+          className="pointer-events-none absolute -top-12 right-[20%] h-[420px] w-[420px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(0,194,206,0.18) 0%, transparent 70%)",
+          }}
+        />
+        {/* Atmospheric glow matching footer dark blue */}
+        <div
+          className="pointer-events-none absolute -bottom-16 left-[25%] h-[460px] w-[460px] rounded-full"
+          style={{
+            background: "radial-gradient(circle, rgba(0,82,212,0.25) 0%, transparent 70%)",
+          }}
+        />
+      </div>
 
       <div
         ref={sliderRef}
-        className="flex h-full w-max items-stretch gap-[6vw] px-[5vw] pt-[78px] sm:pt-[84px] lg:pt-20 pb-4 transform-gpu will-change-transform"
+        className="relative z-10 flex h-full w-max items-stretch gap-[6vw] px-[5vw] pt-[78px] sm:pt-[84px] lg:pt-20 pb-4 transform-gpu will-change-transform"
       >
-        {/* â”€â”€ Intro panel (moved upward on mobile/tab with safe clearance below navbar) â”€â”€ */}
+        {/* ── Intro panel (moved upward on mobile/tab with safe clearance below navbar) ── */}
         <div className="flex w-[90vw] shrink-0 snap-start items-start pt-2 sm:pt-4 lg:items-center lg:pt-0">
-          <div className="mx-auto grid w-full max-w-[1200px] items-center gap-5 sm:gap-6 md:grid-cols-[1.1fr_1fr] md:gap-8 lg:gap-14">
+          <div className="mx-auto grid w-full max-w-[1400px] items-center gap-6 sm:gap-8 md:grid-cols-[0.88fr_1.12fr] lg:grid-cols-[0.82fr_1.18fr] xl:grid-cols-[0.78fr_1.22fr] md:gap-10 lg:gap-16">
             <div className="max-w-xl">
               <div
                 data-intro
@@ -290,18 +388,19 @@ export default function HowWeWorkTimeline({
                   }}
                 />
                 <span
-                  className="font-mono text-xs font-semibold uppercase tracking-[0.18em]"
+                  id="how-we-work-badge"
+                  className="font-mono text-xs font-semibold uppercase tracking-[0.18em] transition-colors duration-300"
                   style={{ color: "#0052D4" }}
                 >
                   Our Process
                 </span>
               </div>
 
-              {/* Exact heading font size, weight, line-height, and spacing matching block portfolio */}
+              {/* Exact heading font size, weight, line-height, with smooth color shift */}
               <h2
                 id="how-we-work-title"
                 data-intro
-                className={`${introHidden} font-extrabold text-[#0F172A]`}
+                className={`${introHidden} font-extrabold text-[#0F172A] transition-colors duration-300`}
                 style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   fontSize: "clamp(1.85rem, 3.4vw, 2.85rem)",
@@ -313,10 +412,11 @@ export default function HowWeWorkTimeline({
                 {renderTitle()}
               </h2>
 
-              {/* Exact description font size, weight, line-height, and color matching block portfolio */}
+              {/* Exact description with smooth color shift */}
               <p
+                id="how-we-work-desc"
                 data-intro
-                className={`${introHidden} font-semibold text-[#1E293B]`}
+                className={`${introHidden} font-semibold text-[#1E293B] transition-colors duration-300`}
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontSize: "clamp(0.95rem, 1.15vw, 1.05rem)",
@@ -328,30 +428,28 @@ export default function HowWeWorkTimeline({
                 {subtitle}
               </p>
 
-              {/* Tells people the section moves sideways as they scroll down */}
               <div
                 data-intro
                 className={`${introHidden} mt-5 inline-flex items-center gap-2 text-sm font-semibold md:mt-7`}
                 style={{ color: "var(--tl-accent)", fontFamily: "'Inter', sans-serif" }}
-              >
-                
-              </div>
+              />
             </div>
 
-            {/* Image framed with a brand-gradient edge */}
+            {/* Image framed with a brand-gradient edge - significantly enlarged in desktop view */}
             <div
+              ref={imageWrapRef}
               data-intro
-              className={`${introHidden} rounded-[1.4rem] sm:rounded-[1.6rem] p-[3px] shadow-xl max-w-md sm:max-w-lg md:max-w-none w-full`}
+              className={`${introHidden} rounded-[1.6rem] sm:rounded-[2rem] p-[3.5px] shadow-[0_20px_50px_-10px_rgba(0,112,198,0.35)] max-w-md sm:max-w-lg md:max-w-none w-full`}
               style={{ background: BRAND_GRADIENT }}
             >
-              <div className="relative aspect-[16/10] max-h-[22svh] sm:max-h-[28svh] md:max-h-[42svh] lg:max-h-[54svh] w-full overflow-hidden rounded-[1.2rem] sm:rounded-[1.4rem] bg-white">
+              <div className="relative aspect-[16/10] max-h-[22svh] sm:max-h-[28svh] md:max-h-[50svh] lg:max-h-[64svh] xl:max-h-[70svh] w-full overflow-hidden rounded-[1.4rem] sm:rounded-[1.8rem] bg-slate-900">
                 <Image
                   src={imageUrl}
                   alt={imageAlt}
                   fill
                   priority
                   draggable={false}
-                  sizes="(min-width: 768px) 45vw, 90vw"
+                  sizes="(min-width: 1280px) 55vw, (min-width: 768px) 50vw, 90vw"
                   className="object-cover"
                 />
               </div>
@@ -359,7 +457,7 @@ export default function HowWeWorkTimeline({
           </div>
         </div>
 
-        {/* â”€â”€ Steps track â”€â”€ */}
+        {/* ── Steps track ── */}
         <ol ref={trackRef} className="relative flex h-full list-none p-0">
           {/* Journey line */}
           <div
@@ -367,8 +465,8 @@ export default function HowWeWorkTimeline({
             className="pointer-events-none absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2"
           >
             <div
-              className="absolute inset-0 rounded-full opacity-20"
-              style={{ backgroundColor: "var(--tl-accent)" }}
+              className="absolute inset-0 rounded-full opacity-30"
+              style={{ backgroundColor: "rgba(255, 255, 255, 0.25)" }}
             />
             <div
               ref={fillRef}
@@ -376,11 +474,12 @@ export default function HowWeWorkTimeline({
               style={{
                 background:
                   "linear-gradient(90deg, #0052D4 0%, #0070C6 50%, #00C2CE 100%)",
+                boxShadow: "0 0 12px rgba(0, 194, 206, 0.6)",
               }}
             />
           </div>
 
-          {/* Glowing head that leads the line (outer div moves, inner span centers) */}
+          {/* Glowing head that leads the line */}
           <div
             ref={headRef}
             aria-hidden
@@ -391,7 +490,7 @@ export default function HowWeWorkTimeline({
               style={{
                 background: "#00C2CE",
                 boxShadow:
-                  "0 0 0 5px rgba(0,194,206,0.25), 0 0 18px rgba(0,194,206,0.7)",
+                  "0 0 0 5px rgba(0,194,206,0.35), 0 0 20px rgba(0,194,206,0.9)",
               }}
             />
           </div>
@@ -403,38 +502,41 @@ export default function HowWeWorkTimeline({
             const card = (
               <div
                 data-card
-                className={`w-[min(78vw,24rem)] pl-5 will-change-[transform,opacity] sm:pl-6 ${
-                  isTop ? "pb-6 md:pb-8" : "pt-6 md:pt-8"
+                className={`w-[min(78vw,24.5rem)] ml-3 sm:ml-4 rounded-2xl border border-white/10 p-5 sm:p-6 backdrop-blur-md shadow-2xl will-change-[transform,opacity] transition-all duration-300 ${
+                  isTop ? "mb-3 md:mb-4" : "mt-3 md:mt-4"
                 }`}
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(11, 15, 25, 0.9) 100%)",
+                  boxShadow:
+                    "0 14px 34px -8px rgba(0, 82, 212, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12)",
+                }}
               >
-                {/* Large gradient numeral - sized & spaced so it never crops under navbar */}
+                {/* Large gradient numeral with luminous cyan glow */}
                 <p
                   className="mb-1 text-[clamp(2.15rem,3.4vw,3.15rem)] font-extrabold leading-none tracking-tight tabular-nums"
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    background: BRAND_GRADIENT,
+                    background: "linear-gradient(135deg, #00C2CE 0%, #0070C6 50%, #60A5FA 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
+                    filter: "drop-shadow(0 2px 8px rgba(0,194,206,0.35))",
                   }}
                 >
                   {step.number}
                 </p>
 
-                {/* Focus area as a pill */}
+                {/* Focus area as a luminous pill */}
                 <p
-                  className="mb-2 inline-block rounded-full border bg-white/60 px-3 py-0.5 text-[0.72rem] font-semibold text-slate-800 sm:text-[0.76rem]"
-                  style={{
-                    borderColor:
-                      "color-mix(in srgb, var(--tl-accent) 28%, transparent)",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
+                  className="mb-2.5 inline-block rounded-full border border-cyan-400/30 bg-cyan-950/50 px-3 py-0.5 text-[0.72rem] font-semibold text-cyan-300 sm:text-[0.76rem] shadow-[0_0_12px_rgba(0,194,206,0.15)]"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
                 >
                   {step.focus}
                 </p>
 
                 <h3
-                  className="mb-1.5 text-[clamp(1.15rem,1.6vw,1.55rem)] font-extrabold leading-tight tracking-tight text-slate-900 sm:mb-2"
+                  className="mb-2 text-[clamp(1.15rem,1.6vw,1.55rem)] font-extrabold leading-tight tracking-tight text-white sm:mb-2.5"
                   style={{
                     fontFamily: "'Plus Jakarta Sans', sans-serif",
                     fontWeight: 800,
@@ -443,7 +545,7 @@ export default function HowWeWorkTimeline({
                   {step.title}
                 </h3>
                 <p
-                  className="max-w-[23rem] text-[0.8rem] font-medium leading-relaxed text-slate-800 sm:text-[0.875rem]"
+                  className="max-w-[23rem] text-[0.82rem] font-normal leading-relaxed text-slate-300 sm:text-[0.88rem]"
                   style={{ fontFamily: "'Inter', sans-serif" }}
                 >
                   {step.content}
@@ -455,13 +557,14 @@ export default function HowWeWorkTimeline({
               <div
                 data-stem
                 aria-hidden
-                className={`absolute left-0 h-6 w-[2px] will-change-transform md:h-8 ${
-                  isTop ? "bottom-0 origin-bottom" : "top-0 origin-top"
+                className={`absolute left-0 w-[2px] will-change-transform ${
+                  isTop ? "bottom-0 h-6 md:h-8 origin-bottom" : "top-0 h-6 md:h-8 origin-top"
                 }`}
                 style={{
                   background: isTop
-                    ? "linear-gradient(0deg, #0052D4, #00C2CE)"
-                    : "linear-gradient(180deg, #0052D4, #00C2CE)",
+                    ? "linear-gradient(0deg, #00C2CE, #0052D4)"
+                    : "linear-gradient(180deg, #00C2CE, #0052D4)",
+                  boxShadow: "0 0 8px rgba(0, 194, 206, 0.4)",
                 }}
               />
             );
@@ -483,7 +586,7 @@ export default function HowWeWorkTimeline({
                   )}
                 </div>
 
-                {/* Node: white core, gradient ring, soft halo */}
+                {/* Node: white core, cyan border, dark halo with glow */}
                 <div className="relative">
                   <span
                     data-dot
@@ -491,8 +594,8 @@ export default function HowWeWorkTimeline({
                     className="absolute left-0 top-0 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full will-change-transform"
                     style={{
                       background: "#FFFFFF",
-                      border: "4px solid var(--tl-accent)",
-                      boxShadow: `0 0 0 4px ${backgroundColor}, 0 4px 14px rgba(0,102,238,0.35)`,
+                      border: "3.5px solid #00C2CE",
+                      boxShadow: "0 0 0 4px rgba(11, 15, 25, 0.9), 0 0 16px rgba(0, 194, 206, 0.8)",
                     }}
                   />
                 </div>

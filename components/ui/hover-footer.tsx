@@ -223,7 +223,7 @@ export const FooterBackgroundGradient = () => {
       className="absolute inset-0 z-0 pointer-events-none"
       style={{
         background:
-          "radial-gradient(125% 125% at 50% 10%, rgba(11, 15, 25, 0.98) 45%, rgba(0, 112, 198, 0.3) 100%)",
+          "radial-gradient(130% 120% at 50% 0%, rgba(11, 15, 25, 0.95) 25%, rgba(0, 82, 212, 0.45) 60%, rgba(0, 112, 198, 0.35) 80%, rgba(0, 194, 206, 0.3) 100%)",
       }}
     />
   );

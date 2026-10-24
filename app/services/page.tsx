@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface ServiceItem {a
+interface ServiceItem {
   title: string;
   description: string;
   features: string[];
@@ -155,6 +155,7 @@ export default function ServicesPage() {
   return (
     <>
       <style>{`
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
         /* Hero */
         .srv-hero {
@@ -184,9 +185,14 @@ export default function ServicesPage() {
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .srv-hero-sub {
-          font-size: 1.125rem; line-height: 1.65; color: #CBD5E1;
-          opacity: 0.9; max-width: 576px; margin-bottom: 32px;
-          font-family: var(--font-space-grotesk), sans-serif;
+          font-family: 'Inter', sans-serif;
+          font-size: 1.125rem;
+          line-height: 1.65;
+          color: #CBD5E1;
+          opacity: 0.9;
+          max-width: 576px;
+          margin: 0 0 32px;
+          text-align: left;
         }
 
         /* Bottom section with light background */

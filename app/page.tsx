@@ -4,6 +4,7 @@ import MissionVisionSection from '@/app/components/MissionVisionSection';
 import Portfolio9 from '@/components/ui/block-portfolio-9';
 import TestimonialsSection from '@/app/components/TestimonialsSection';
 import HowWeWorkTimeline from '@/components/ui/timeline';
+import { HeroSection as ProductMockupSection } from '@/components/ui/hero-with-product-mockup';
 
 export default function HomePage() {
   return (
@@ -58,6 +59,11 @@ export default function HomePage() {
       {/* Testimonials Marquee Section */}
       <div className="relative z-[10] w-full bg-[#ffebeb] border-t border-slate-200/60">
         <TestimonialsSection />
+      </div>
+
+      {/* Product & Enterprise Platform Showcase Section */}
+      <div className="relative z-[10] w-full bg-[#ffebeb] border-t border-slate-200/60">
+        <ProductMockupSection />
       </div>
 
     </div>
