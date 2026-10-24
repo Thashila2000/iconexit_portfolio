@@ -362,13 +362,103 @@ export default function ServicesPage() {
         @media (max-width: 960px) {
           .srv-panel { grid-template-columns: 1fr; gap: 36px; }
         }
+
+        /* ─────────────────────────────────────────────────────────────
+           MOBILE: bubbles → title/description → feature box all fit in
+           ONE screen. Smaller type + tighter spacing, nothing scrolls
+           sideways, and nothing jumps when you switch services.
+           ───────────────────────────────────────────────────────────── */
         @media (max-width: 768px) {
           .srv-hero { padding: 130px 24px 50px; }
-          .srv-tabs-wrap { padding: 32px 24px 0; }
-          .srv-panel-wrap { padding: 36px 24px 80px; }
-          .srv-panel-title { font-size: 2rem; }
-          .srv-feature-box { padding: 28px 24px 24px; }
+
+          .srv-bottom {
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+          }
+
+          /* Bubbles wrap onto rows so every service is visible at once */
+          .srv-tabs-wrap { padding: 18px 16px 0; overflow: visible; }
+          .srv-tabs {
+            flex-wrap: wrap;
+            min-width: 0;
+            gap: 7px;
+            padding-bottom: 0;
+          }
+          .srv-tab {
+            padding: 7px 13px;
+            font-size: 0.72rem;
+            border-width: 1px;
+            box-shadow: none;
+          }
+          .srv-tab:hover,
+          .srv-tab.active { transform: none; }
+          .srv-tab.active { box-shadow: 0 3px 10px rgba(0, 112, 198, 0.3); }
+
+          .srv-panel-wrap {
+            flex: 1;
+            padding: 16px 16px 20px;
+          }
+          .srv-panel { grid-template-columns: 1fr; gap: 14px; }
+
+          /* Icon sits beside the title instead of above it */
+          .srv-panel-left {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            column-gap: 12px;
+            row-gap: 8px;
+            align-items: center;
+          }
+          .srv-panel-icon-wrap {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            margin-bottom: 0;
+          }
+          .srv-panel-icon-wrap svg { width: 22px; height: 22px; }
+          .srv-panel-title {
+            font-size: 1.3rem;
+            line-height: 1.15;
+            margin: 0;
+          }
+          .srv-panel-desc {
+            grid-column: 1 / -1;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            max-width: none;
+            min-height: 6em; /* reserves 4 lines so the box below doesn't jump */
+          }
+
+          /* Compact feature box */
+          .srv-feature-box {
+            padding: 14px 16px 8px;
+            border-radius: 18px;
+            box-shadow: 0 10px 24px rgba(0, 82, 212, 0.25);
+          }
+          .srv-feature-box-header { padding-bottom: 10px; margin-bottom: 2px; }
+          .srv-feature-box-pill { font-size: 0.6rem; padding: 3px 10px; letter-spacing: 0.12em; }
+          .srv-feature-box-count { font-size: 0.7rem; }
+          .srv-feature-item {
+            gap: 10px;
+            padding: 7px 0;
+            font-size: 0.78rem;
+            line-height: 1.3;
+          }
+          .srv-feature-item:hover { transform: none; }
+          .srv-feature-bullet { width: 6px; height: 6px; box-shadow: 0 0 6px rgba(255, 255, 255, 0.9); }
         }
+
+        /* Shorter phones (iPhone SE class): squeeze a little more */
+        @media (max-width: 768px) and (max-height: 700px) {
+          .srv-tabs-wrap { padding-top: 12px; }
+          .srv-tab { padding: 6px 11px; font-size: 0.68rem; }
+          .srv-panel-wrap { padding-top: 12px; padding-bottom: 14px; }
+          .srv-panel { gap: 10px; }
+          .srv-panel-title { font-size: 1.15rem; }
+          .srv-panel-desc { font-size: 0.75rem; line-height: 1.45; min-height: 5.8em; }
+          .srv-feature-box { padding: 12px 14px 6px; }
+          .srv-feature-item { padding: 5px 0; font-size: 0.74rem; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           * { animation: none !important; transition-duration: 0.01ms !important; }
         }
