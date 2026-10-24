@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface ServiceItem {
+interface ServiceItem {a
   title: string;
   description: string;
   features: string[];
@@ -140,6 +140,17 @@ export default function ServicesPage() {
   const tabsRef = useRef<HTMLDivElement>(null);
 
   const current = services[active];
+
+  // Keep the selected pill visible inside the swipeable row (skip first render).
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    const btn = tabsRef.current?.children[active] as HTMLElement | undefined;
+    btn?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [active]);
 
   return (
     <>
@@ -364,99 +375,80 @@ export default function ServicesPage() {
         }
 
         /* ─────────────────────────────────────────────────────────────
-           MOBILE: bubbles → title/description → feature box all fit in
-           ONE screen. Smaller type + tighter spacing, nothing scrolls
-           sideways, and nothing jumps when you switch services.
+           MOBILE: same look as before (icon above title, large pills,
+           roomy feature box) but the whole section is sized in em, and
+           the em itself is derived from the screen height. So it always
+           fills the visible screen and nothing is ever cropped.
            ───────────────────────────────────────────────────────────── */
         @media (max-width: 768px) {
           .srv-hero { padding: 130px 24px 50px; }
 
           .srv-bottom {
-            min-height: 100svh;
+            /* Height of your fixed navbar. Adjust if yours differs. */
+            --srv-header-h: 80px;
+            /* 1em = (visible screen height) / 46. Capped so tall screens don't get huge. */
+            font-size: clamp(10.5px, calc((100svh - var(--srv-header-h)) / 46), 16px);
+            min-height: calc(100svh - var(--srv-header-h));
+            scroll-margin-top: var(--srv-header-h);
             display: flex;
             flex-direction: column;
           }
 
-          /* Bubbles wrap onto rows so every service is visible at once */
-          .srv-tabs-wrap { padding: 18px 16px 0; overflow: visible; }
-          .srv-tabs {
-            flex-wrap: wrap;
-            min-width: 0;
-            gap: 7px;
-            padding-bottom: 0;
+          /* Pills: still one swipeable row, like before */
+          .srv-tabs-wrap {
+            padding: 0.9em 1em 0;
+            -webkit-overflow-scrolling: touch;
+            scroll-padding-inline: 1em;
           }
+          .srv-tabs { gap: 0.6em; padding: 0.4em 0.2em 0.5em 0; }
           .srv-tab {
-            padding: 7px 13px;
-            font-size: 0.72rem;
-            border-width: 1px;
-            box-shadow: none;
+            padding: 0.7em 1.3em;
+            font-size: 0.9em;
+            line-height: 1.2;
           }
           .srv-tab:hover,
           .srv-tab.active { transform: none; }
-          .srv-tab.active { box-shadow: 0 3px 10px rgba(0, 112, 198, 0.3); }
 
-          .srv-panel-wrap {
-            flex: 1;
-            padding: 16px 16px 20px;
-          }
-          .srv-panel { grid-template-columns: 1fr; gap: 14px; }
+          .srv-panel-wrap { flex: 1; padding: 0.9em 1em 1.2em; }
+          .srv-panel { grid-template-columns: 1fr; gap: 1.1em; }
 
-          /* Icon sits beside the title instead of above it */
-          .srv-panel-left {
-            display: grid;
-            grid-template-columns: 40px 1fr;
-            column-gap: 12px;
-            row-gap: 8px;
-            align-items: center;
-          }
           .srv-panel-icon-wrap {
-            width: 40px; height: 40px;
-            border-radius: 12px;
-            margin-bottom: 0;
+            width: 3.2em; height: 3.2em;
+            border-radius: 0.9em;
+            margin-bottom: 0.8em;
           }
-          .srv-panel-icon-wrap svg { width: 22px; height: 22px; }
+          .srv-panel-icon-wrap svg { width: 1.7em; height: 1.7em; }
+
           .srv-panel-title {
-            font-size: 1.3rem;
-            line-height: 1.15;
-            margin: 0;
+            font-size: 1.6em;
+            line-height: 1.12;
+            margin-bottom: 0.5em;
           }
           .srv-panel-desc {
-            grid-column: 1 / -1;
-            font-size: 0.8rem;
-            line-height: 1.5;
+            font-size: 0.95em;
+            line-height: 1.55;
             max-width: none;
-            min-height: 6em; /* reserves 4 lines so the box below doesn't jump */
+            min-height: 6.2em; /* 4 lines reserved: box below never jumps between tabs */
           }
 
-          /* Compact feature box */
           .srv-feature-box {
-            padding: 14px 16px 8px;
-            border-radius: 18px;
-            box-shadow: 0 10px 24px rgba(0, 82, 212, 0.25);
+            padding: 1.3em 1.4em 0.7em;
+            border-radius: 1.4em;
           }
-          .srv-feature-box-header { padding-bottom: 10px; margin-bottom: 2px; }
-          .srv-feature-box-pill { font-size: 0.6rem; padding: 3px 10px; letter-spacing: 0.12em; }
-          .srv-feature-box-count { font-size: 0.7rem; }
+          .srv-feature-box-header { padding-bottom: 0.9em; margin-bottom: 0.2em; }
+          .srv-feature-box-pill {
+            font-size: 0.62em;
+            padding: 0.4em 1em;
+          }
+          .srv-feature-box-count { font-size: 0.8em; }
           .srv-feature-item {
-            gap: 10px;
-            padding: 7px 0;
-            font-size: 0.78rem;
+            gap: 0.9em;
+            padding: 0.62em 0;
+            font-size: 0.92em;
             line-height: 1.3;
           }
           .srv-feature-item:hover { transform: none; }
-          .srv-feature-bullet { width: 6px; height: 6px; box-shadow: 0 0 6px rgba(255, 255, 255, 0.9); }
-        }
-
-        /* Shorter phones (iPhone SE class): squeeze a little more */
-        @media (max-width: 768px) and (max-height: 700px) {
-          .srv-tabs-wrap { padding-top: 12px; }
-          .srv-tab { padding: 6px 11px; font-size: 0.68rem; }
-          .srv-panel-wrap { padding-top: 12px; padding-bottom: 14px; }
-          .srv-panel { gap: 10px; }
-          .srv-panel-title { font-size: 1.15rem; }
-          .srv-panel-desc { font-size: 0.75rem; line-height: 1.45; min-height: 5.8em; }
-          .srv-feature-box { padding: 12px 14px 6px; }
-          .srv-feature-item { padding: 5px 0; font-size: 0.74rem; }
+          .srv-feature-bullet { width: 0.5em; height: 0.5em; }
         }
 
         @media (prefers-reduced-motion: reduce) {
