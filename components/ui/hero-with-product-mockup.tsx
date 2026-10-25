@@ -68,8 +68,8 @@ const sectionVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.1,
+      staggerChildren: 0.08,
+      delayChildren: 0.04,
     },
   },
 };
@@ -79,19 +79,19 @@ const leftColVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.08,
     },
   },
 };
 
 const fadeUpVariants: Variants = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.7,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 0.45,
+      ease: [0.16, 1, 0.3, 1],
     },
   },
 };
@@ -101,64 +101,64 @@ const mockupsContainerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.18,
-      delayChildren: 0.15,
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
     },
   },
 };
 
 const desktopWindowVariants: Variants = {
-  hidden: { opacity: 0, y: 45, scale: 0.94 },
+  hidden: { opacity: 0, y: 24, scale: 0.97 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.85,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1],
     },
   },
 };
 
 const backCard1Variants: Variants = {
-  hidden: { opacity: 0, rotate: 0, scale: 0.92 },
+  hidden: { opacity: 0, rotate: 0, scale: 0.95 },
   visible: {
     opacity: 0.7,
     rotate: 6,
     scale: 1,
     transition: {
-      duration: 0.9,
-      delay: 0.25,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 0.6,
+      delay: 0.12,
+      ease: [0.16, 1, 0.3, 1],
     },
   },
 };
 
 const backCard2Variants: Variants = {
-  hidden: { opacity: 0, rotate: 0, scale: 0.88 },
+  hidden: { opacity: 0, rotate: 0, scale: 0.92 },
   visible: {
     opacity: 0.5,
     rotate: 12,
     scale: 1,
     transition: {
-      duration: 1.0,
-      delay: 0.35,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 0.65,
+      delay: 0.18,
+      ease: [0.16, 1, 0.3, 1],
     },
   },
 };
 
 const phoneVariants: Variants = {
-  hidden: { opacity: 0, y: 70, x: 30, scale: 0.9 },
+  hidden: { opacity: 0, y: 35, x: 15, scale: 0.95 },
   visible: {
     opacity: 1,
     y: 0,
     x: 0,
     scale: 1,
     transition: {
-      duration: 0.85,
-      delay: 0.35,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 0.6,
+      delay: 0.18,
+      ease: [0.16, 1, 0.3, 1],
     },
   },
 };
@@ -211,13 +211,11 @@ export function HeroSection({
     <motion.section
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.05, margin: "0px 0px -40px 0px" }}
       variants={sectionVariants}
       className="relative w-full overflow-hidden bg-[#ffebeb] px-4 py-14 sm:px-6 sm:py-24 lg:px-12"
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600&display=swap');
-
         .hero-title { font-family: 'Plus Jakarta Sans', sans-serif; }
         .hero-desc  { font-family: 'Inter', sans-serif; }
 
@@ -260,6 +258,15 @@ export function HeroSection({
           transform: translate3d(0, 0, 0);
           backface-visibility: hidden;
           -webkit-backface-visibility: hidden;
+        }
+
+        @media (max-width: 768px) {
+          .hero-blob-1,
+          .hero-blob-2 {
+            animation: none !important;
+            transform: none !important;
+            will-change: auto !important;
+          }
         }
 
         /* ── CTA: gradient pan, lift, glow, shine sweep, arrow nudge ── */
@@ -323,42 +330,24 @@ export function HeroSection({
         }
       `}</style>
 
-      {/* ── Left Soft Blue/Cyan Organic Shape (matching Mission & Vision background) ── */}
-      <motion.div
+      {/* ── Left Soft Blue/Cyan Organic Shape ── */}
+      <div
         aria-hidden
-        variants={{
-          hidden: { opacity: 0, scale: 0.8 },
-          visible: {
-            opacity: 0.65,
-            scale: 1,
-            transition: { duration: 1.2, ease: "easeOut" },
-          },
-        }}
-        className="pointer-events-none absolute -top-16 -left-16 size-72 sm:size-96 rounded-full hero-blob-1"
+        className="pointer-events-none absolute -top-16 -left-16 size-72 sm:size-96 rounded-full hero-blob-1 opacity-60 sm:opacity-65"
         style={{
           background:
             "radial-gradient(circle, rgba(0, 194, 206, 0.28) 0%, rgba(0, 112, 198, 0.12) 45%, transparent 70%)",
-          transform: "translate3d(0, 0, 0)",
         }}
       />
 
-      {/* ── Right Pink/Magenta Organic Blob Shape (matching Mission & Vision background) ── */}
-      <motion.div
+      {/* ── Right Pink/Magenta Organic Blob Shape ── */}
+      <div
         aria-hidden
-        variants={{
-          hidden: { opacity: 0, scale: 0.8 },
-          visible: {
-            opacity: 0.8,
-            scale: 1,
-            transition: { duration: 1.2, ease: "easeOut" },
-          },
-        }}
-        className="pointer-events-none absolute -bottom-16 -right-12 h-96 w-80 sm:h-[500px] sm:w-[480px] hero-blob-2"
+        className="pointer-events-none absolute -bottom-16 -right-12 h-96 w-80 sm:h-[500px] sm:w-[480px] hero-blob-2 opacity-70 sm:opacity-80"
         style={{
           background:
             "radial-gradient(circle at 60% 60%, rgba(255, 140, 210, 0.45) 0%, rgba(244, 114, 182, 0.3) 35%, rgba(251, 113, 133, 0.15) 52%, transparent 72%)",
           borderRadius: "62% 38% 70% 30% / 45% 58% 42% 55%",
-          transform: "translate3d(0, 0, 0)",
         }}
       />
 
@@ -411,22 +400,22 @@ export function HeroSection({
 
       <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-between gap-16 lg:flex-row lg:gap-16">
         {/* ───────── Left: heading, description, CTA ───────── */}
-        <motion.div variants={leftColVariants} className="max-w-2xl text-left">
+        <motion.div variants={leftColVariants} className="max-w-2xl text-left will-change-[transform,opacity]">
           <motion.h2
             variants={fadeUpVariants}
-            className="hero-title text-[2.15rem] font-extrabold leading-[1.1] tracking-[-0.025em] text-[#0A101D] sm:text-5xl lg:text-[3.5rem]"
+            className="hero-title text-[2.15rem] font-extrabold leading-[1.1] tracking-[-0.025em] text-[#0A101D] sm:text-5xl lg:text-[3.5rem] transform-gpu will-change-[transform,opacity]"
           >
             {renderTitle(title, highlights, gradient)}
           </motion.h2>
 
           <motion.p
             variants={fadeUpVariants}
-            className="hero-desc mt-5 max-w-xl text-[1.05rem] font-medium leading-[1.7] text-slate-800 sm:mt-6 sm:text-[1.15rem]"
+            className="hero-desc mt-5 max-w-xl text-[1.05rem] font-medium leading-[1.7] text-slate-800 sm:mt-6 sm:text-[1.15rem] transform-gpu will-change-[transform,opacity]"
           >
             {description}
           </motion.p>
 
-          <motion.div variants={fadeUpVariants} className="mt-8 sm:mt-10">
+          <motion.div variants={fadeUpVariants} className="mt-8 sm:mt-10 transform-gpu will-change-[transform,opacity]">
             {primaryButtonHref ? (
               <Button asChild size="lg" className="hero-cta cursor-pointer">
                 <Link href={primaryButtonHref}>{ctaInner}</Link>
