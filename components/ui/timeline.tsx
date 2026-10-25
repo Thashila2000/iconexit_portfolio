@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   type CSSProperties,
@@ -114,8 +114,6 @@ export default function HowWeWorkTimeline({
   const trackRef = useRef<HTMLOListElement>(null);
   const fillRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
-  const imageWrapRef = useRef<HTMLDivElement>(null);
-  const darkBgRef = useRef<HTMLDivElement>(null);
 
   const reducedMotion = usePrefersReducedMotion();
 
@@ -128,7 +126,6 @@ export default function HowWeWorkTimeline({
       const track = trackRef.current;
       const fill = fillRef.current;
       const head = headRef.current;
-      const darkBg = darkBgRef.current;
       if (!section || !slider || !track || !fill || !head) return;
 
       /* 0 ── Intro entrance: plays ONCE, only when the section scrolls into view. */
@@ -152,92 +149,38 @@ export default function HowWeWorkTimeline({
       const getDistance = () =>
         Math.max(0, slider.scrollWidth - window.innerWidth);
 
-      /* 1 ── The pinned pan, 1:1 with scroll (no smoothing lag). */
+      // Light scrub smoothing on touch/mobile dampens inertial scroll jitter
+      const isTouch =
+        typeof window !== "undefined" &&
+        ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+      const scrubSpeed = isTouch ? 0.35 : 0.6;
+
+      /* 1 ── The pinned pan across horizontal phases ── */
       const move = gsap.to(slider, {
         x: () => -getDistance(),
         ease: "none",
+        force3D: true,
         scrollTrigger: {
           trigger: section,
           start: "top top",
           end: () => `+=${getDistance()}`,
           pin: true,
-          scrub: true,
+          scrub: scrubSpeed,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-        },
-      });
-
-      /* 1.5 ── Dark blue gradient sweep from right side next to image moving left with timeline ── */
-      const getInitialDarkBgX = () => {
-        if (imageWrapRef.current) {
-          const rect = imageWrapRef.current.getBoundingClientRect();
-          return Math.max(window.innerWidth * 0.45, rect.right);
-        }
-        return window.innerWidth * 0.85;
-      };
-
-      if (darkBg) {
-        gsap.fromTo(
-          darkBg,
-          { x: () => getInitialDarkBgX() },
-          {
-            x: () => getInitialDarkBgX() - getDistance(),
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: () => `+=${getDistance()}`,
-              scrub: true,
-              invalidateOnRefresh: true,
-            },
-          }
-        );
-      }
-
-      /* Dynamic text color shift as dark blue gradient washes over intro panel */
-      gsap.to("#how-we-work-title", {
-        color: "#FFFFFF",
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: () => `+=${window.innerWidth * 0.75}`,
-          scrub: true,
-        },
-      });
-
-      gsap.to("#how-we-work-desc", {
-        color: "#CBD5E1",
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: () => `+=${window.innerWidth * 0.75}`,
-          scrub: true,
-        },
-      });
-
-      gsap.to("#how-we-work-badge", {
-        color: "#00C2CE",
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: () => `+=${window.innerWidth * 0.75}`,
-          scrub: true,
         },
       });
 
       /* 2 ── Journey line: fill + glowing head travel together (transforms only). */
       gsap
         .timeline({
-          defaults: { ease: "none" },
+          defaults: { ease: "none", force3D: true },
           scrollTrigger: {
             trigger: track,
             containerAnimation: move,
             start: "left 92%",
             end: "right 100%",
-            scrub: true,
+            scrub: scrubSpeed,
             invalidateOnRefresh: true,
           },
         })
@@ -254,26 +197,26 @@ export default function HowWeWorkTimeline({
 
         gsap
           .timeline({
-            defaults: { ease: "none" },
+            defaults: { ease: "none", force3D: true },
             scrollTrigger: {
               trigger: li,
               containerAnimation: move,
               start: "left 92%",
-              end: "left 68%",
-              scrub: true,
+              end: "left 70%",
+              scrub: scrubSpeed,
             },
           })
           .fromTo(stem, { scaleY: 0 }, { scaleY: 1, duration: 0.5 }, 0)
           .fromTo(
             dot,
             { scale: 0 },
-            { scale: 1, duration: 0.4, ease: "back.out(2)" },
+            { scale: 1, duration: 0.4, ease: "power1.out" },
             0.15
           )
           .fromTo(
             card,
-            { opacity: 0, y: 24 },
-            { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
+            { opacity: 0, y: 22 },
+            { opacity: 1, y: 0, duration: 0.8, ease: "power1.out" },
             0.1
           );
       });
@@ -329,47 +272,9 @@ export default function HowWeWorkTimeline({
         .tl-intro-hidden { opacity: 0; transform: translate3d(0, 28px, 0); }
       `}</style>
 
-      {/* ── Dark blue gradient background layer matching footer ── */}
-      <div
-        ref={darkBgRef}
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-0 z-0 will-change-transform"
-        style={{
-          width: "400vw",
-          background: "#0B0F19",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 80px, black 240px)",
-          maskImage:
-            "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 80px, black 240px)",
-        }}
-      >
-        {/* Footer atmospheric radial gradient */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(130% 120% at 65% 25%, rgba(0, 194, 206, 0.28) 0%, rgba(0, 112, 198, 0.42) 35%, rgba(0, 82, 212, 0.52) 60%, rgba(11, 15, 25, 0.98) 100%)",
-          }}
-        />
-        {/* Atmospheric glow matching footer right teal glow */}
-        <div
-          className="pointer-events-none absolute -top-12 right-[20%] h-[420px] w-[420px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, rgba(0,194,206,0.18) 0%, transparent 70%)",
-          }}
-        />
-        {/* Atmospheric glow matching footer dark blue */}
-        <div
-          className="pointer-events-none absolute -bottom-16 left-[25%] h-[460px] w-[460px] rounded-full"
-          style={{
-            background: "radial-gradient(circle, rgba(0,82,212,0.25) 0%, transparent 70%)",
-          }}
-        />
-      </div>
-
       <div
         ref={sliderRef}
-        className="relative z-10 flex h-full w-max items-stretch gap-[6vw] px-[5vw] pt-[78px] sm:pt-[84px] lg:pt-20 pb-4 transform-gpu will-change-transform"
+        className="relative z-10 flex h-full w-max items-stretch gap-[6vw] px-[5vw] pt-[78px] sm:pt-[84px] lg:pt-20 pb-4 will-change-transform"
       >
         {/* ── Intro panel (moved upward on mobile/tab with safe clearance below navbar) ── */}
         <div className="flex w-[90vw] shrink-0 snap-start items-start pt-2 sm:pt-4 lg:items-center lg:pt-0">
@@ -389,18 +294,18 @@ export default function HowWeWorkTimeline({
                 />
                 <span
                   id="how-we-work-badge"
-                  className="font-mono text-xs font-semibold uppercase tracking-[0.18em] transition-colors duration-300"
+                  className="font-mono text-xs font-semibold uppercase tracking-[0.18em]"
                   style={{ color: "#0052D4" }}
                 >
                   Our Process
                 </span>
               </div>
 
-              {/* Exact heading font size, weight, line-height, with smooth color shift */}
+              {/* Exact heading font size, weight, line-height */}
               <h2
                 id="how-we-work-title"
                 data-intro
-                className={`${introHidden} font-extrabold text-[#0F172A] transition-colors duration-300`}
+                className={`${introHidden} font-extrabold text-[#0F172A]`}
                 style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
                   fontSize: "clamp(1.85rem, 3.4vw, 2.85rem)",
@@ -412,11 +317,11 @@ export default function HowWeWorkTimeline({
                 {renderTitle()}
               </h2>
 
-              {/* Exact description with smooth color shift */}
+              {/* Exact description */}
               <p
                 id="how-we-work-desc"
                 data-intro
-                className={`${introHidden} font-semibold text-[#1E293B] transition-colors duration-300`}
+                className={`${introHidden} font-semibold text-[#1E293B]`}
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontSize: "clamp(0.95rem, 1.15vw, 1.05rem)",
@@ -430,19 +335,21 @@ export default function HowWeWorkTimeline({
 
               <div
                 data-intro
-                className={`${introHidden} mt-5 inline-flex items-center gap-2 text-sm font-semibold md:mt-7`}
+                className={`${introHidden} mt-4 sm:mt-6 inline-flex items-center gap-2 text-xs sm:text-sm font-semibold`}
                 style={{ color: "var(--tl-accent)", fontFamily: "'Inter', sans-serif" }}
-              />
+              >
+                <span>Scroll to explore the phases</span>
+                <ArrowRight className="size-4 animate-pulse" aria-hidden />
+              </div>
             </div>
 
             {/* Image framed with a brand-gradient edge - significantly enlarged in desktop view */}
             <div
-              ref={imageWrapRef}
               data-intro
-              className={`${introHidden} rounded-[1.6rem] sm:rounded-[2rem] p-[3.5px] shadow-[0_20px_50px_-10px_rgba(0,112,198,0.35)] max-w-md sm:max-w-lg md:max-w-none w-full`}
+              className={`${introHidden} rounded-[1.6rem] sm:rounded-[2rem] p-[3px] shadow-[0_16px_36px_rgba(0,112,198,0.2)] max-w-md sm:max-w-lg md:max-w-none w-full`}
               style={{ background: BRAND_GRADIENT }}
             >
-              <div className="relative aspect-[16/10] max-h-[22svh] sm:max-h-[28svh] md:max-h-[50svh] lg:max-h-[64svh] xl:max-h-[70svh] w-full overflow-hidden rounded-[1.4rem] sm:rounded-[1.8rem] bg-slate-900">
+              <div className="relative aspect-[16/10] max-h-[22svh] sm:max-h-[28svh] md:max-h-[50svh] lg:max-h-[64svh] xl:max-h-[70svh] w-full overflow-hidden rounded-[1.4rem] sm:rounded-[1.8rem] bg-white">
                 <Image
                   src={imageUrl}
                   alt={imageAlt}
@@ -465,8 +372,8 @@ export default function HowWeWorkTimeline({
             className="pointer-events-none absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2"
           >
             <div
-              className="absolute inset-0 rounded-full opacity-30"
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.25)" }}
+              className="absolute inset-0 rounded-full"
+              style={{ backgroundColor: "rgba(0, 82, 212, 0.15)" }}
             />
             <div
               ref={fillRef}
@@ -502,14 +409,14 @@ export default function HowWeWorkTimeline({
             const card = (
               <div
                 data-card
-                className={`w-[min(78vw,24.5rem)] ml-3 sm:ml-4 rounded-2xl border border-white/10 p-5 sm:p-6 backdrop-blur-md shadow-2xl will-change-[transform,opacity] transition-all duration-300 ${
+                className={`w-[min(78vw,24.5rem)] ml-3 sm:ml-4 rounded-2xl border border-slate-800/90 p-5 sm:p-6 will-change-[transform,opacity] ${
                   isTop ? "mb-3 md:mb-4" : "mt-3 md:mt-4"
                 }`}
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(11, 15, 25, 0.9) 100%)",
+                    "linear-gradient(135deg, #0F172A 0%, #0B0F19 100%)",
                   boxShadow:
-                    "0 14px 34px -8px rgba(0, 82, 212, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12)",
+                    "0 20px 45px -12px rgba(11, 15, 25, 0.45), 0 8px 24px -6px rgba(0, 82, 212, 0.25)",
                 }}
               >
                 {/* Large gradient numeral with luminous cyan glow */}
