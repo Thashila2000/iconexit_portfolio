@@ -44,14 +44,12 @@ function renderTitle(title: string, highlights: string[], gradient: string) {
     valid.includes(part) ? (
       <span
         key={i}
+        className="inline-block"
         style={{
           background: gradient,
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
-          paddingBottom: "0.08em",
-          boxDecorationBreak: "clone",
-          WebkitBoxDecorationBreak: "clone",
         }}
       >
         {part}
@@ -62,24 +60,14 @@ function renderTitle(title: string, highlights: string[], gradient: string) {
   );
 }
 
-/* Variants for scroll-triggered entrance animations */
-const sectionVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.04,
-    },
-  },
-};
-
+/* Fast, smooth, GPU-friendly variants for scroll-triggered entrance animations */
 const leftColVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
       staggerChildren: 0.08,
+      delayChildren: 0.02,
     },
   },
 };
@@ -90,8 +78,8 @@ const fadeUpVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.45,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.5,
+      ease: [0.22, 1, 0.36, 1],
     },
   },
 };
@@ -101,64 +89,60 @@ const mockupsContainerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1,
+      staggerChildren: 0.1,
+      delayChildren: 0.05,
     },
   },
 };
 
 const desktopWindowVariants: Variants = {
-  hidden: { opacity: 0, y: 24, scale: 0.97 },
+  hidden: { opacity: 0, y: 20, scale: 0.98 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.6,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.55,
+      ease: [0.22, 1, 0.36, 1],
     },
   },
 };
 
 const backCard1Variants: Variants = {
-  hidden: { opacity: 0, rotate: 0, scale: 0.95 },
+  hidden: { opacity: 0, rotate: 0 },
   visible: {
     opacity: 0.7,
     rotate: 6,
-    scale: 1,
     transition: {
-      duration: 0.6,
-      delay: 0.12,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.55,
+      delay: 0.08,
+      ease: [0.22, 1, 0.36, 1],
     },
   },
 };
 
 const backCard2Variants: Variants = {
-  hidden: { opacity: 0, rotate: 0, scale: 0.92 },
+  hidden: { opacity: 0, rotate: 0 },
   visible: {
     opacity: 0.5,
     rotate: 12,
-    scale: 1,
     transition: {
-      duration: 0.65,
-      delay: 0.18,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.6,
+      delay: 0.14,
+      ease: [0.22, 1, 0.36, 1],
     },
   },
 };
 
 const phoneVariants: Variants = {
-  hidden: { opacity: 0, y: 35, x: 15, scale: 0.95 },
+  hidden: { opacity: 0, y: 25 },
   visible: {
     opacity: 1,
     y: 0,
-    x: 0,
-    scale: 1,
     transition: {
-      duration: 0.6,
-      delay: 0.18,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.55,
+      delay: 0.12,
+      ease: [0.22, 1, 0.36, 1],
     },
   },
 };
@@ -167,20 +151,20 @@ const capabilityGridVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.4,
+      staggerChildren: 0.05,
+      delayChildren: 0.25,
     },
   },
 };
 
 const capabilityItemVariants: Variants = {
-  hidden: { opacity: 0, y: 14, scale: 0.85 },
+  hidden: { opacity: 0, y: 10, scale: 0.92 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.45,
+      duration: 0.4,
       ease: [0.22, 1, 0.36, 1],
     },
   },
@@ -208,15 +192,9 @@ export function HeroSection({
   );
 
   return (
-    <motion.section
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.05, margin: "0px 0px -40px 0px" }}
-      variants={sectionVariants}
-      className="relative w-full overflow-hidden bg-[#ffebeb] px-4 py-14 sm:px-6 sm:py-24 lg:px-12"
-    >
+    <section className="relative w-full overflow-hidden bg-[#ffebeb] px-4 py-14 sm:px-6 sm:py-24 lg:px-12">
       <style>{`
-        .hero-title { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .hero-title { font-family: var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', sans-serif; }
         .hero-desc  { font-family: 'Inter', sans-serif; }
 
         /* ── GPU-accelerated ambient blob float keyframes (matching Mission & Vision section) ── */
@@ -281,7 +259,7 @@ export function HeroSection({
           border: 0;
           border-radius: 9999px;
           color: #fff;
-          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-family: var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', sans-serif;
           font-size: 1rem;
           font-weight: 700;
           letter-spacing: 0.01em;
@@ -351,71 +329,56 @@ export function HeroSection({
         }}
       />
 
-      {/* ── Crisp Vector Organic Accent Blob (Desktop only matching Mission & Vision background) ── */}
-      <motion.svg
-        aria-hidden
-        variants={{
-          hidden: { opacity: 0 },
-          visible: {
-            opacity: 0.38,
-            rotate: [0, 6, -5, 0],
-            scale: [1, 1.05, 0.98, 1],
-            y: [0, -14, 8, 0],
-            transition: {
-              opacity: { duration: 1.2 },
-              rotate: { duration: 18, repeat: Infinity, ease: "easeInOut" },
-              scale: { duration: 18, repeat: Infinity, ease: "easeInOut" },
-              y: { duration: 18, repeat: Infinity, ease: "easeInOut" },
-            },
-          },
-        }}
-        className="pointer-events-none absolute -bottom-10 -right-8 hidden h-80 w-64 sm:block sm:h-[420px] sm:w-96 will-change-transform"
-        viewBox="0 0 200 200"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          fill="#F472B6"
-          d="M48.2,-64.3C61.3,-55.8,70.2,-41.2,74.5,-25.6C78.9,-10,78.8,6.5,73.6,21.1C68.4,35.6,58.2,48.1,45.4,57.4C32.6,66.6,17.3,72.6,1.4,70.7C-14.5,68.8,-28.9,59,-42.6,49C-56.3,39,-69.1,28.8,-74.6,14.7C-80.1,0.5,-78.2,-17.6,-70,-31.6C-61.9,-45.6,-47.4,-55.6,-33.1,-63.5C-18.7,-71.3,-4.5,-77.1,9.4,-75.7C23.3,-74.3,35.1,-72.8,48.2,-64.3Z"
-          transform="translate(140 100)"
-        />
-      </motion.svg>
+      {/* ── Crisp Vector Organic Accent Blob (Desktop only) ── */}
+      <div className="pointer-events-none absolute -bottom-10 -right-8 hidden h-80 w-64 opacity-35 sm:block sm:h-[420px] sm:w-96">
+        <svg
+          aria-hidden
+          className="h-full w-full"
+          viewBox="0 0 200 200"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill="#F472B6"
+            d="M48.2,-64.3C61.3,-55.8,70.2,-41.2,74.5,-25.6C78.9,-10,78.8,6.5,73.6,21.1C68.4,35.6,58.2,48.1,45.4,57.4C32.6,66.6,17.3,72.6,1.4,70.7C-14.5,68.8,-28.9,59,-42.6,49C-56.3,39,-69.1,28.8,-74.6,14.7C-80.1,0.5,-78.2,-17.6,-70,-31.6C-61.9,-45.6,-47.4,-55.6,-33.1,-63.5C-18.7,-71.3,-4.5,-77.1,9.4,-75.7C23.3,-74.3,35.1,-72.8,48.2,-64.3Z"
+            transform="translate(140 100)"
+          />
+        </svg>
+      </div>
 
       {/* Soft brand glow behind the mockups */}
-      <motion.div
+      <div
         aria-hidden
-        variants={{
-          hidden: { opacity: 0, scale: 0.8 },
-          visible: {
-            opacity: 1,
-            scale: 1,
-            transition: { duration: 1.2, ease: "easeOut" },
-          },
-        }}
-        className="pointer-events-none absolute right-[-10%] top-1/2 hidden size-[42rem] -translate-y-1/2 lg:block"
+        className="pointer-events-none absolute right-[-10%] top-1/2 hidden size-[42rem] -translate-y-1/2 opacity-75 lg:block"
         style={{
           background:
             "radial-gradient(closest-side, rgba(0,194,206,0.22), rgba(0,82,212,0.08) 55%, transparent)",
         }}
       />
 
-      <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-between gap-16 lg:flex-row lg:gap-16">
+      <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-between gap-12 lg:flex-row lg:gap-16">
         {/* ───────── Left: heading, description, CTA ───────── */}
-        <motion.div variants={leftColVariants} className="max-w-2xl text-left will-change-[transform,opacity]">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15, margin: "0px 0px -20px 0px" }}
+          variants={leftColVariants}
+          className="max-w-2xl text-left"
+        >
           <motion.h2
             variants={fadeUpVariants}
-            className="hero-title text-[2.15rem] font-extrabold leading-[1.1] tracking-[-0.025em] text-[#0A101D] sm:text-5xl lg:text-[3.5rem] transform-gpu will-change-[transform,opacity]"
+            className="hero-title text-[2.15rem] font-bold leading-[1.15] tracking-tight text-[#0A101D] sm:text-5xl lg:text-[3.5rem]"
           >
             {renderTitle(title, highlights, gradient)}
           </motion.h2>
 
           <motion.p
             variants={fadeUpVariants}
-            className="hero-desc mt-5 max-w-xl text-[1.05rem] font-medium leading-[1.7] text-slate-800 sm:mt-6 sm:text-[1.15rem] transform-gpu will-change-[transform,opacity]"
+            className="hero-desc mt-5 max-w-xl text-[1.05rem] font-medium leading-[1.7] text-slate-800 sm:mt-6 sm:text-[1.15rem]"
           >
             {description}
           </motion.p>
 
-          <motion.div variants={fadeUpVariants} className="mt-8 sm:mt-10 transform-gpu will-change-[transform,opacity]">
+          <motion.div variants={fadeUpVariants} className="mt-8 sm:mt-10">
             {primaryButtonHref ? (
               <Button asChild size="lg" className="hero-cta cursor-pointer">
                 <Link href={primaryButtonHref}>{ctaInner}</Link>
@@ -431,6 +394,9 @@ export function HeroSection({
         {/* ───────── Right: product mockups ───────── */}
         {showMockups && (
           <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.12, margin: "0px 0px -40px 0px" }}
             variants={mockupsContainerVariants}
             className="relative mx-auto mb-14 w-full max-w-lg lg:mb-0 lg:mr-0"
           >
@@ -685,7 +651,7 @@ export function HeroSection({
           </motion.div>
         )}
       </div>
-    </motion.section>
+    </section>
   );
 }
 

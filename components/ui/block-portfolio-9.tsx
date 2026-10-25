@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
@@ -232,11 +232,11 @@ export default function Portfolio9({
           box-shadow: 0 0 8px rgba(0, 194, 206, 0.6);
         }
         .bp-title {
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          font-size: clamp(1.85rem, 3.4vw, 2.85rem);
-          font-weight: 800;
-          line-height: 1.15;
-          letter-spacing: -0.03em;
+          font-family: var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', sans-serif;
+          font-size: clamp(1.875rem, 3.5vw, 3rem);
+          font-weight: 700;
+          line-height: 1.25;
+          letter-spacing: -0.025em;
           color: #0F172A;
           margin: 0;
           text-align: center;

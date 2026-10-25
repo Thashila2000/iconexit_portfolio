@@ -84,50 +84,37 @@ const socialLinks = [
   { icon: <TikTok />,   label: "TikTok",    href: "https://tiktok.com/@iconex" },
 ];
 
+/*
+  Footer background, matched to the "Live Project Deployment" banner:
+  a very dark navy base, a soft teal glow in the upper right, a faint blue
+  glow lower right, and a slightly lighter blue haze on the left edge.
+  Glows use fixed pixel radii so they keep the same shape on tall footers.
+*/
+const FOOTER_BACKGROUND = [
+  // Teal glow, upper right (the round glow in the banner)
+  "radial-gradient(circle 420px at 92% 10%, rgba(0, 194, 206, 0.20) 0%, rgba(0, 150, 180, 0.09) 50%, transparent 100%)",
+  // Faint blue glow, lower right
+  "radial-gradient(circle 520px at 90% 92%, rgba(0, 82, 212, 0.14) 0%, transparent 100%)",
+  // Soft blue haze, left edge
+  "radial-gradient(circle 600px at 0% 45%, rgba(24, 44, 96, 0.38) 0%, transparent 100%)",
+  // Base: very dark navy
+  "linear-gradient(135deg, #0B1228 0%, #090F1F 55%, #0A1325 100%)",
+].join(", ");
+
 export default function IconexFooter() {
   const pathname = usePathname();
   return (
     <footer
       className="relative overflow-hidden"
-      style={{ background: "#0B0F19" }}
+      style={{ background: "#090F1F" }}
     >
-      {/* ── Top atmospheric gradient: matches contact section dark blue/teal glow ── */}
+      {/* ── Background gradient field (matches the project banner) ── */}
       <div
-        className="absolute top-0 left-0 right-0 z-[1] pointer-events-none"
-        style={{ height: "280px" }}
-      >
-        {/* Dark glow — top left corner */}
-        <div
-          className="absolute"
-          style={{
-            top: "-60px",
-            left: "-60px",
-            width: "420px",
-            height: "420px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, #0B0F19 0%, transparent 70%)",
-          }}
-        />
-        {/* Teal glow — right side, matching contact's cp-left-glow2 */}
-        <div
-          className="absolute"
-          style={{
-            top: "-40px",
-            right: "10%",
-            width: "340px",
-            height: "340px",
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(0,194,206,0.12) 0%, transparent 70%)",
-          }}
-        />
-        {/* Soft top-edge fade */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background: "linear-gradient(to bottom, rgba(0,112,198,0.08) 0%, transparent 100%)",
-          }}
-        />
-      </div>
+        aria-hidden
+        className="absolute inset-0 z-[1] pointer-events-none"
+        style={{ background: FOOTER_BACKGROUND }}
+      />
+
       {/* ── Main content ── */}
       <div className="relative z-10 max-w-7xl mx-auto px-8 md:px-14 pt-20 pb-10">
 

@@ -128,10 +128,11 @@ export default function WorkDetailClient({
         }
 
         .wd-title {
-          font-size: clamp(2rem, 4.5vw, 3.6rem);
-          font-weight: 800;
-          letter-spacing: -0.03em;
-          line-height: 1.12;
+          font-family: var(--font-plus-jakarta-sans), "Plus Jakarta Sans", sans-serif;
+          font-size: clamp(2.25rem, 4.5vw, 3.6rem);
+          font-weight: 700;
+          letter-spacing: -0.025em;
+          line-height: 1.25;
           color: #0a101d;
           margin-bottom: 18px;
         }

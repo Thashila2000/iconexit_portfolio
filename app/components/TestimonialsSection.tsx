@@ -94,7 +94,7 @@ export default function TestimonialsSection() {
           <motion.h2
             variants={fadeUp}
             className="mb-4 text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-4xl md:text-5xl"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            style={{ fontFamily: "var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', sans-serif" }}
           >
             Trusted by teams who{" "}
             <em

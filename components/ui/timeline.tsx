@@ -241,6 +241,7 @@ export default function HowWeWorkTimeline({
         <>
           How We{" "}
           <span
+            className="not-italic font-extrabold"
             style={{
               background: BRAND_GRADIENT,
               WebkitBackgroundClip: "text",
@@ -301,17 +302,17 @@ export default function HowWeWorkTimeline({
                 </span>
               </div>
 
-              {/* Exact heading font size, weight, line-height */}
+              {/* Exact heading font size, weight, line-height matching Testimonials */}
               <h2
                 id="how-we-work-title"
                 data-intro
-                className={`${introHidden} font-extrabold text-[#0F172A]`}
+                className={`${introHidden} font-bold text-[#0F172A]`}
                 style={{
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: "clamp(1.85rem, 3.4vw, 2.85rem)",
-                  fontWeight: 800,
-                  lineHeight: 1.15,
-                  letterSpacing: "-0.03em",
+                  fontFamily: "var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', sans-serif",
+                  fontSize: "clamp(1.875rem, 3.5vw, 3rem)",
+                  fontWeight: 700,
+                  lineHeight: 1.25,
+                  letterSpacing: "-0.025em",
                 }}
               >
                 {renderTitle()}
@@ -333,14 +334,7 @@ export default function HowWeWorkTimeline({
                 {subtitle}
               </p>
 
-              <div
-                data-intro
-                className={`${introHidden} mt-4 sm:mt-6 inline-flex items-center gap-2 text-xs sm:text-sm font-semibold`}
-                style={{ color: "var(--tl-accent)", fontFamily: "'Inter', sans-serif" }}
-              >
-                <span>Scroll to explore the phases</span>
-                <ArrowRight className="size-4 animate-pulse" aria-hidden />
-              </div>
+             
             </div>
 
             {/* Image framed with a brand-gradient edge - significantly enlarged in desktop view */}
